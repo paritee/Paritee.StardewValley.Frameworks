@@ -1,6 +1,6 @@
 # Paritee's Quick Patch Buildings
 
-Customize the types and species of farm animals you can raise without needing to replace the default farm animal types
+Customize the types of simple buildings you can purchase without needing to replace the default options
 
 ## Contents
 
