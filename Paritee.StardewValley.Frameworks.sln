@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paritee's Quick Patch Buildings", "ContentPatchBuildings\Paritee's Quick Patch Buildings.csproj", "{577D5C93-70C8-4F51-B661-388D27B0B4EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paritee's Quick Patch Buildings", "QuickPatchBuildings\Paritee's Quick Patch Buildings.csproj", "{577D5C93-70C8-4F51-B661-388D27B0B4EE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paritee's Better Farm Animal Variety", "BetterFarmAnimalVariety\Paritee's Better Farm Animal Variety.csproj", "{C06A1D78-D24E-41E1-B446-67D409836AB1}"
 EndProject

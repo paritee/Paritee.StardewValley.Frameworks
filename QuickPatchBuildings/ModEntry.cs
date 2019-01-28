@@ -69,12 +69,6 @@ namespace QuickPatchBuildings
                 {
                     if (asset.AssetNameEquals($"Buildings/{patch.Type}"))
                     {
-
-                        this.Monitor.Log($"Buildings/{patch.Type}", LogLevel.Trace);
-                        this.Monitor.Log(patch.GetSeasonalAsset(Game1.currentSeason), LogLevel.Trace);
-                        this.Monitor.Log(patch.Asset, LogLevel.Trace);
-
-
                         // try to load the seasonal asset first
                         try
                         {
@@ -155,19 +149,13 @@ namespace QuickPatchBuildings
         /// <param name="e">The event arguments.</param>
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
-            this.Monitor.Log($"DAYA HAS STARTED", LogLevel.Debug);
-            this.Monitor.Log($"OnDayStarted", LogLevel.Debug);
-
             // Invalidate the cache just in case seasonal assets exist
             foreach (IContentPack contentPack in this.ContentPacks)
             {
                 foreach (BuildingPatch patch in this.BuildingPatches[contentPack.Manifest.UniqueID])
                 {
                     if (patch.Seasonal)
-                    {
-                        this.Monitor.Log($"Buildings/{patch.Type}", LogLevel.Debug);
                         this.Helper.Content.InvalidateCache($"Buildings/{patch.Type}");
-                    }
                 }
             }
         }
