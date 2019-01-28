@@ -1,21 +1,16 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuickPatchBuildings
 {
     /// <summary>The mod entry point.</summary>
     public class ModEntry : Mod, IAssetEditor, IAssetLoader
     {
-        private const string MAGICAL_PREFIX = "magical_";
-
         IEnumerable<IContentPack> ContentPacks;
         private Dictionary<string, List<BuildingPatch>> BuildingPatches;
 
@@ -183,7 +178,7 @@ namespace QuickPatchBuildings
                     .GetValue();
 
                 List<BuildingPatch> buildingPatches = this.BuildingPatches.Values // to get just the List<BuildingPatch>s
-                     .SelectMany(x => x.Where(patch => (magicalConstruction && patch.Type.StartsWith(ModEntry.MAGICAL_PREFIX)) || (!magicalConstruction && !patch.Type.StartsWith(ModEntry.MAGICAL_PREFIX))))  // flatten and remove magical if necessary
+                     .SelectMany(x => x.Where(patch => (magicalConstruction && patch.IsMagical()) || (!magicalConstruction && !patch.IsMagical())))  // flatten and remove magical if necessary
                      .ToList(); // convert to list
 
                 foreach (BuildingPatch patch in buildingPatches)
