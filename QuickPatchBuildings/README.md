@@ -21,9 +21,9 @@ Customize the types and species of farm animals you can raise without needing to
 
 The following section explains how to add a new building with the [QPB](https://www.nexusmods.com/stardewvalley/mods/0000) mod. In this example we will be using [Paritee's Animal Troughs](https://www.nexusmods.com/stardewvalley/mods/0000) mod, but this can be done with any building type that has been loaded into `Data/Blueprint`.
 
-2. Install the latest version of [QPB](#install)
+1. Install the latest version of [QPB](#install)
 2. Install the latest version of [Content Patcher](https://www.nexusmods.com/stardewvalley/mods/1915)
-2. Unzip the [Paritee's Animal Troughs](https://www.nexusmods.com/stardewvalley/mods/0000) folder into `Stardew Valley/Mods`
+3. Unzip the [Paritee's Animal Troughs](https://www.nexusmods.com/stardewvalley/mods/0000) folder into `Stardew Valley/Mods`
 4. Run the game using SMAPI
 
 
