@@ -42,7 +42,7 @@ The following section explains how to add a skin with the [QPB](https://www.nexu
 3. Unzip the [Paritee's Seasonal Animal Troughs](https://www.nexusmods.com/stardewvalley/mods/0000) folder into `Stardew Valley/Mods`
 4. Run the game using SMAPI
 
-#### Creating or Upgrading a Content Patcher skin
+#### Creating or Migrating a Content Patcher Skin
 
  You need to make sure your Content Patcher skin mod adheres to the following. I'll be using [Paritees's Seasonal Animal Troughs](https://www.nexusmods.com/stardewvalley/mods/0000) as the Content Patcher skin mod and [Paritee's Animal Troughs](https://www.nexusmods.com/stardewvalley/mods/0000) as the QPB building in the example.
 
