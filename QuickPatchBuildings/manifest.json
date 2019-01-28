@@ -2,7 +2,7 @@
    "Name": "QuickPatchBuildings",
    "Author": "Paritee",
    "Version": "1.0.0",
-   "Description": "QuickPatchBuildings",
+   "Description": "Customize the types of simple buildings you can purchase without needing to replace the default options",
    "UniqueID": "Paritee.QuickPatchBuildings",
    "EntryDll": "QuickPatchBuildings.dll",
    "MinimumApiVersion": "2.9",
