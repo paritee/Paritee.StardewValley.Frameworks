@@ -73,34 +73,43 @@ I'll be using [Paritees's Seasonal Animal Troughs](https://www.nexusmods.com/sta
 
 ### Content Packs
 
-`manifest.json`
+#### manifest.json
+
+Follows standard SMAPI `manifest.json` format, but must include `ContentPackFor` targetted to `Paritee.QuickPatchBuildings`.
 
 ```json
 {
-   .. // Standard SMAPI manifest.json format
+   ..
    "ContentPackFor": {
-      "UniqueID": "Paritee.QuickPatchBuildings" // Must include ContentPackFor target towards Paritee.QuickPatchBuildings
+      "UniqueID": "Paritee.QuickPatchBuildings"
    }
 }
 ```
 
-`content.json`
+
+#### content.json
 
 ```json
 {
   "Format": "1.0",
   "Changes": [
     {
-      "Type": "<unique building name>", // Must be unique against Data/Blueprints
-      "Data": "<Data/Blueprints formatted value string>", // ex. of well: "390 75/3/3/-1/-1/-1/-1/null/Well/Provides a place for you to refill your watering can./Buildings/none/32/32/-1/null/Farm/1000/false",
-      "Asset": "assets/<filename>.png", // All lowercase
-      "Seasonal": false, // Recommend setting this to false and using Content Patcher to apply the seasonal variations
+      "Type": "<unique building name>",
+      "Data": "<Data/Blueprints formatted value string>",
+      "Asset": "assets/<filename>.png",
+      "Seasonal": false,
     }
-    // Can have multiple entries
   ]
 }
 ```
 
-`/assets`
+Field | Type | Description
+--- | --- | ---
+Type | string | Must be unique against `Content/Data/Blueprints`
+Data | string |  Ex. of Well: `390 75/3/3/-1/-1/-1/-1/null/Well/Provides a place for you to refill your watering can./Buildings/none/32/32/-1/null/Farm/1000/false`
+Asset | string | All lowercase
+Seasonal | boolean | Recommend setting this to `false` and using Content Patcher to apply the seasonal variations
+
+#### ./assets
 
 Folder to contain the building's assets - all lowercase and typically `.pngs`. If using the seasonal capability of QPB, your filename format must be `<filename>_<season>.png`.
