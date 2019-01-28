@@ -31,11 +31,20 @@ The following section explains how to add a new building with the [QPB](https://
 
 ### Skins
 
-It is possible to override the default spritesheets for the QPB buildings so that you can use your favourite packs (ex. add seasonal support). You need to make sure your Content Patcher skin mod adheres to the following.
+It is possible to override the default spritesheets for the QPB buildings so that you can use your favourite packs (ex. add seasonal support).
 
-#### Example
+#### Add a Skin
 
-I'll be using [Paritees's Seasonal Animal Troughs](https://www.nexusmods.com/stardewvalley/mods/0000) as the Content Patcher skin mod and [Paritee's Animal Troughs](https://www.nexusmods.com/stardewvalley/mods/0000) as the QPB building in the example.
+The following section explains how to add a skin with the [QPB](https://www.nexusmods.com/stardewvalley/mods/0000) mod and Content Patcher. In this example we will be using [Paritee's Seasonal Animal Troughs](https://www.nexusmods.com/stardewvalley/mods/0000) mod.
+
+1. Install the latest version of [QPB](#install)
+2. Install the latest version of [Content Patcher](https://www.nexusmods.com/stardewvalley/mods/1915)
+3. Unzip the [Paritee's Seasonal Animal Troughs](https://www.nexusmods.com/stardewvalley/mods/0000) folder into `Stardew Valley/Mods`
+4. Run the game using SMAPI
+
+#### Creating or Upgrading a Content Patcher skin
+
+ You need to make sure your Content Patcher skin mod adheres to the following. I'll be using [Paritees's Seasonal Animal Troughs](https://www.nexusmods.com/stardewvalley/mods/0000) as the Content Patcher skin mod and [Paritee's Animal Troughs](https://www.nexusmods.com/stardewvalley/mods/0000) as the QPB building in the example.
 
 1. Add your target QPB building's mod `UniqueID` (found in `manifest.json`) as a required dependency in your Content Patcher skin mod's `manifest.json`.
 
