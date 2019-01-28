@@ -1,0 +1,33 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="BetterFarmAnimalVariety.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FarmAnimals_Cows" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">5927/11343/32/448/32/16/White Cow,Brown Cow</Value>
+    </Setting>
+    <Setting Name="FarmAnimals_Chickens" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">5922/11334/0/448/32/16/White Chicken,Brown Chicken,Blue Chicken,Void Chicken</Value>
+    </Setting>
+    <Setting Name="FarmAnimals_Sheep" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">5942/11352/32/464/32/16/Sheep</Value>
+    </Setting>
+    <Setting Name="FarmAnimals_Goats" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">5933/11349/64/448/32/16/Goat</Value>
+    </Setting>
+    <Setting Name="FarmAnimals_Pigs" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">5948/11346/0/480/32/16/Pig</Value>
+    </Setting>
+    <Setting Name="FarmAnimals_Ducks" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">5937/11337/0/464/32/16/Duck</Value>
+    </Setting>
+    <Setting Name="FarmAnimals_Rabbits" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">5945/11340/64/464/32/16/Rabbit</Value>
+    </Setting>
+    <Setting Name="FarmAnimals_Dinosaurs" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">-1/-1/-1/-1/-1/-1/Dinosaur</Value>
+    </Setting>
+    <Setting Name="AssetsDirectory" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">assets</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

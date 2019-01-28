@@ -1,0 +1,10 @@
+﻿{
+   "Name": "QuickPatchBuildings",
+   "Author": "Paritee",
+   "Version": "1.0.0",
+   "Description": "QuickPatchBuildings",
+   "UniqueID": "Paritee.QuickPatchBuildings",
+   "EntryDll": "QuickPatchBuildings.dll",
+   "MinimumApiVersion": "2.9",
+   "UpdateKeys": [ "Nexus:0000" ]
+}
