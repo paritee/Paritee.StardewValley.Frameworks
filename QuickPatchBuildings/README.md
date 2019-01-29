@@ -115,34 +115,10 @@ Follows standard SMAPI `manifest.json` format, but must include `ContentPackFor`
 Field | Type | Description
 --- | --- | ---
 Type | string | Must be unique against `Content/Data/Blueprints`
-Data | string |  Ex. of Well: `390 75/3/3/-1/-1/-1/-1/null/Well/Provides a place for you to refill your watering can./Buildings/none/32/32/-1/null/Farm/1000/false` (see below for meaning of values)
+Data | string |  Ex. of Well: `390 75/3/3/-1/-1/-1/-1/null/Well/Provides a place for you to refill your watering can./Buildings/none/32/32/-1/null/Farm/1000/false` (see [Blueprint Data Guide](https://stardewvalleywiki.com/Modding:Blueprint_data))
 Asset | string | All lowercase
 Seasonal | boolean | Recommend setting this to `false` and using Content Patcher to apply the seasonal variations
 
-##### Data
-
-Index | Type | Description
---- | --- | ---
-0 | `string` | itemsRequired - space separated string of item ID and quantity pairs
-1 | `int` | tilesWidth
-2 | `int` | tilesHeight
-3 | `int` | humanDoor X coordinate (`-1` if not applicable)
-4 | `int` | humanDoor Y coordinate (`-1` if not applicablel)
-5 | `int` | animalDoor X coordinate (`-1` if not applicable)
-6 | `int` | animalDoor Y coordinate (`-1` if not applicable)
-7 | `string` | mapToWarpTo (`null` if not applicable)
-8 | `string` | displayName
-9 | `string` | description
-10 | `string` | blueprintType - `Buildings` or `Upgrades`
-11 | `string` | nameOfBuildingToUpgrade - only if blueprintType is `Upgrades` and `none` if blueprintType is `Buildings`
-12 | `int` | sourceRectForMenuView width
-13 | `int` | sourceRectForMenuView height
-14 | `int` | maxOccupants (`-1` if not applicable)
-15 | `int` | actionBehavior - only `MineElevator` uses this field (`null` if not applicable)
-16 | `string` | namesOfOkayBuildingLocations - space separated string of location names
-17 | `int` | moneyRequirednames
-18 | `bool` | magical
-19 | `int` | daysToConstruct
 
 #### ./assets
 
