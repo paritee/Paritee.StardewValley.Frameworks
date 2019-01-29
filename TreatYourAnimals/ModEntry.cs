@@ -156,13 +156,9 @@ namespace TreatYourAnimals
                     {
                         this.AttemptToGiveTreatToHorse(character as Horse);
                     }
-                    else if (character is Dog)
-                    {
-                        this.AttemptToGiveTreatToPet(character as Dog);
-                    }
                     else
                     {
-                        this.AttemptToGiveTreatToPet(character as Cat);
+                        this.AttemptToGiveTreatToPet(character as Pet);
                     }
 
                     // Intersects always return true
