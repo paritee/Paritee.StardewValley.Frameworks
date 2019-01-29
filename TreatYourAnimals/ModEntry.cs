@@ -29,6 +29,7 @@ namespace TreatYourAnimals
             // Events
             this.Helper.Events.Input.ButtonPressed += this.OnButtonPressed;
             this.Helper.Events.GameLoop.DayStarted += this.OnDayStarted;
+            // TODO: Change cursor to gift on hover with a valid object to give to animal - use same rectangle
         }
 
         private void OnDayStarted(object sender, DayStartedEventArgs e)
