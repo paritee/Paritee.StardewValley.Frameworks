@@ -32,32 +32,26 @@ namespace TreatYourAnimals.Framework
                 return;
             }
 
-            string originalName = this.Horse.Name;
-            string friendshipName = String.Join("_", new string[] { this.Horse.GetType().ToString(), originalName });
-
-            // Temporarily change the horse's name to use the social NPC functions
-            // This will be reset before exiting
-            this.Horse.Name = friendshipName;
-
             // WARNING:
             // - Completing socialize quests will also boost your Horse's friendship poiints
             // - Counts towards friendship achievements
             // - Affects percentage that contributes towards percentGameComplete
             // - Will not show up on the social menu (@TODO: make this happen?)
+
+            // A horse's name gets appended with spaces if it matches an already existing NPC name
+            // Horse.cs:nameHorse(string name)
+            // if (allCharacter.isVillager() && allCharacter.Name.Equals(name))
+            //    name += " ";
             if (!Game1.player.friendshipData.ContainsKey(this.Horse.Name))
             {
                 Game1.player.friendshipData.Add(this.Horse.Name, new Friendship());
-                //Game1.player.hasPlayerTalkedToNPC(this.Horse.Name);
             }
 
             // Treat the horse as if it's a social NPC
             Game1.player.changeFriendship(points, this.Horse);
 
-            // Set the name back
-            this.Horse.Name = originalName;
-
             // Chance to show the "pet loves you" global message
-            this.AttemptToExpressLove(this.Horse, Game1.player.getFriendshipLevelForNPC(friendshipName), HorseTreat.FRIENDSHIP_POINTS_MAX, "horseLoveMessage");
+            this.AttemptToExpressLove(this.Horse, Game1.player.getFriendshipLevelForNPC(this.Horse.Name), HorseTreat.FRIENDSHIP_POINTS_MAX, "horseLoveMessage");
         }
 
         public void RefuseTreat(bool penalty)

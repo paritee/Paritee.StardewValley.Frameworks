@@ -155,6 +155,13 @@ namespace TreatYourAnimals
                 {
                     if (character is Horse)
                     {
+                        // Check if horse has a name
+                        if (character.Name.Length <= 0)
+                        {
+                            // We don't want to stop the naming prompt even with an intercept
+                            return false;
+                        }
+
                         this.AttemptToGiveTreatToHorse(character as Horse);
                     }
                     else
