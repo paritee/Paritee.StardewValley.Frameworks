@@ -7,7 +7,7 @@ namespace TreatYourAnimals.Framework
     class HorseTreat : CharacterTreat
     {
         private const int FRIENDSHIP_POINTS_MAX = 2000; // 2000 = Bouquet; 2500 = Sea Amulet
-        private const int FRIENDSHIP_POINTS_STEP = 45; // matches "like" in receiveGift() value
+        private const int FRIENDSHIP_POINTS_STEP = 12; // same percentage as the other animals
 
         private Horse Horse;
 

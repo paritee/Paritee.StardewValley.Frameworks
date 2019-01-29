@@ -7,7 +7,7 @@ namespace TreatYourAnimals.Framework
     class FarmAnimalTreat : CharacterTreat
     {
         private const int FRIENDSHIP_POINTS_MAX = 1000;
-        private const int FRIENDSHIP_POINTS_STEP = 15; // matches pet() value
+        private const int FRIENDSHIP_POINTS_STEP = 6; // matches water bowl for pets
         private const int EXPERIENCE_POINTS = 5; // matches pet() value
 
         private FarmAnimal FarmAnimal;

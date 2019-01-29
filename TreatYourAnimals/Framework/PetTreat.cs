@@ -6,7 +6,7 @@ namespace TreatYourAnimals.Framework
     class PetTreat : CharacterTreat
     {
         private const int FRIENDSHIP_POINTS_MAX = 1000;
-        private const int FRIENDSHIP_POINTS_STEP = 12; // matches checkAction() value
+        private const int FRIENDSHIP_POINTS_STEP = 6; // matches water bowl value
 
         private const int CHOCOLATE_CAKE = 220;
 
