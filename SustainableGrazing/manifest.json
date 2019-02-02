@@ -1,0 +1,10 @@
+﻿{
+   "Name": "SustainableGrazing",
+   "Author": "Paritee",
+   "Version": "1.0.0",
+   "Description": "SustainableGrazing",
+   "UniqueID": "Paritee.SustainableGrazing",
+   "EntryDll": "SustainableGrazing.dll",
+   "MinimumApiVersion": "2.9",
+   "UpdateKeys": [ "Nexus:0000" ]
+}

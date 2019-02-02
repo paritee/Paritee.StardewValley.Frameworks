@@ -1,0 +1,10 @@
+﻿{
+   "Name": "Paritee's Jumping Horse",
+   "Author": "Paritee",
+   "Version": "1.0.0",
+   "Description": "JumpingHorse",
+   "UniqueID": "Paritee.JumpingHorse",
+   "EntryDll": "JumpingHorse.dll",
+   "MinimumApiVersion": "2.9",
+   "UpdateKeys": [ "Nexus:0000" ]
+}
