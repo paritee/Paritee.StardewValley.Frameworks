@@ -42,8 +42,8 @@ namespace BetterFarmAnimalVariety
         }
 
         /// <param name="farm">StardewValley.Farm</param>
-        /// <param name="blueFarmAnimals">Paritee.StardewValleyAPI.FarmAnimals.Variations.Blue</param>
-        /// <param name="voidFarmAnimals">Paritee.StardewValleyAPI.FarmAnimals.Variations.Void</param>
+        /// <param name="blueFarmAnimals">Paritee.StardewValleyAPI.FarmAnimals.Variations.BlueVariation</param>
+        /// <param name="voidFarmAnimals">Paritee.StardewValleyAPI.FarmAnimals.Variations.VoidVariation</param>
         /// <returns>Returns Paritee.StardewValleyAPI.Buidlings.AnimalShop</returns>
         public AnimalShop GetAnimalShop(Farm farm, BlueVariation blueFarmAnimals, VoidVariation voidFarmAnimals)
         {
