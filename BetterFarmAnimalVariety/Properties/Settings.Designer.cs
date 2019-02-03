@@ -12,7 +12,7 @@ namespace BetterFarmAnimalVariety.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,25 +25,26 @@ namespace BetterFarmAnimalVariety.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5927/11343/32/448/32/16/White Cow,Brown Cow")]
-        public string FarmAnimals_Cows {
+        [global::System.Configuration.DefaultSettingValueAttribute("1/5927/11343/1500/White Cow,Brown Cow/Barn,Big Barn,Deluxe Barn")]
+        public string FarmAnimals_DairyCow {
             get {
-                return ((string)(this["FarmAnimals_Cows"]));
+                return ((string)(this["FarmAnimals_DairyCow"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5922/11334/0/448/32/16/White Chicken,Brown Chicken,Blue Chicken,Void Chicken")]
-        public string FarmAnimals_Chickens {
+        [global::System.Configuration.DefaultSettingValueAttribute("0/5922/11334/800/White Chicken,Brown Chicken,Blue Chicken,Void Chicken/Coop,Big C" +
+            "oop,Deluxe Coop")]
+        public string FarmAnimals_Chicken {
             get {
-                return ((string)(this["FarmAnimals_Chickens"]));
+                return ((string)(this["FarmAnimals_Chicken"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5942/11352/32/464/32/16/Sheep")]
+        [global::System.Configuration.DefaultSettingValueAttribute("4/5942/11352/8000/Sheep/Deluxe Barn")]
         public string FarmAnimals_Sheep {
             get {
                 return ((string)(this["FarmAnimals_Sheep"]));
@@ -52,46 +53,46 @@ namespace BetterFarmAnimalVariety.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5933/11349/64/448/32/16/Goat")]
-        public string FarmAnimals_Goats {
+        [global::System.Configuration.DefaultSettingValueAttribute("2/5933/11349/4000/Goat/Big Barn,Deluxe Barn")]
+        public string FarmAnimals_Goat {
             get {
-                return ((string)(this["FarmAnimals_Goats"]));
+                return ((string)(this["FarmAnimals_Goat"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5948/11346/0/480/32/16/Pig")]
-        public string FarmAnimals_Pigs {
+        [global::System.Configuration.DefaultSettingValueAttribute("6/5948/11346/16000/Pig/Deluxe Barn")]
+        public string FarmAnimals_Pig {
             get {
-                return ((string)(this["FarmAnimals_Pigs"]));
+                return ((string)(this["FarmAnimals_Pig"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5937/11337/0/464/32/16/Duck")]
-        public string FarmAnimals_Ducks {
+        [global::System.Configuration.DefaultSettingValueAttribute("3/5937/11337/4000/Duck/Big Coop,Deluxe Coop")]
+        public string FarmAnimals_Duck {
             get {
-                return ((string)(this["FarmAnimals_Ducks"]));
+                return ((string)(this["FarmAnimals_Duck"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5945/11340/64/464/32/16/Rabbit")]
-        public string FarmAnimals_Rabbits {
+        [global::System.Configuration.DefaultSettingValueAttribute("5/5945/11340/8000/Rabbit/Deluxe Coop")]
+        public string FarmAnimals_Rabbit {
             get {
-                return ((string)(this["FarmAnimals_Rabbits"]));
+                return ((string)(this["FarmAnimals_Rabbit"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1/-1/-1/-1/-1/-1/Dinosaur")]
-        public string FarmAnimals_Dinosaurs {
+        [global::System.Configuration.DefaultSettingValueAttribute("7/null/null/null/Dinosaur/Big Coop,Deluxe Coop")]
+        public string FarmAnimals_Dinosaur {
             get {
-                return ((string)(this["FarmAnimals_Dinosaurs"]));
+                return ((string)(this["FarmAnimals_Dinosaur"]));
             }
         }
         
