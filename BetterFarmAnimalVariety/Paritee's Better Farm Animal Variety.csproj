@@ -32,12 +32,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lib.Harmony.1.2.0.1\lib\net45\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Paritee.StardewValleyAPI, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Paritee.StardewValleyAPI.1.4.1\lib\net452\Paritee.StardewValleyAPI.dll</HintPath>
+    <Reference Include="Paritee.StardewValleyAPI, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Paritee.StardewValleyAPI.2.0.0\lib\net452\Paritee.StardewValleyAPI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -51,14 +54,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Editors\AnimalShopEditor.cs" />
     <Compile Include="ModApi.cs" />
     <Compile Include="Models\AppSettings.cs" />
     <Compile Include="Models\AppSetting.cs" />
     <Compile Include="Models\ConfigFarmAnimal.cs" />
     <Compile Include="Editors\AnimalBirthEditor.cs" />
     <Compile Include="ModConfig.cs" />
+    <Compile Include="Models\ConfigFarmAnimalAnimalShop.cs" />
     <Compile Include="ModEntry.cs" />
+    <Compile Include="Patches\PurchaseAnimalsMenuPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -1,6 +1,9 @@
 ﻿using BetterFarmAnimalVariety.Models;
-using Paritee.StardewValleyAPI.Buidlings.AnimalShop.FarmAnimals;
+using Paritee.StardewValleyAPI.Buildings.AnimalShop.FarmAnimals;
+using Paritee.StardewValleyAPI.FarmAnimals;
 using Paritee.StardewValleyAPI.FarmAnimals.Variations;
+using StardewValley;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,7 +12,7 @@ namespace BetterFarmAnimalVariety
     public class ModConfig
     {
         public VoidConfig.InShop VoidFarmAnimalsInShop;
-        public Dictionary<ConfigFarmAnimal.TypeGroup, ConfigFarmAnimal> FarmAnimals;
+        public Dictionary<string, ConfigFarmAnimal> FarmAnimals;
 
         private AppSettings AppSettings;
 
@@ -17,7 +20,7 @@ namespace BetterFarmAnimalVariety
         {
             Dictionary<string, string> settings = Properties.Settings.Default.Properties
               .Cast<System.Configuration.SettingsProperty>()
-              .OrderBy(s => s.Name).ToDictionary(x => x.Name.ToString(), x => x.DefaultValue.ToString());
+              .ToDictionary(x => x.Name.ToString(), x => x.DefaultValue.ToString());
 
             this.AppSettings = new AppSettings(settings);
             this.VoidFarmAnimalsInShop = VoidConfig.InShop.Never;
@@ -25,36 +28,44 @@ namespace BetterFarmAnimalVariety
             this.InitializeFarmAnimals();
         }
 
-        private List<ConfigFarmAnimal.TypeGroup> GetFarmAnimalGroups()
+        private List<string> GetFarmAnimalGroups()
         {
-            return this.FarmAnimals.Keys.ToList<ConfigFarmAnimal.TypeGroup>();
+            return this.FarmAnimals.Keys.ToList<string>();
         }
 
         public List<string> GetFarmAnimalTypes()
         {
             List<string> types = new List<string>();
 
-            foreach (KeyValuePair<ConfigFarmAnimal.TypeGroup, ConfigFarmAnimal> Entry in this.FarmAnimals)
+            foreach (KeyValuePair<string, ConfigFarmAnimal> Entry in this.FarmAnimals)
+            {
                 types = types.Concat(Entry.Value.GetTypes()).ToList<string>();
+            }
 
             return types.ToList<string>();
         }
 
-        public List<string> GetFarmAnimalTypes(ConfigFarmAnimal.TypeGroup farmAnimalGroup)
+        public List<string> GetFarmAnimalTypes(string category)
         {
-            return this.GetFarmAnimalTypesByGroup(farmAnimalGroup);
+            return this.FarmAnimals[category].GetTypes().ToList<string>();
         }
 
-        public List<string> GetFarmAnimalTypesByGroup(ConfigFarmAnimal.TypeGroup group)
+        public void InitializeFarmAnimals()
         {
-            return this.FarmAnimals[group].GetTypes().ToList<string>();
-        }
-
-        private void InitializeFarmAnimals()
-        {
-            this.FarmAnimals = new Dictionary<ConfigFarmAnimal.TypeGroup, ConfigFarmAnimal>();
-
-            this.UpdateFarmAnimalValuesFromAppSettings();
+            if (this.FarmAnimals == null)
+            {
+                this.FarmAnimals = new Dictionary<string, ConfigFarmAnimal>();
+                this.UpdateFarmAnimalValuesFromAppSettings();
+            }
+            else
+            {
+                // Need to restore the categories because they are not in the config.json
+                foreach(KeyValuePair<string, ConfigFarmAnimal> entry in this.FarmAnimals.ToDictionary(kvp => kvp.Key, kvp => kvp.Value))
+                {
+                    entry.Value.Category = entry.Key;
+                    this.FarmAnimals[entry.Key] = entry.Value;
+                }
+            }
         }
 
         public void UpdateFarmAnimalValuesFromAppSettings()
@@ -65,44 +76,54 @@ namespace BetterFarmAnimalVariety
             {
                 ConfigFarmAnimal configFarmAnimal = new ConfigFarmAnimal(appSetting);
                   
-                if (this.FarmAnimals.ContainsKey(configFarmAnimal.Group))
+                if (this.FarmAnimals.ContainsKey(configFarmAnimal.Category))
                 {
                     // Preserve user preferences if the group already has data loaded from the user's config JSON
-                    ConfigFarmAnimal custom = this.FarmAnimals[configFarmAnimal.Group];
+                    ConfigFarmAnimal custom = this.FarmAnimals[configFarmAnimal.Category];
 
-                    configFarmAnimal.Name = custom.Name;
-                    configFarmAnimal.Description = custom.Description;
-                    configFarmAnimal.ShopIcon = custom.ShopIcon;
+                    configFarmAnimal.AnimalShop.Name = custom.AnimalShop.Name;
+                    configFarmAnimal.AnimalShop.Description = custom.AnimalShop.Description;
+                    configFarmAnimal.AnimalShop.Price = custom.AnimalShop.Price;
+                    configFarmAnimal.AnimalShop.Icon = custom.AnimalShop.Icon;
                     configFarmAnimal.Types = custom.Types;
+                    configFarmAnimal.Buildings = custom.Buildings;
 
                     // Add the configuration to the farm animals config
-                    this.FarmAnimals[configFarmAnimal.Group] = configFarmAnimal;
+                    this.FarmAnimals[configFarmAnimal.Category] = configFarmAnimal;
                 }
                 else
                 {
-                    this.FarmAnimals.Add(configFarmAnimal.Group, configFarmAnimal);
+                    this.FarmAnimals.Add(configFarmAnimal.Category, configFarmAnimal);
                 }
             }
         }
 
-        public Dictionary<Stock.Name, string[]> MapFarmAnimalsToAvailableAnimalShopStock()
+        public List<FarmAnimalForPurchase> GetFarmAnimalsForPurchase(Farm farm)
         {
-            Dictionary<Stock.Name, string[]> availableStock = new Dictionary<Stock.Name, string[]>();
+            List<FarmAnimalForPurchase> purchaseAnimalStock = new List<FarmAnimalForPurchase>();
+            FarmAnimalsData farmAnimalsData = new FarmAnimalsData();
+            Dictionary<string, string> farmAnimalsDataEntries = farmAnimalsData.GetEntries();
 
-            foreach (KeyValuePair<ConfigFarmAnimal.TypeGroup, ConfigFarmAnimal> entry in this.FarmAnimals)
+            foreach (KeyValuePair<string, ConfigFarmAnimal> entry in this.FarmAnimals)
             {
-                try
+                if (!entry.Value.CanBePurchased())
                 {
-                    Stock.Name name = entry.Value.GetStockName();
-                    availableStock.Add(name, entry.Value.Types);
+                    continue;
                 }
-                catch
-                {
-                    // Do nothing, "Dinosaurs" will trigger this
-                }
+
+                string name = entry.Value.Category;
+                string displayName = entry.Value.AnimalShop.Name;
+                string description = entry.Value.AnimalShop.Description;
+                int price = Convert.ToInt32(entry.Value.AnimalShop.Price) / 2; // Divide by two because of the weird functionality in Object.salePrice()
+                List<string> farmAnimalTypes = this.GetFarmAnimalTypes(name);
+                List<string> buildingsILiveIn = new List<string>(entry.Value.Buildings);
+
+                FarmAnimalForPurchase farmAnimalForPurchase = new FarmAnimalForPurchase(name, displayName, description, price, buildingsILiveIn, farmAnimalTypes);
+
+                purchaseAnimalStock.Add(farmAnimalForPurchase);
             }
 
-            return availableStock;
+            return purchaseAnimalStock;
         }
     }
 }

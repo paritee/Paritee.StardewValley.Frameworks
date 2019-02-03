@@ -1,9 +1,8 @@
-﻿using BetterFarmAnimalVariety.Models;
-using Paritee.StardewValleyAPI.Buidlings.AnimalShop;
-using Paritee.StardewValleyAPI.Buidlings.AnimalShop.FarmAnimals;
+﻿using Paritee.StardewValleyAPI.Buildings.AnimalShop;
+using Paritee.StardewValleyAPI.Buildings.AnimalShop.FarmAnimals;
 using Paritee.StardewValleyAPI.FarmAnimals.Variations;
 using Paritee.StardewValleyAPI.Players;
-using Paritee.StardewValleyAPI.Utilities;
+using StardewValley;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,33 +18,37 @@ namespace BetterFarmAnimalVariety
         }
 
         /// <returns>Returns Dictionary<string, string[]></returns>
-        public Dictionary<string, string[]> GetGroupedFarmAnimals()
+        public Dictionary<string, string[]> GetFarmAnimalsByCategory()
         {
-            return this.Config.FarmAnimals.ToDictionary(entry => Enums.GetValue(entry.Key), entry => entry.Value.Types);
+            return this.Config.FarmAnimals.ToDictionary(entry => entry.Key, entry => entry.Value.Types);
         }
 
         /// <param name="player">Paritee.StardewValleyAPI.Players</param>
         /// <returns>Returns Paritee.StardewValleyAPI.FarmAnimals.Variations.Blue</returns>
-        public Blue GetBlueFarmAnimals(Player player)
+        public BlueVariation GetBlueFarmAnimals(Player player)
         {
-            BlueConfig blueConfig = new BlueConfig(player.HasSeenEvent(Blue.EVENT_ID));
-            return new Blue(blueConfig);
+            BlueConfig blueConfig = new BlueConfig(player.HasSeenEvent(BlueVariation.EVENT_ID));
+
+            return new BlueVariation(blueConfig);
         }
 
         /// <param name="player">Paritee.StardewValleyAPI.Players</param>
         /// <returns>Returns Paritee.StardewValleyAPI.FarmAnimals.Variations.Void</returns>
-        public Void GetVoidFarmAnimals(Player player)
+        public VoidVariation GetVoidFarmAnimals(Player player)
         {
-            VoidConfig voidConfig = new VoidConfig(this.Config.VoidFarmAnimalsInShop, player.HasCompletedQuest(Void.QUEST_ID));
-            return new Void(voidConfig);
+            VoidConfig voidConfig = new VoidConfig(this.Config.VoidFarmAnimalsInShop, player.HasCompletedQuest(VoidVariation.QUEST_ID));
+
+            return new VoidVariation(voidConfig);
         }
 
-        /// <param name="player">Paritee.StardewValleyAPI.Players</param>
+        /// <param name="farm">StardewValley.Farm</param>
+        /// <param name="blueFarmAnimals">Paritee.StardewValleyAPI.FarmAnimals.Variations.Blue</param>
+        /// <param name="voidFarmAnimals">Paritee.StardewValleyAPI.FarmAnimals.Variations.Void</param>
         /// <returns>Returns Paritee.StardewValleyAPI.Buidlings.AnimalShop</returns>
-        public AnimalShop GetAnimalShop(Player player)
+        public AnimalShop GetAnimalShop(Farm farm, BlueVariation blueFarmAnimals, VoidVariation voidFarmAnimals)
         {
-            Dictionary<Stock.Name, string[]> available = this.Config.MapFarmAnimalsToAvailableAnimalShopStock();
-            StockConfig stockConfig = new StockConfig(available, this.GetBlueFarmAnimals(player), this.GetVoidFarmAnimals(player));
+            List<FarmAnimalForPurchase> farmAnimalsForPurchase = this.Config.GetFarmAnimalsForPurchase(farm);
+            StockConfig stockConfig = new StockConfig(farmAnimalsForPurchase, blueFarmAnimals, voidFarmAnimals);
             Stock stock = new Stock(stockConfig);
 
             return new AnimalShop(stock);

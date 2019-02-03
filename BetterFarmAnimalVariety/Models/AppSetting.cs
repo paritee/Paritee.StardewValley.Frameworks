@@ -8,15 +8,17 @@ namespace BetterFarmAnimalVariety.Models
         public const char VALUE_DELIMITER = '/';
         public const char VALUE_ARRAY_DELIMITER = ',';
 
+        //Keys
         public const string FARMANIMALS = "FarmAnimals";
-        public const byte FARMANIMALS_GROUP_INDEX = 1;
-        public const byte FARMANIMALS_ANIMAL_SHOP_NAME_ID_INDEX = 0;
-        public const byte FARMANIMALS_ANIMAL_SHOP_DESCRIPTION_ID_INDEX = 1;
-        public const byte FARMANIMALS_ANIMAL_SHOP_TO_AREA_X_INDEX = 2;
-        public const byte FARMANIMALS_ANIMAL_SHOP_TO_AREA_Y_INDEX = 3;
-        public const byte FARMANIMALS_ANIMAL_SHOP_TO_AREA_WIDTH_INDEX = 4;
-        public const byte FARMANIMALS_ANIMAL_SHOP_TO_AREA_HEIGHT_INDEX = 5;
-        public const byte FARMANIMALS_TYPES_INDEX = 6;
+        public const byte FARMANIMALS_CATEGORY_INDEX = 1;
+
+        // Values
+        public const byte FARMANIMALS_ANIMAL_SHOP_ORDER = 0;
+        public const byte FARMANIMALS_ANIMAL_SHOP_NAME_ID_INDEX = 1;
+        public const byte FARMANIMALS_ANIMAL_SHOP_DESCRIPTION_ID_INDEX = 2;
+        public const byte FARMANIMALS_ANIMAL_SHOP_PRICE_INDEX = 3;
+        public const byte FARMANIMALS_TYPES_INDEX = 4;
+        public const byte FARMANIMALS_BUILDINGS_INDEX = 5;
 
         public string Key;
         public string Value;
