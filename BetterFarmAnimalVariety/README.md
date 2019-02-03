@@ -239,7 +239,6 @@ public Void GetVoidFarmAnimals(Player player);
 /// <param name="blueFarmAnimals">Paritee.StardewValleyAPI.FarmAnimals.Variations.BlueVariation</param>
 /// <param name="voidFarmAnimals">Paritee.StardewValleyAPI.FarmAnimals.Variations.VoidVariation</param>
 /// <returns>Returns Paritee.StardewValleyAPI.Buidlings.AnimalShop</returns>
-/// <returns>Returns Paritee.StardewValleyAPI.Buidlings.AnimalShop</returns>
 public AnimalShop GetAnimalShop(Player player)
 ```
 
