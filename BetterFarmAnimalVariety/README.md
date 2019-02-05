@@ -228,14 +228,16 @@ See [SMAPI Modder Guide](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs
 public Dictionary<string, string[]> GetGroupedFarmAnimals();
 
 /// <param name="player">Paritee.StardewValleyAPI.Players</param>
-/// <returns>Returns Paritee.StardewValleyAPI.FarmAnimals.Variations.Blue</returns>
+/// <returns>Returns Paritee.StardewValleyAPI.FarmAnimals.Variations.BlueVariation</returns>
 public Blue GetBlueFarmAnimals(Player player);
 
 /// <param name="player">Paritee.StardewValleyAPI.Players</param>
-/// <returns>Returns Paritee.StardewValleyAPI.FarmAnimals.Variations.Void</returns>
+/// <returns>Returns Paritee.StardewValleyAPI.FarmAnimals.Variations.VoidVariation</returns>
 public Void GetVoidFarmAnimals(Player player);
 
-/// <param name="player">Paritee.StardewValleyAPI.Players</param>
+/// <param name="farm">StardewValley.Farm</param>
+/// <param name="blueFarmAnimals">Paritee.StardewValleyAPI.FarmAnimals.Variations.BlueVariation</param>
+/// <param name="voidFarmAnimals">Paritee.StardewValleyAPI.FarmAnimals.Variations.VoidVariation</param>
 /// <returns>Returns Paritee.StardewValleyAPI.Buidlings.AnimalShop</returns>
 public AnimalShop GetAnimalShop(Player player)
 ```
