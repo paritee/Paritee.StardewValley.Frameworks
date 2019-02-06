@@ -7,45 +7,32 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BetterFarmAnimalVariety.Commands
 {
-    class FarmAnimalsCommand : BaseCommand
+    class FarmAnimalsCommands : BaseCommands
     {
         private const string ANIMAL_SHOP_AVAILABLE = "yes";
         private const string ANIMAL_SHOP_UNAVAILABLE = "no";
 
-        public FarmAnimalsCommand(ModConfig config, IModHelper helper, IMonitor monitor) : base(config, helper, monitor)
+        public FarmAnimalsCommands(ModConfig config, IModHelper helper, IMonitor monitor) : base(config, helper, monitor)
         {
             this.Commands = new List<Command>()
             {
                 new Command("bfav_fa", "List all farm animal commands.\nUsage: bfav_fa", this.ListCommands),
                 new Command("bfav_fa_list", "List the farm animal categories and types.\nUsage: bfav_fa_list", this.ListFarmAnimals),
                 new Command("bfav_fa_reset", "Reset the farm animals in config.json to vanilla default.\nUsage: bfav_fa_reset", this.Reset),
-                new Command("bfav_fa_addcategory", $"Add a unique category.\nUsage: bfav_fa_addcategory <category> <types> <buildings> <animalshop>\n- category: the unique animal category.\n- types: a comma separated string in quotes (ex \"White Cow,Brown Cow\").\n- buildings: a comma separated string in quotes (ex \"Barn,Deluxe Coop\").\n- animalshop: {FarmAnimalsCommand.ANIMAL_SHOP_AVAILABLE} or {FarmAnimalsCommand.ANIMAL_SHOP_UNAVAILABLE}.", this.AddCategory),
+                new Command("bfav_fa_addcategory", $"Add a unique category.\nUsage: bfav_fa_addcategory <category> <types> <buildings> <animalshop>\n- category: the unique animal category.\n- types: a comma separated string in quotes (ex \"White Cow,Brown Cow\").\n- buildings: a comma separated string in quotes (ex \"Barn,Deluxe Coop\").\n- animalshop: {FarmAnimalsCommands.ANIMAL_SHOP_AVAILABLE} or {FarmAnimalsCommands.ANIMAL_SHOP_UNAVAILABLE}.", this.AddCategory),
                 new Command("bfav_fa_removecategory", "Remove an existing category.\nUsage: bfav_fa_removecategory <category>\n- category: the unique animal category.", this.RemoveCategory),
                 new Command("bfav_fa_addtypes", "Add at least one animal type to a category.\nUsage: bfav_fa_addtypes <category> <types>\n- category: the unique animal category.\n- types: a comma separated string in quotes (ex \"White Cow,Brown Cow\").", this.AddTypes),
                 new Command("bfav_fa_removetypes", "Remove at least one animal type to a category.\nUsage: bfav_fa_removetypes <category> <types>\n- category: the unique animal category.\n- types: a comma separated string in quotes (ex \"White Cow,Brown Cow\").", this.RemoveTypes),
                 new Command("bfav_fa_setbuildings", "Set the category's buildings.\nUsage: bfav_fa_setbuildings <category> <buildings>\n- category: the unique animal category.\n- buildings: a comma separated string in quotes (ex \"Barn,Deluxe Coop\").", this.SetBuildings),
-                new Command("bfav_fa_setshop", $"Set the availability of this category in the animal shop.\nUsage: bfav_fa_setshop <category> <animalshop>\n- category: the unique animal category.\n- animalshop: {FarmAnimalsCommand.ANIMAL_SHOP_AVAILABLE} or {FarmAnimalsCommand.ANIMAL_SHOP_UNAVAILABLE}.", this.SetAnimalShop),
+                new Command("bfav_fa_setshop", $"Set the availability of this category in the animal shop.\nUsage: bfav_fa_setshop <category> <animalshop>\n- category: the unique animal category.\n- animalshop: {FarmAnimalsCommands.ANIMAL_SHOP_AVAILABLE} or {FarmAnimalsCommands.ANIMAL_SHOP_UNAVAILABLE}.", this.SetAnimalShop),
                 new Command("bfav_fa_setshopname", "Set the category's animal shop name.\nUsage: bfav_fa_setshopname <category> <name>\n- category: the unique animal category.\n- name: the displayed name.", this.SetAnimalShopName),
                 new Command("bfav_fa_setshopdescription", "Set the category's animal shop description.\nUsage: bfav_fa_setshopdescription <category> <description>\n- category: the unique animal category.\n- description: the description.", this.SetAnimalShopDescription),
                 new Command("bfav_fa_setshopprice", "Set the category's animal shop price.\nUsage: bfav_fa_setshopprice <category> <price>\n- category: the unique animal category.\n- price: the integer amount.", this.SetAnimalShopPrice),
                 new Command("bfav_fa_setshopicon", "Set the category's animal shop icon.\nUsage: bfav_fa_setshopicon <category> <filename>\n- category: the unique animal category.\n- filename: the name of the file (ex. filename.png).", this.SetAnimalShopIcon),
             };
-        }
-
-        /// <summary>List all farm animal commands when the 'bfav_fa' command is invoked.</summary>
-        /// <param name="command">The name of the command invoked.</param>
-        /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
-        private void ListCommands(string command, string[] args)
-        {
-            foreach (Command cmd in this.Commands)
-            {
-                this.Helper.ConsoleCommands.Trigger($"help", new string[1] { cmd.Name });
-            }
         }
 
         /// <summary>List the farm animal categories and types when the 'bfav_fa_list' command is invoked.</summary>
@@ -155,9 +142,9 @@ namespace BetterFarmAnimalVariety.Commands
                 }
             }
 
-            string animalShop = args.Length < 4 ? FarmAnimalsCommand.ANIMAL_SHOP_UNAVAILABLE : args[3].Trim().ToLower();
+            string animalShop = args.Length < 4 ? FarmAnimalsCommands.ANIMAL_SHOP_UNAVAILABLE : args[3].Trim().ToLower();
 
-            if (!animalShop.Equals(FarmAnimalsCommand.ANIMAL_SHOP_AVAILABLE) && !animalShop.Equals(FarmAnimalsCommand.ANIMAL_SHOP_UNAVAILABLE))
+            if (!animalShop.Equals(FarmAnimalsCommands.ANIMAL_SHOP_AVAILABLE) && !animalShop.Equals(FarmAnimalsCommands.ANIMAL_SHOP_UNAVAILABLE))
             {
                 this.Monitor.Log($"animalshop must be yes or no", LogLevel.Error);
                 return;
@@ -406,18 +393,18 @@ namespace BetterFarmAnimalVariety.Commands
 
             string animalShop = args[1].Trim().ToLower();
 
-            if (!animalShop.Equals(FarmAnimalsCommand.ANIMAL_SHOP_AVAILABLE) && !animalShop.Equals(FarmAnimalsCommand.ANIMAL_SHOP_UNAVAILABLE))
+            if (!animalShop.Equals(FarmAnimalsCommands.ANIMAL_SHOP_AVAILABLE) && !animalShop.Equals(FarmAnimalsCommands.ANIMAL_SHOP_UNAVAILABLE))
             {
                 this.Monitor.Log($"animalshop must be yes or no", LogLevel.Error);
                 return;
             }
 
-            if (animalShop.Equals(FarmAnimalsCommand.ANIMAL_SHOP_AVAILABLE) && this.Config.FarmAnimals[category].CanBePurchased())
+            if (animalShop.Equals(FarmAnimalsCommands.ANIMAL_SHOP_AVAILABLE) && this.Config.FarmAnimals[category].CanBePurchased())
             {
                 this.Monitor.Log($"{category} is already available in the animal shop", LogLevel.Error);
                 return;
             }
-            else if (animalShop.Equals(FarmAnimalsCommand.ANIMAL_SHOP_UNAVAILABLE) && !this.Config.FarmAnimals[category].CanBePurchased())
+            else if (animalShop.Equals(FarmAnimalsCommands.ANIMAL_SHOP_UNAVAILABLE) && !this.Config.FarmAnimals[category].CanBePurchased())
             {
                 this.Monitor.Log($"{category} is already not available in the animal shop", LogLevel.Error);
                 return;
@@ -677,7 +664,7 @@ namespace BetterFarmAnimalVariety.Commands
         {
             ConfigFarmAnimalAnimalShop configFarmAnimalAnimalShop = new ConfigFarmAnimalAnimalShop();
 
-            if (animalShop.Equals(FarmAnimalsCommand.ANIMAL_SHOP_UNAVAILABLE))
+            if (animalShop.Equals(FarmAnimalsCommands.ANIMAL_SHOP_UNAVAILABLE))
             {
                 return configFarmAnimalAnimalShop;
             }

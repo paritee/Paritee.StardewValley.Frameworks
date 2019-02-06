@@ -54,8 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\BaseCommand.cs" />
-    <Compile Include="Commands\FarmAnimalsCommand.cs" />
+    <Compile Include="Commands\BaseCommands.cs" />
+    <Compile Include="Commands\ConfigCommands.cs" />
+    <Compile Include="Commands\FarmAnimalsCommands.cs" />
     <Compile Include="ModApi.cs" />
     <Compile Include="ModCommand.cs" />
     <Compile Include="Models\AppSettings.cs" />

@@ -4,16 +4,15 @@ using System.Collections.Generic;
 
 namespace BetterFarmAnimalVariety.Commands
 {
-    class BaseCommand
+    class BaseCommands
     {
-
-        protected List<Command> Commands = new List<Command>();
+        public List<Command> Commands = new List<Command>();
 
         protected readonly ModConfig Config;
         protected readonly IModHelper Helper;
         protected readonly IMonitor Monitor;
 
-        public BaseCommand(ModConfig config, IModHelper helper, IMonitor monitor)
+        public BaseCommands(ModConfig config, IModHelper helper, IMonitor monitor)
         {
             this.Config = config;
             this.Helper = helper;
@@ -31,6 +30,17 @@ namespace BetterFarmAnimalVariety.Commands
         protected void HandleUpdatedConfig()
         {
             this.Helper.WriteConfig<ModConfig>(this.Config);
+        }
+
+        /// <summary>List all farm animal commands when the 'bfav_fa' command is invoked.</summary>
+        /// <param name="command">The name of the command invoked.</param>
+        /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
+        protected void ListCommands(string command, string[] args)
+        {
+            foreach (Command cmd in this.Commands)
+            {
+                this.Helper.ConsoleCommands.Trigger($"help", new string[1] { cmd.Name });
+            }
         }
     }
 }
