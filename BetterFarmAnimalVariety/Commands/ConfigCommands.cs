@@ -42,7 +42,7 @@ namespace BetterFarmAnimalVariety.Commands
                 return;
             }
 
-            if (!Enum.TryParse(args[0], out VoidConfig.InShop flag))
+            if (!Enum.TryParse(args[0], true, out VoidConfig.InShop flag))
             {
                 this.Monitor.Log($"{args[0]} is not a valid flag", LogLevel.Error);
                 return;
