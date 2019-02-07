@@ -22,6 +22,17 @@ namespace BetterFarmAnimalVariety
             this.ModVersion = modVersion;
         }
 
+        /// <returns>Returns bool</returns>
+        public bool IsEnabled(string version)
+        {
+            if (!this.IsVersionSupported(version))
+            {
+                throw new NotSupportedException();
+            }
+
+            return this.Config.IsEnabled;
+        }
+
         /// <param name="version">string</param>
         /// <returns>Returns Dictionary<string, string[]></returns>
         public Dictionary<string, string[]> GetFarmAnimalsByCategory(string version)
