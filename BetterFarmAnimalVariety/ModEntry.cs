@@ -66,6 +66,7 @@ namespace BetterFarmAnimalVariety
             this.Helper.Content.AssetEditors.Add(new AnimalBirthEditor(this));
 
             // Events
+            this.Helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
             this.Helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
             this.Helper.Events.Display.RenderingActiveMenu += this.OnRenderingActiveMenu;
             this.Helper.Events.Display.RenderedActiveMenu += this.OnRenderedActiveMenu;
@@ -126,6 +127,13 @@ namespace BetterFarmAnimalVariety
             config.InitializeFarmAnimals();
 
             return config;
+        }
+
+        private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
+        {
+            // Always attempt to clean up the animal types on launch to prevent on save load crashes
+            // if the patch mod had been removed without the animals being sold/deleted
+            this.Helper.ConsoleCommands.Trigger("bfav_fa_fix", new string[] { });
         }
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)

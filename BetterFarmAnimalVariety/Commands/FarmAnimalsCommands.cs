@@ -2,11 +2,14 @@
 using Paritee.StardewValleyAPI.Buildings;
 using Paritee.StardewValleyAPI.Buildings.AnimalHouses;
 using Paritee.StardewValleyAPI.FarmAnimals;
+using Paritee.StardewValleyAPI.FarmAnimals.Variations;
 using StardewModdingAPI;
+using StardewValley;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 
 namespace BetterFarmAnimalVariety.Commands
 {
@@ -32,7 +35,105 @@ namespace BetterFarmAnimalVariety.Commands
                 new Command("bfav_fa_setshopdescription", "Set the category's animal shop description.\nUsage: bfav_fa_setshopdescription <category> <description>\n- category: the unique animal category.\n- description: the description.", this.SetAnimalShopDescription),
                 new Command("bfav_fa_setshopprice", "Set the category's animal shop price.\nUsage: bfav_fa_setshopprice <category> <price>\n- category: the unique animal category.\n- price: the integer amount.", this.SetAnimalShopPrice),
                 new Command("bfav_fa_setshopicon", "Set the category's animal shop icon.\nUsage: bfav_fa_setshopicon <category> <filename>\n- category: the unique animal category.\n- filename: the name of the file (ex. filename.png).", this.SetAnimalShopIcon),
+                new Command("bfav_fa_fix", "Substitutes broken farm animal types from premature patch removal with vanilla versions.\nUsage: bfav_fa_fix", this.Fix),
             };
+        }
+
+        /// <summary>Substitutes broken farm animal types from premature patch removal with vanilla versions.</summary>
+        /// <param name="command">The name of the command invoked.</param>
+        /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
+        private void Fix(string command, string[] args)
+        {
+            if (Game1.hasLoadedGame)
+            {
+                this.Monitor.Log($"this cannot be done after loading a save");
+                return;
+            }
+
+            // Need to manually parse the XML since casting to a FarmAnimal 
+            // triggers the data search crash that this command aims to avoid
+            if (Directory.Exists(Constants.SavesPath))
+            {
+                List<string> allSubstitutions = new List<string>();
+
+                // Baseline
+                FarmAnimalsData data = new FarmAnimalsData();
+
+                WhiteVariation whiteVariation = new WhiteVariation();
+                string coopDwellerSubstitute = whiteVariation.ApplyPrefix(Paritee.StardewValleyAPI.FarmAnimals.Type.Base.Chicken.ToString());
+                string barnDwellerSubstitute = whiteVariation.ApplyPrefix(Paritee.StardewValleyAPI.FarmAnimals.Type.Base.Cow.ToString());
+
+                string[] saveFolders = Directory.GetDirectories(Constants.SavesPath);
+
+                foreach (string saveFolder in saveFolders)
+                {
+                    // Scan only the most recent save if it can be found
+                    string saveFile = Path.Combine(saveFolder, Path.GetFileName(saveFolder));
+
+                    if (File.Exists(saveFile))
+                    {
+                        this.Monitor.Log($"Searching {saveFolder} for problematic farm animal types", LogLevel.Trace);
+
+                        // Replace barn animals with White Cows and coop animals with White Chickens
+                        XmlDocument doc = new XmlDocument();
+
+                        // Track the types to be substituted
+                        List<string> typesToBeSubstituted = new List<string>();
+
+                        XmlNamespaceManager namespaceManager = new XmlNamespaceManager(doc.NameTable);
+                        namespaceManager.AddNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+
+                        // Load the xml
+                        doc.Load(saveFile);
+
+                        XmlNodeList buildings = doc.SelectNodes("//GameLocation[@xsi:type='Farm']/buildings/Building[@xsi:type='Barn' or @xsi:type='Coop']", namespaceManager);
+
+                        this.Monitor.Log($"- Checking {buildings.Count} buildings", LogLevel.Trace);
+
+                        // Go through each building
+                        for (int i = 0; i < buildings.Count; i++)
+                        {
+                            XmlNode building = buildings[i];
+
+                            bool isCoop = building.Attributes["xsi:type"].Value.Equals("Coop");
+
+                            // Grab only the animal types
+                            XmlNodeList types = building.SelectNodes(".//FarmAnimal/type");
+
+                            for (int k = 0; k < types.Count; k++)
+                            {
+                                XmlNode type = types[k];
+
+                                // If the type can't be found in the data entries
+                                // then substitute it with an appropriate basic animal
+                                if (!data.GetEntries().ContainsKey(type.InnerText))
+                                {
+                                    typesToBeSubstituted.Add(type.InnerText);
+
+                                    type.InnerText = isCoop ? coopDwellerSubstitute : barnDwellerSubstitute;
+                                }
+                            }
+                        }
+
+                        // Track everything
+                        allSubstitutions = allSubstitutions.Concat(typesToBeSubstituted).ToList();
+
+                        if (typesToBeSubstituted.Count > 0)
+                        {
+                            // save the XmlDocument back to disk
+                            doc.Save(saveFile);
+
+                            this.Monitor.Log($"- Converted {typesToBeSubstituted.Count} farm animals to White Cows or White Chickens: {String.Join(", ", typesToBeSubstituted.Distinct())}", LogLevel.Trace);
+                        }
+                        else
+                        {
+                            this.Monitor.Log($"- No problematic farm animals found", LogLevel.Trace);
+                        }
+                    }
+                }
+
+                this.Monitor.Log($"Completed scan of problematic farm animal types: {allSubstitutions.Count} substitutions" + (allSubstitutions.Count > 0 ? $" of {String.Join(", ", allSubstitutions.Distinct())}" : ""), LogLevel.Debug);
+            }
         }
 
         /// <summary>List the farm animal categories and types when the 'bfav_fa_list' command is invoked.</summary>
@@ -55,6 +156,12 @@ namespace BetterFarmAnimalVariety.Commands
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
         private void Reset(string command, string[] args)
         {
+            if (Game1.hasLoadedGame)
+            {
+                this.Monitor.Log($"this cannot be done after loading a save");
+                return;
+            }
+
             ModConfig config = new ModConfig();
 
             this.Config.FarmAnimals = config.FarmAnimals;
@@ -69,6 +176,12 @@ namespace BetterFarmAnimalVariety.Commands
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
         private void AddCategory(string command, string[] args)
         {
+            if (Game1.hasLoadedGame)
+            {
+                this.Monitor.Log($"this cannot be done after loading a save");
+                return;
+            }
+
             if (args.Length > 4)
             {
                 this.Monitor.Log($"use quotation marks (\") around your text if you are using spaces", LogLevel.Error);
@@ -181,6 +294,12 @@ namespace BetterFarmAnimalVariety.Commands
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
         private void RemoveCategory(string command, string[] args)
         {
+            if (Game1.hasLoadedGame)
+            {
+                this.Monitor.Log($"this cannot be done after loading a save");
+                return;
+            }
+
             if (args.Length > 1)
             {
                 this.Monitor.Log($"use quotation marks (\") around your text if you are using spaces", LogLevel.Error);
@@ -213,6 +332,12 @@ namespace BetterFarmAnimalVariety.Commands
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>ary>
         private void AddTypes(string command, string[] args)
         {
+            if (Game1.hasLoadedGame)
+            {
+                this.Monitor.Log($"this cannot be done after loading a save");
+                return;
+            }
+
             if (args.Length > 2)
             {
                 this.Monitor.Log($"use quotation marks (\") around your text if you are using spaces", LogLevel.Error);
@@ -267,6 +392,12 @@ namespace BetterFarmAnimalVariety.Commands
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
         private void RemoveTypes(string command, string[] args)
         {
+            if (Game1.hasLoadedGame)
+            {
+                this.Monitor.Log($"this cannot be done after loading a save");
+                return;
+            }
+
             if (args.Length > 2)
             {
                 this.Monitor.Log($"use quotation marks (\") around your text if you are using spaces", LogLevel.Error);
@@ -317,6 +448,12 @@ namespace BetterFarmAnimalVariety.Commands
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
         private void SetBuildings(string command, string[] args)
         {
+            if (Game1.hasLoadedGame)
+            {
+                this.Monitor.Log($"this cannot be done after loading a save");
+                return;
+            }
+
             if (args.Length > 2)
             {
                 this.Monitor.Log($"use quotation marks (\") around your text if you are using spaces", LogLevel.Error);
@@ -371,6 +508,12 @@ namespace BetterFarmAnimalVariety.Commands
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
         private void SetAnimalShop(string command, string[] args)
         {
+            if (Game1.hasLoadedGame)
+            {
+                this.Monitor.Log($"this cannot be done after loading a save");
+                return;
+            }
+
             if (args.Length < 1)
             {
                 this.Monitor.Log($"category is required", LogLevel.Error);
@@ -436,6 +579,12 @@ namespace BetterFarmAnimalVariety.Commands
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
         private void SetAnimalShopName(string command, string[] args)
         {
+            if (Game1.hasLoadedGame)
+            {
+                this.Monitor.Log($"this cannot be done after loading a save");
+                return;
+            }
+
             if (args.Length > 2)
             {
                 this.Monitor.Log($"use quotation marks (\") around your text if you are using spaces", LogLevel.Error);
@@ -482,6 +631,12 @@ namespace BetterFarmAnimalVariety.Commands
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
         private void SetAnimalShopDescription(string command, string[] args)
         {
+            if (Game1.hasLoadedGame)
+            {
+                this.Monitor.Log($"this cannot be done after loading a save");
+                return;
+            }
+
             if (args.Length > 2)
             {
                 this.Monitor.Log($"use quotation marks (\") around your text if you are using spaces", LogLevel.Error);
@@ -528,6 +683,12 @@ namespace BetterFarmAnimalVariety.Commands
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
         private void SetAnimalShopPrice(string command, string[] args)
         {
+            if (Game1.hasLoadedGame)
+            {
+                this.Monitor.Log($"this cannot be done after loading a save");
+                return;
+            }
+
             if (args.Length > 2)
             {
                 this.Monitor.Log($"use quotation marks (\") around your text if you are using spaces", LogLevel.Error);
@@ -587,6 +748,12 @@ namespace BetterFarmAnimalVariety.Commands
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
         private void SetAnimalShopIcon(string command, string[] args)
         {
+            if (Game1.hasLoadedGame)
+            {
+                this.Monitor.Log($"this cannot be done after loading a save");
+                return;
+            }
+
             if (args.Length > 2)
             {
                 this.Monitor.Log($"use quotation marks (\") around your text if you are using spaces", LogLevel.Error);
