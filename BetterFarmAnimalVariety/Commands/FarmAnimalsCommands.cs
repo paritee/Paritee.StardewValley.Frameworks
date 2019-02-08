@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using PariteeAnimalHouse = Paritee.StardewValleyAPI.Buildings.AnimalHouses.AnimalHouse;
 
 namespace BetterFarmAnimalVariety.Commands
 {
@@ -226,16 +227,16 @@ namespace BetterFarmAnimalVariety.Commands
 
             if (building.ToLower().Equals(Coop.COOP.ToLower()))
             {
-                foreach (AnimalHouse.Size size in Enum.GetValues(typeof(Coop.Size)))
+                foreach (PariteeAnimalHouse.Size size in Enum.GetValues(typeof(Coop.Size)))
                 {
-                    buildings.Add(AnimalHouse.FormatBuilding(Coop.COOP, size));
+                    buildings.Add(PariteeAnimalHouse.FormatBuilding(Coop.COOP, size));
                 }
             }
             else if (building.ToLower().Equals(Barn.BARN.ToLower()))
             {
-                foreach (AnimalHouse.Size size in Enum.GetValues(typeof(Barn.Size)))
+                foreach (PariteeAnimalHouse.Size size in Enum.GetValues(typeof(Barn.Size)))
                 {
-                    buildings.Add(AnimalHouse.FormatBuilding(Barn.BARN, size));
+                    buildings.Add(PariteeAnimalHouse.FormatBuilding(Barn.BARN, size));
                 }
             }
             else
