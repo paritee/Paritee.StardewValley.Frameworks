@@ -4,24 +4,20 @@ using Microsoft.Xna.Framework;
 using Paritee.StardewValleyAPI.Buildings;
 using Paritee.StardewValleyAPI.Buildings.AnimalHouses;
 using Paritee.StardewValleyAPI.FarmAnimals;
-using Paritee.StardewValleyAPI.FarmAnimals.Variations;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.Buildings;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using System.Xml.Serialization;
 using PariteeAnimalHouse = Paritee.StardewValleyAPI.Buildings.AnimalHouses.AnimalHouse;
 
 namespace BetterFarmAnimalVariety.Commands
 {
     class FarmAnimalsCommands : BaseCommands
     {
-        private const string ANIMAL_SHOP_AVAILABLE = "yes";
-        private const string ANIMAL_SHOP_UNAVAILABLE = "no";
-
         public FarmAnimalsCommands(ModConfig config, IModHelper helper, IMonitor monitor) : base(config, helper, monitor)
         {
             this.Commands = new List<Command>()
@@ -29,12 +25,12 @@ namespace BetterFarmAnimalVariety.Commands
                 new Command("bfav_fa", "List all farm animal commands.\nUsage: bfav_fa", this.ListCommands),
                 new Command("bfav_fa_list", "List the farm animal categories and types.\nUsage: bfav_fa_list", this.ListFarmAnimals),
                 new Command("bfav_fa_reset", "Reset the farm animals in config.json to vanilla default.\nUsage: bfav_fa_reset", this.Reset),
-                new Command("bfav_fa_addcategory", $"Add a unique category.\nUsage: bfav_fa_addcategory <category> <types> <buildings> <animalshop>\n- category: the unique animal category.\n- types: a comma separated string in quotes (ex \"White Cow,Brown Cow\").\n- buildings: a comma separated string in quotes (ex \"Barn,Deluxe Coop\").\n- animalshop: {FarmAnimalsCommands.ANIMAL_SHOP_AVAILABLE} or {FarmAnimalsCommands.ANIMAL_SHOP_UNAVAILABLE}.", this.AddCategory),
+                new Command("bfav_fa_addcategory", $"Add a unique category.\nUsage: bfav_fa_addcategory <category> <types> <buildings> <animalshop>\n- category: the unique animal category.\n- types: a comma separated string in quotes (ex \"White Cow,Brown Cow\").\n- buildings: a comma separated string in quotes (ex \"Barn,Deluxe Coop\").\n- animalshop: {true.ToString()} or {false.ToString()}.", this.AddCategory),
                 new Command("bfav_fa_removecategory", "Remove an existing category.\nUsage: bfav_fa_removecategory <category>\n- category: the unique animal category.", this.RemoveCategory),
                 new Command("bfav_fa_addtypes", "Add at least one animal type to a category.\nUsage: bfav_fa_addtypes <category> <types>\n- category: the unique animal category.\n- types: a comma separated string in quotes (ex \"White Cow,Brown Cow\").", this.AddTypes),
                 new Command("bfav_fa_removetypes", "Remove at least one animal type to a category.\nUsage: bfav_fa_removetypes <category> <types>\n- category: the unique animal category.\n- types: a comma separated string in quotes (ex \"White Cow,Brown Cow\").", this.RemoveTypes),
                 new Command("bfav_fa_setbuildings", "Set the category's buildings.\nUsage: bfav_fa_setbuildings <category> <buildings>\n- category: the unique animal category.\n- buildings: a comma separated string in quotes (ex \"Barn,Deluxe Coop\").", this.SetBuildings),
-                new Command("bfav_fa_setshop", $"Set the availability of this category in the animal shop.\nUsage: bfav_fa_setshop <category> <animalshop>\n- category: the unique animal category.\n- animalshop: {FarmAnimalsCommands.ANIMAL_SHOP_AVAILABLE} or {FarmAnimalsCommands.ANIMAL_SHOP_UNAVAILABLE}.", this.SetAnimalShop),
+                new Command("bfav_fa_setshop", $"Set the availability of this category in the animal shop.\nUsage: bfav_fa_setshop <category> <animalshop>\n- category: the unique animal category.\n- animalshop: {true.ToString()} or {false.ToString()}.", this.SetAnimalShop),
                 new Command("bfav_fa_setshopname", "Set the category's animal shop name.\nUsage: bfav_fa_setshopname <category> <name>\n- category: the unique animal category.\n- name: the displayed name.", this.SetAnimalShopName),
                 new Command("bfav_fa_setshopdescription", "Set the category's animal shop description.\nUsage: bfav_fa_setshopdescription <category> <description>\n- category: the unique animal category.\n- description: the description.", this.SetAnimalShopDescription),
                 new Command("bfav_fa_setshopprice", "Set the category's animal shop price.\nUsage: bfav_fa_setshopprice <category> <price>\n- category: the unique animal category.\n- price: the integer amount.", this.SetAnimalShopPrice),
@@ -133,6 +129,8 @@ namespace BetterFarmAnimalVariety.Commands
                 {
                     XmlNode animal = animals[k];
 
+                    // This is the type that's saved... We're going to continue to
+                    // associate the dweller's type as saved and this as the current
                     string currentType = animal.SelectSingleNode("type").InnerText;
 
                     // We only need to update the animals if they aren't vanilla
@@ -141,10 +139,15 @@ namespace BetterFarmAnimalVariety.Commands
                         continue;
                     }
 
-                    // Choose the baseline based on this building
-                    StardewValley.FarmAnimal dweller = isCoop ? coopDweller : barnDweller;
-                    
                     long myId = long.Parse(animal.SelectSingleNode("myID").InnerText);
+
+                    // Choose the baseline dweller based on the building
+                    string defaultType = isCoop
+                        ? Framework.Helpers.Utilities.GetDefaultCoopDwellerType()
+                        : Framework.Helpers.Utilities.GetDefaultBarnDwellerType();
+
+                    // Passing the myID means this will be saved in the save data
+                    StardewValley.FarmAnimal dweller = Framework.Helpers.Utilities.CreateFarmAnimal(defaultType, Game1.player.UniqueMultiplayerID, null, null, myId);
 
                     // Go through ALL of their child nodes and prepare to 
                     // overwrite with the default dwellers
@@ -324,21 +327,21 @@ namespace BetterFarmAnimalVariety.Commands
                 }
             }
 
-            string building = args.Length < 3 ? Barn.BARN : args[2].Trim();
+            string building = args.Length < 3 ? Framework.Helpers.Constants.Barn : args[2].Trim();
             List<string> buildings = new List<string>();
 
-            if (building.ToLower().Equals(Coop.COOP.ToLower()))
+            if (building.ToLower().Equals(Framework.Helpers.Constants.Coop.ToLower()))
             {
-                foreach (PariteeAnimalHouse.Size size in Enum.GetValues(typeof(Coop.Size)))
+                foreach (PariteeAnimalHouse.Size size in Enum.GetValues(typeof(Paritee.StardewValleyAPI.Buildings.AnimalHouses.Coop.Size)))
                 {
-                    buildings.Add(PariteeAnimalHouse.FormatBuilding(Coop.COOP, size));
+                    buildings.Add(PariteeAnimalHouse.FormatBuilding(Framework.Helpers.Constants.Coop, size));
                 }
             }
-            else if (building.ToLower().Equals(Barn.BARN.ToLower()))
+            else if (building.ToLower().Equals(Framework.Helpers.Constants.Barn.ToLower()))
             {
-                foreach (PariteeAnimalHouse.Size size in Enum.GetValues(typeof(Barn.Size)))
+                foreach (PariteeAnimalHouse.Size size in Enum.GetValues(typeof(Paritee.StardewValleyAPI.Buildings.AnimalHouses.Barn.Size)))
                 {
-                    buildings.Add(PariteeAnimalHouse.FormatBuilding(Barn.BARN, size));
+                    buildings.Add(PariteeAnimalHouse.FormatBuilding(Framework.Helpers.Constants.Barn, size));
                 }
             }
             else
@@ -358,9 +361,9 @@ namespace BetterFarmAnimalVariety.Commands
                 }
             }
 
-            string animalShop = args.Length < 4 ? FarmAnimalsCommands.ANIMAL_SHOP_UNAVAILABLE : args[3].Trim().ToLower();
+            string animalShop = (args.Length < 4 ? false.ToString().ToLower() : args[3].Trim()).ToLower();
 
-            if (!animalShop.Equals(FarmAnimalsCommands.ANIMAL_SHOP_AVAILABLE) && !animalShop.Equals(FarmAnimalsCommands.ANIMAL_SHOP_UNAVAILABLE))
+            if (!animalShop.Equals(true.ToString().ToLower()) && !animalShop.Equals(false.ToString().ToLower()))
             {
                 this.Monitor.Log($"animalshop must be yes or no", LogLevel.Error);
                 return;
@@ -639,18 +642,18 @@ namespace BetterFarmAnimalVariety.Commands
 
             string animalShop = args[1].Trim().ToLower();
 
-            if (!animalShop.Equals(FarmAnimalsCommands.ANIMAL_SHOP_AVAILABLE) && !animalShop.Equals(FarmAnimalsCommands.ANIMAL_SHOP_UNAVAILABLE))
+            if (!animalShop.Equals(true.ToString().ToLower()) && !animalShop.Equals(false.ToString().ToLower()))
             {
                 this.Monitor.Log($"animalshop must be yes or no", LogLevel.Error);
                 return;
             }
 
-            if (animalShop.Equals(FarmAnimalsCommands.ANIMAL_SHOP_AVAILABLE) && this.Config.FarmAnimals[category].CanBePurchased())
+            if (animalShop.Equals(true.ToString().ToLower()) && this.Config.FarmAnimals[category].CanBePurchased())
             {
                 this.Monitor.Log($"{category} is already available in the animal shop", LogLevel.Error);
                 return;
             }
-            else if (animalShop.Equals(FarmAnimalsCommands.ANIMAL_SHOP_UNAVAILABLE) && !this.Config.FarmAnimals[category].CanBePurchased())
+            else if (animalShop.Equals(false.ToString().ToLower()) && !this.Config.FarmAnimals[category].CanBePurchased())
             {
                 this.Monitor.Log($"{category} is already not available in the animal shop", LogLevel.Error);
                 return;
@@ -934,7 +937,7 @@ namespace BetterFarmAnimalVariety.Commands
         {
             ConfigFarmAnimalAnimalShop configFarmAnimalAnimalShop = new ConfigFarmAnimalAnimalShop();
 
-            if (animalShop.Equals(FarmAnimalsCommands.ANIMAL_SHOP_UNAVAILABLE))
+            if (animalShop.Equals(false.ToString().ToLower()))
             {
                 return configFarmAnimalAnimalShop;
             }

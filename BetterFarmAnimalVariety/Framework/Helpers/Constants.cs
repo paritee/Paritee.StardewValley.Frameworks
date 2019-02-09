@@ -13,6 +13,7 @@
         public const string BabyPrefix = "Baby";
         public const string ShearedPrefix = "Sheared";
 
+        public const string Coop = "Coop";
         public const string Barn = "Barn";
         public const string Incubator = "Incubator";
         public const int DefaultIncubatorItem = 101;

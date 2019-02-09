@@ -107,13 +107,13 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             Helpers.Utilities.ResetIncubator(animalHouse);
         }
 
-        public static FarmAnimal CreateFarmAnimal(string type, long ownerId, string name = null, Building home = null)
+        public static FarmAnimal CreateFarmAnimal(string type, long ownerId, string name = null, Building home = null, long myId = -1L)
         {
             Multiplayer multiplayer = Helpers.Utilities.Multiplayer();
 
-            long newId = multiplayer.getNewID();
+            myId = myId.Equals(-1L) ? multiplayer.getNewID() : myId;
 
-            return new FarmAnimal(type, newId, ownerId)
+            return new FarmAnimal(type, myId, ownerId)
             {
                 Name = name,
                 displayName = name,

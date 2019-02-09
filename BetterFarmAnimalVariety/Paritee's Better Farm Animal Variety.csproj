@@ -57,9 +57,15 @@
     <Compile Include="Commands\BaseCommands.cs" />
     <Compile Include="Commands\ConfigCommands.cs" />
     <Compile Include="Commands\FarmAnimalsCommands.cs" />
-    <Compile Include="Framework\Data\FarmAnimalData.cs" />
+    <Compile Include="Framework\Content\Asset.cs" />
+    <Compile Include="Framework\Content\Data.cs" />
+    <Compile Include="Framework\Data\FarmAnimalsSaveData.cs" />
+    <Compile Include="Framework\Data\TypeHistory.cs" />
+    <Compile Include="Framework\Data\SaveData.cs" />
     <Compile Include="Framework\Helpers\Constants.cs" />
+    <Compile Include="Framework\Content\FarmAnimalsData.cs" />
     <Compile Include="Framework\Helpers\Utilities.cs" />
+    <Compile Include="Framework\Helpers\VanillaFarmAnimal.cs" />
     <Compile Include="ModApi.cs" />
     <Compile Include="ModCommand.cs" />
     <Compile Include="Models\AppSettings.cs" />

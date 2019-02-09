@@ -33,7 +33,14 @@ namespace BetterFarmAnimalVariety.Framework.Data
             // Clean up the data file
             foreach (TypeHistory typeHistory in history)
             {
-                this.TypeHistory.Add(typeHistory.FarmAnimalId, typeHistory);
+                if (this.TypeHistory.ContainsKey(typeHistory.FarmAnimalId))
+                {
+                    this.TypeHistory[typeHistory.FarmAnimalId] = typeHistory;
+                }
+                else
+                {
+                    this.TypeHistory.Add(typeHistory.FarmAnimalId, typeHistory);
+                }
             }
 
             this.WriteChanges();
@@ -41,8 +48,17 @@ namespace BetterFarmAnimalVariety.Framework.Data
 
         public void AddTypeHistory(long key, string currentType, string originalType)
         {
+            TypeHistory typeHistory = new TypeHistory(key, currentType, originalType);
+
             // Clean up the data file
-            this.TypeHistory.Add(key, new TypeHistory(key, currentType, originalType));
+            if (this.TypeHistory.ContainsKey(key))
+            {
+                this.TypeHistory[key] = typeHistory;
+            }
+            else
+            {
+                this.TypeHistory.Add(key, typeHistory);
+            }
 
             this.WriteChanges();
         }
