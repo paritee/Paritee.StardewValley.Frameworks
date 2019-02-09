@@ -1,11 +1,12 @@
-﻿namespace BetterFarmAnimalVariety.Framework.Helpers
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+namespace BetterFarmAnimalVariety.Framework.Helpers
 {
     class VanillaFarmAnimal
     {
-        private VanillaFarmAnimal(string value) { Value = value; }
-
-        public string Value { get; set; }
-
         public static VanillaFarmAnimal WhiteChicken { get { return new VanillaFarmAnimal("White Chicken"); } }
         public static VanillaFarmAnimal BrownChicken { get { return new VanillaFarmAnimal("Brown Chicken"); } }
         public static VanillaFarmAnimal BlueChicken { get { return new VanillaFarmAnimal("Blue Chicken"); } }
@@ -18,9 +19,16 @@
         public static VanillaFarmAnimal Rabbit { get { return new VanillaFarmAnimal("Rabbit"); } }
         public static VanillaFarmAnimal Pig { get { return new VanillaFarmAnimal("Pig"); } }
 
+        public string Type { get; set; }
+
+        private VanillaFarmAnimal(string type)
+        {
+            this.Type = type;
+        }
+
         public override string ToString()
         {
-            return this.Value;
+            return this.Type;
         }
 
         private static string Parse(string str)
@@ -30,7 +38,7 @@
 
         public static bool Exists(string str)
         {
-            return typeof(Helpers.VanillaFarmAnimal).GetProperty(Helpers.VanillaFarmAnimal.Parse(str)) != null;
+            return Helpers.Reflection.GetProperty(typeof(VanillaFarmAnimal), Helpers.VanillaFarmAnimal.Parse(str), BindingFlags.Static | BindingFlags.Public) != null;
         }
     }
 }

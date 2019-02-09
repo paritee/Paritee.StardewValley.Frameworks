@@ -4,7 +4,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches
 {
     class Patch
     {
-        public static void CleanSaveData()
+        protected static void CleanSaveData()
         {
             FarmAnimalsSaveData saveData = FarmAnimalsSaveData.Deserialize();
 

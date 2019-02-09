@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace BetterFarmAnimalVariety.Framework.Content
+﻿namespace BetterFarmAnimalVariety.Framework.Helpers
 {
-    class FarmAnimalsData : Data
+    class Data
     {
-        public enum ValueIndex
+        public enum FarmAnimalsIndex
         {
             DaysToLay = 0,
             AgeWhenMature = 1,
@@ -31,17 +29,6 @@ namespace BetterFarmAnimalVariety.Framework.Content
             ToolUsedForHarvest = 22,
             MeatIndex = 23,
             Price = 24
-        }
-
-        public static int GetIndex(ValueIndex index)
-        {
-            return (int)index;
-        }
-
-        public static Dictionary<string, string> Load()
-        {
-            string filename = Helpers.Utilities.BuildContentPath(new string[] { Helpers.Constants.DataContentDirectory, Helpers.Constants.DataFarmAnimalsContentDirectory });
-            return Asset.Load<Dictionary<string, string>>(filename);
         }
     }
 }

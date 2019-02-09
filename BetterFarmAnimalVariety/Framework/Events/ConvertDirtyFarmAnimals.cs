@@ -1,5 +1,4 @@
-﻿using BetterFarmAnimalVariety.Framework.Content;
-using BetterFarmAnimalVariety.Framework.Data;
+﻿using BetterFarmAnimalVariety.Framework.Data;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -33,7 +32,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                     FarmAnimal animal = Utility.getAnimal(id);
 
                     // Only non-vanilla animals need to be updated before being saved
-                    if (Framework.Api.FarmAnimal.IsVanillaType(animal.type.Value))
+                    if (Framework.Api.FarmAnimal.IsVanilla(animal.type.Value))
                     {
                         continue;
                     }
@@ -41,7 +40,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                     string savedType = saveData.GetSavedTypeOrDefault(animal);
 
                     // Convert it to the proper vanilla
-                    KeyValuePair<string, string> contentDataEntry = FarmAnimalsData.Load()
+                    KeyValuePair<string, string> contentDataEntry = Api.Content.Load<Dictionary<string, string>>(Helpers.Constants.DataFarmAnimalsContentDirectory)
                         .First(o => o.Key.Equals(savedType));
 
                     // Kill everything if for some reason the user removed the default dweller information from the game
@@ -96,8 +95,8 @@ namespace BetterFarmAnimalVariety.Framework.Events
                     continue;
                 }
 
-                int currentItemIndex = Framework.Helpers.Utilities.GetFieldValue<int>(loadGameMenu, "currentItemIndex");
-                SaveFileSlot saveFileSlot = Framework.Helpers.Utilities.GetFieldValue<List<MenuSlot>>(loadGameMenu, "menuSlots")[currentItemIndex + index] as SaveFileSlot;
+                int currentItemIndex = Framework.Helpers.Reflection.GetFieldValue<int>(loadGameMenu, "currentItemIndex");
+                SaveFileSlot saveFileSlot = Framework.Helpers.Reflection.GetFieldValue<List<MenuSlot>>(loadGameMenu, "menuSlots")[currentItemIndex + index] as SaveFileSlot;
 
                 // Need to manually parse the XML since casting to a FarmAnimal 
                 // triggers the data search crash that this command aims to avoid
@@ -107,7 +106,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 }
 
                 // Scan only the most recent save if it can be found
-                Framework.Helpers.Utilities.FixGameSave(Path.Combine(Constants.SavesPath, Game1.player.slotName), out typesToBeMigrated);
+                Framework.Helpers.GameSave.Fix(Path.Combine(Constants.SavesPath, Game1.player.slotName), out typesToBeMigrated);
 
                 return true;
             }

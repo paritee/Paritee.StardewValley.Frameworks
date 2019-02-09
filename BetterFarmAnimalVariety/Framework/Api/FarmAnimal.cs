@@ -37,13 +37,13 @@ namespace BetterFarmAnimalVariety.Framework.Api
             string assetName = prefix + animal.type.Value;
 
             // Check if the asset exists (ex. vanilla fails on BabyDuck)
-            if (!Helpers.Utilities.AssetExists<Texture2D>(assetName))
+            if (!Api.Content.Exists<Texture2D>(assetName))
             {
                 // Covers the BabyDuck scenario by using BabyWhite Chicken
                 assetName = Api.FarmAnimal.GetDefaultType(animal);
             }
 
-            return Helpers.Utilities.BuildContentPath(new string[] { Helpers.Constants.AnimalsContentDirectory, assetName });
+            return Api.Content.BuildPath(new string[] { Helpers.Constants.AnimalsContentDirectory, assetName });
         }
 
         public static AnimatedSprite CreateSprite(StardewValley.FarmAnimal animal)
@@ -51,18 +51,9 @@ namespace BetterFarmAnimalVariety.Framework.Api
             return new AnimatedSprite(Api.FarmAnimal.BuildSpriteAssetName(animal), Helpers.Constants.StartingFrame, animal.frontBackSourceRect.Width, animal.frontBackSourceRect.Height);
         }
 
-        public static bool IsCoopDweller(StardewValley.FarmAnimal animal)
-        {
-            string buildingType = animal.home != null
-                ? animal.home.buildingType.Value
-                : animal.buildingTypeILiveIn.Value;
-
-            return buildingType.Equals(Helpers.Constants.Coop);
-        }
-
         public static StardewValley.FarmAnimal CreateFarmAnimal(string type, long ownerId, string name = null, Building home = null, long myId = default(long))
         {
-            myId = myId.Equals(default(long)) ? Helpers.Utilities.Multiplayer().getNewID() : myId;
+            myId = myId.Equals(default(long)) ? Helpers.Multiplayer.GetNewId() : myId;
 
             return new StardewValley.FarmAnimal(type, myId, ownerId)
             {
@@ -72,9 +63,18 @@ namespace BetterFarmAnimalVariety.Framework.Api
             };
         }
 
-        public static bool IsVanillaType(string type)
+        public static bool IsVanilla(string type)
         {
             return Helpers.VanillaFarmAnimal.Exists(type);
+        }
+
+        public static bool IsCoopDweller(StardewValley.FarmAnimal animal)
+        {
+            string buildingType = animal.home != null
+                ? animal.home.buildingType.Value
+                : animal.buildingTypeILiveIn.Value;
+
+            return buildingType.Equals(Helpers.Constants.Coop);
         }
 
         public static string GetDefaultType(string buildingType)
@@ -106,52 +106,52 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
         public static void UpdateFromData(ref StardewValley.FarmAnimal animal, KeyValuePair<string, string> contentDataEntry)
         {
-            string[] values = Content.Data.Split(contentDataEntry.Value);
+            string[] values = Api.Content.ParseDataValue(contentDataEntry.Value);
 
             // Reset the instance's values based on the new type
             animal.type.Value = contentDataEntry.Value;
-            animal.daysToLay.Value = Convert.ToByte(values[(int)Content.FarmAnimalsData.ValueIndex.DaysToLay]);
-            animal.ageWhenMature.Value = Convert.ToByte(values[(int)Content.FarmAnimalsData.ValueIndex.AgeWhenMature]);
-            animal.defaultProduceIndex.Value = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.DefaultProduce]);
-            animal.deluxeProduceIndex.Value = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.DeluxeProduce]);
-            animal.sound.Value = values[(int)Content.FarmAnimalsData.ValueIndex.Sound].Equals(Helpers.Constants.None) ? null : values[(int)Content.FarmAnimalsData.ValueIndex.Sound];
+            animal.daysToLay.Value = Convert.ToByte(values[(int)Helpers.Data.FarmAnimalsIndex.DaysToLay]);
+            animal.ageWhenMature.Value = Convert.ToByte(values[(int)Helpers.Data.FarmAnimalsIndex.AgeWhenMature]);
+            animal.defaultProduceIndex.Value = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.DefaultProduce]);
+            animal.deluxeProduceIndex.Value = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.DeluxeProduce]);
+            animal.sound.Value = values[(int)Helpers.Data.FarmAnimalsIndex.Sound].Equals(Helpers.Constants.None) ? null : values[(int)Helpers.Data.FarmAnimalsIndex.Sound];
 
             int x, y, width, height;
 
-            x = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.FrontBackBoundingBoxX]);
-            y = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.FrontBackBoundingBoxY]);
-            width = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.FrontBackBoundingBoxWidth]);
-            height = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.FrontBackBoundingBoxHeight]);
+            x = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.FrontBackBoundingBoxX]);
+            y = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.FrontBackBoundingBoxY]);
+            width = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.FrontBackBoundingBoxWidth]);
+            height = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.FrontBackBoundingBoxHeight]);
 
             animal.frontBackBoundingBox.Value = new Rectangle(x, y, width, height);
 
-            x = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.SidewaysBoundingBoxX]);
-            y = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.SidewaysBoundingBoxY]);
-            width = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.SidewaysBoundingBoxWidth]);
-            height = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.SidewaysBoundingBoxHeight]);
+            x = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.SidewaysBoundingBoxX]);
+            y = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.SidewaysBoundingBoxY]);
+            width = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.SidewaysBoundingBoxWidth]);
+            height = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.SidewaysBoundingBoxHeight]);
 
             animal.sidewaysBoundingBox.Value = new Rectangle(x, y, width, height);
 
-            animal.harvestType.Value = Convert.ToByte(values[(int)Content.FarmAnimalsData.ValueIndex.HarvestType]);
-            animal.showDifferentTextureWhenReadyForHarvest.Value = Convert.ToBoolean(values[(int)Content.FarmAnimalsData.ValueIndex.ShowDifferentTextureWhenReadyForHarvest]);
-            animal.buildingTypeILiveIn.Value = values[(int)Content.FarmAnimalsData.ValueIndex.BuildingTypeILiveIn];
+            animal.harvestType.Value = Convert.ToByte(values[(int)Helpers.Data.FarmAnimalsIndex.HarvestType]);
+            animal.showDifferentTextureWhenReadyForHarvest.Value = Convert.ToBoolean(values[(int)Helpers.Data.FarmAnimalsIndex.ShowDifferentTextureWhenReadyForHarvest]);
+            animal.buildingTypeILiveIn.Value = values[(int)Helpers.Data.FarmAnimalsIndex.BuildingTypeILiveIn];
 
-            width = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.SpriteWidth]);
-            height = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.SpritHeight]);
+            width = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.SpriteWidth]);
+            height = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.SpritHeight]);
 
             animal.Sprite = new AnimatedSprite(Api.FarmAnimal.BuildSpriteAssetName(animal), Helpers.Constants.StartingFrame, width, height);
             animal.frontBackSourceRect.Value = new Rectangle(0, 0, width, height);
 
-            width = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.SidewaysSourceRectWidth]);
-            height = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.SidewaysSourceRectHeight]);
+            width = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.SidewaysSourceRectWidth]);
+            height = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.SidewaysSourceRectHeight]);
 
             animal.sidewaysSourceRect.Value = new Rectangle(0, 0, width, height);
 
-            animal.fullnessDrain.Value = Convert.ToByte(values[(int)Content.FarmAnimalsData.ValueIndex.FullnessDrain]);
-            animal.happinessDrain.Value = Convert.ToByte(values[(int)Content.FarmAnimalsData.ValueIndex.HappinessDrain]);
-            animal.toolUsedForHarvest.Value = values[(int)Content.FarmAnimalsData.ValueIndex.ToolUsedForHarvest].Equals(Helpers.Constants.None) ? null : values[(int)Content.FarmAnimalsData.ValueIndex.ToolUsedForHarvest];
-            animal.meatIndex.Value = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.MeatIndex]);
-            animal.price.Value = Convert.ToInt32(values[(int)Content.FarmAnimalsData.ValueIndex.Price]);
+            animal.fullnessDrain.Value = Convert.ToByte(values[(int)Helpers.Data.FarmAnimalsIndex.FullnessDrain]);
+            animal.happinessDrain.Value = Convert.ToByte(values[(int)Helpers.Data.FarmAnimalsIndex.HappinessDrain]);
+            animal.toolUsedForHarvest.Value = values[(int)Helpers.Data.FarmAnimalsIndex.ToolUsedForHarvest].Equals(Helpers.Constants.None) ? null : values[(int)Helpers.Data.FarmAnimalsIndex.ToolUsedForHarvest];
+            animal.meatIndex.Value = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.MeatIndex]);
+            animal.price.Value = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.Price]);
         }
 
         public static List<string> GetTypesFromProduce(int produceId)
@@ -160,14 +160,14 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
             // TODO: check BFAVs config instead
             // Someone could have the data set up, but not add it to BFAV so that it's hidden from the game
-            Dictionary<string, string> contentData = Content.FarmAnimalsData.Load();
+            Dictionary<string, string> contentData = Api.Content.Load<Dictionary<string, string>>(Helpers.Constants.DataFarmAnimalsContentDirectory);
 
             foreach (KeyValuePair<string, string> entry in contentData)
             {
-                string[] values = entry.Value.Split('/');
+                string[] values = Api.Content.ParseDataValue(entry.Value);
 
-                int defaultProduceId = Int32.Parse(values[(int)Content.FarmAnimalsData.ValueIndex.DefaultProduce]);
-                int deluxeProduceId = Int32.Parse(values[(int)Content.FarmAnimalsData.ValueIndex.DeluxeProduce]);
+                int defaultProduceId = Int32.Parse(values[(int)Helpers.Data.FarmAnimalsIndex.DefaultProduce]);
+                int deluxeProduceId = Int32.Parse(values[(int)Helpers.Data.FarmAnimalsIndex.DeluxeProduce]);
 
                 if (produceId.Equals(defaultProduceId) || produceId.Equals(deluxeProduceId))
                 {

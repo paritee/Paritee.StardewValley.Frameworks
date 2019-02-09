@@ -1,6 +1,4 @@
-﻿using BetterFarmAnimalVariety.Framework.Data;
-using BetterFarmAnimalVariety.Models;
-using Netcode;
+﻿using BetterFarmAnimalVariety.Models;
 using Paritee.StardewValleyAPI.Buildings;
 using Paritee.StardewValleyAPI.FarmAnimals;
 using StardewModdingAPI;
@@ -9,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
 using PariteeAnimalHouse = Paritee.StardewValleyAPI.Buildings.AnimalHouses.AnimalHouse;
 
 namespace BetterFarmAnimalVariety.Commands

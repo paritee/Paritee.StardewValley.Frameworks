@@ -48,7 +48,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
         public static StardewValley.AnimalHouse GetIndoors(Building building)
         {
-            NetRef<GameLocation> indoors = Helpers.Utilities.GetFieldValue<NetRef<GameLocation>>(building, "indoors");
+            NetRef<GameLocation> indoors = Helpers.Reflection.GetFieldValue<NetRef<GameLocation>>(building, "indoors");
             return indoors.Value as StardewValley.AnimalHouse;
         }
 

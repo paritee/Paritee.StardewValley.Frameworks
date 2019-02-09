@@ -78,7 +78,7 @@ namespace BetterFarmAnimalVariety
         private void SetupHarmonyPatches()
         {
             // Harmony
-            HarmonyInstance harmony = HarmonyInstance.Create(Framework.Helpers.Constants.HarmonyKey);
+            HarmonyInstance harmony = HarmonyInstance.Create(Framework.Helpers.Constants.ModKey);
 
             // TODO:
             // FarmInfoPage

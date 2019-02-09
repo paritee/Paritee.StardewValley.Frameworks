@@ -11,7 +11,7 @@ namespace BetterFarmAnimalVariety.Framework.Data
 
         public static string GetPath()
         {
-            string saveDataDir = Path.Combine(StardewModdingAPI.Constants.DataPath, Helpers.Constants.ModDataKey);
+            string saveDataDir = Path.Combine(StardewModdingAPI.Constants.DataPath, Helpers.Constants.ModKey);
 
             return Path.Combine(saveDataDir, Helpers.Constants.FarmAnimalsSaveDataFileName);
         }
@@ -33,14 +33,8 @@ namespace BetterFarmAnimalVariety.Framework.Data
             // Clean up the data file
             foreach (TypeHistory typeHistory in history)
             {
-                if (this.TypeHistory.ContainsKey(typeHistory.FarmAnimalId))
-                {
-                    this.TypeHistory[typeHistory.FarmAnimalId] = typeHistory;
-                }
-                else
-                {
-                    this.TypeHistory.Add(typeHistory.FarmAnimalId, typeHistory);
-                }
+                // Update the existing entry or create it if it doesn't exist
+                this.TypeHistory[typeHistory.FarmAnimalId] = typeHistory;
             }
 
             this.WriteChanges();
@@ -50,15 +44,8 @@ namespace BetterFarmAnimalVariety.Framework.Data
         {
             TypeHistory typeHistory = new TypeHistory(key, currentType, originalType);
 
-            // Clean up the data file
-            if (this.TypeHistory.ContainsKey(key))
-            {
-                this.TypeHistory[key] = typeHistory;
-            }
-            else
-            {
-                this.TypeHistory.Add(key, typeHistory);
-            }
+            // Update the existing entry or create it if it doesn't exist
+            this.TypeHistory[key] = typeHistory;
 
             this.WriteChanges();
         }
@@ -103,12 +90,9 @@ namespace BetterFarmAnimalVariety.Framework.Data
 
         public string GetSavedTypeOrDefault(FarmAnimal animal)
         {
-            if (this.TypeHistory.ContainsKey(animal.myID.Value))
-            {
-                return this.TypeHistory[animal.myID.Value].SavedType;
-            }
-
-            return Api.FarmAnimal.GetDefaultType(animal);
+            return this.TypeHistory.ContainsKey(animal.myID.Value)
+                ? this.TypeHistory[animal.myID.Value].SavedType
+                : Api.FarmAnimal.GetDefaultType(animal);
         }
     }
 }

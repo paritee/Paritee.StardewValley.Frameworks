@@ -1,7 +1,6 @@
 ﻿using BetterFarmAnimalVariety.Framework.Data;
 using Harmony;
 using StardewValley;
-using StardewValley.Buildings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +33,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches
             }
 
             // Grab the new type's data to override if it exists
-            KeyValuePair<string, string> contentDataEntry = Content.FarmAnimalsData.Load()
+            KeyValuePair<string, string> contentDataEntry = Api.Content.Load<Dictionary<string, string>>(Helpers.Constants.DataFarmAnimalsContentDirectory)
                 .First(kvp => kvp.Key.Equals(saveDataEntry.Value));
 
             // If the data doesn't exist, 

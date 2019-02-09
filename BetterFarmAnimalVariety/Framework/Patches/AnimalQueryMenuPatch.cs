@@ -18,14 +18,14 @@ namespace BetterFarmAnimalVariety.Framework.Patches
             }
 
             FarmAnimalsSaveData saveData = FarmAnimalsSaveData.Deserialize();
-            FarmAnimal animal = Helpers.Utilities.GetFieldValue<FarmAnimal>(__instance, "animal");
+            FarmAnimal animal = Helpers.Reflection.GetFieldValue<FarmAnimal>(__instance, "animal");
 
             saveData.RemoveTypeHistory(animal.myID.Value);
         }
 
         private static bool IsSelling(AnimalQueryMenu __instance, int x, int y)
         {
-            if (!Helpers.Utilities.GetFieldValue<bool>(__instance, "confirmingSell"))
+            if (!Helpers.Reflection.GetFieldValue<bool>(__instance, "confirmingSell"))
             {
                 return false;
             }

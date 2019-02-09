@@ -1,47 +1,14 @@
 ﻿using BetterFarmAnimalVariety.Framework.Data;
 using Netcode;
-using StardewValley;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Xml;
 
 namespace BetterFarmAnimalVariety.Framework.Helpers
 {
-    internal class Utilities
+    internal class GameSave
     {
-        public static FieldInfo GetField(object obj, string field, BindingFlags bindingAttr = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-        {
-            return obj is Type type
-                ? type.GetField(field, bindingAttr)
-                : obj.GetType().GetField(field, bindingAttr);
-        }
-
-        public static T GetFieldValue<T>(object obj, string field, BindingFlags bindingAttr = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-        {
-            FieldInfo fieldInfo = Helpers.Utilities.GetField(obj, field, bindingAttr);
-            obj = obj is Type type ? null : obj;
-            
-            return (T)fieldInfo.GetValue(obj);
-        }
-
-        public static Multiplayer Multiplayer()
-        {
-            return Helpers.Utilities.GetFieldValue<Multiplayer>(typeof(Game1), "multiplayer", BindingFlags.Static | BindingFlags.NonPublic);
-        }
-
-        public static string BuildContentPath(string[] parts)
-        {
-            return String.Join(Helpers.Constants.ContentPathDelimiter, parts);
-        }
-
-        public static bool AssetExists<T>(string name)
-        {
-            return Content.Asset.Load<T>(name) != null;
-        }
-
-        public static void FixGameSave(string saveFolder, out List<TypeHistory> typesToBeMigrated)
+        public static void Fix(string saveFolder, out List<TypeHistory> typesToBeMigrated)
         {
             // Track the types to be migrated for reporting
             typesToBeMigrated = new List<TypeHistory>();
@@ -81,7 +48,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
                     string currentType = animals[k].SelectSingleNode("type").InnerText;
 
                     // We only need to update the animals if they aren't vanilla
-                    if (Framework.Api.FarmAnimal.IsVanillaType(currentType))
+                    if (Framework.Api.FarmAnimal.IsVanilla(currentType))
                     {
                         continue;
                     }
@@ -91,7 +58,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
 
                     // Clean the node by replace the dirty saved values from the 
                     // content of the default dwellers
-                    Framework.Helpers.Utilities.CleanDirtyFarmAnimalXmlNode(ref doc, ref animals, k, typeToBeSaved, out long myId);
+                    Framework.Helpers.GameSave.CleanDirtyFarmAnimalXmlNode(ref doc, ref animals, k, typeToBeSaved, out long myId);
 
                     // Track the migration of this type so we can save it in our save data
                     typesToBeMigrated.Add(new TypeHistory(myId, currentType, typeToBeSaved));
@@ -144,7 +111,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
                     case "buildingTypeILiveIn":
                     case "toolUsedForHarvest":
                         {
-                            string newValue = Framework.Helpers.Utilities.GetFieldValue<object>(dweller, child.Name).ToString();
+                            string newValue = Framework.Helpers.Reflection.GetFieldValue<object>(dweller, child.Name).ToString();
 
                             // Need to make bools lowercase for XML
                             if (newValue.ToString().Equals("True") || newValue.ToString().Equals("False"))
@@ -163,7 +130,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
                         {
                             // TODO: this is gross.
                             XmlElement newChild = doc.CreateElement(child.Name);
-                            NetRectangle rectangle = Framework.Helpers.Utilities.GetFieldValue<NetRectangle>(dweller, child.Name);
+                            NetRectangle rectangle = Framework.Helpers.Reflection.GetFieldValue<NetRectangle>(dweller, child.Name);
 
                             XmlElement x = doc.CreateElement("X");
                             x.InnerText = rectangle.X.ToString();

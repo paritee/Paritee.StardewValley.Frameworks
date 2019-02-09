@@ -2,28 +2,29 @@
 {
     class Constants
     {
-        public const string HarmonyKey = "paritee.betterfarmanimalvariety";
-        public const string HarmonyPostFix = "postfix";
-
-        public const string ModDataKey = "paritee.betterfarmanimalvariety";
+        // Mod
+        public const string ModKey = "paritee.betterfarmanimalvariety";
         public const string FarmAnimalsSaveDataFileName = "farmanimals.json";
 
-        public const int StartingFrame = 0;
-
+        // FarmAnimal
         public const string BabyPrefix = "Baby";
         public const string ShearedPrefix = "Sheared";
 
+        // AnimalHouse
         public const string Coop = "Coop";
         public const string Barn = "Barn";
         public const string Incubator = "Incubator";
         public const int DefaultIncubatorItem = 101;
 
-        public const string None = "none";
+        // Content
         public const string ContentPathDelimiter = "\\";
-        public const char DataValueDelimiter = '/';
         public const string AnimalsContentDirectory = "Animals";
-        public const string DataContentDirectory = "Data";
-        public const string DataFarmAnimalsContentDirectory = "FarmAnimals";
+        public const string DataFarmAnimalsContentDirectory = "Data\\FarmAnimals";
+        public const char DataValueDelimiter = '/';
+        public const string None = "none";
+        public const int StartingFrame = 0;
 
+        // Event
+        public const int SoundInTheNightAnimalEatenEvent = 2;
     }
 }

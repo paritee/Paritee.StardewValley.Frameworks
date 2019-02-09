@@ -7,13 +7,11 @@ namespace BetterFarmAnimalVariety.Framework.Patches
     [HarmonyPatch("makeChangesToLocation")]
     class SoundInTheNightEventPatch : Patch
     {
-        private const int AnimalWasEatenBehavior = 2;
-
         public static void Postfix(ref SoundInTheNightEvent __instance)
         {
-            int behavior = Helpers.Utilities.GetFieldValue<int>(__instance, "behavior");
+            int behavior = Helpers.Reflection.GetFieldValue<int>(__instance, "behavior");
 
-            if (!behavior.Equals(SoundInTheNightEventPatch.AnimalWasEatenBehavior))
+            if (!behavior.Equals(Helpers.Constants.SoundInTheNightAnimalEatenEvent))
             {
                 return;
             }
