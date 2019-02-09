@@ -1,13 +1,15 @@
-﻿using StardewValley;
+﻿using Harmony;
+using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Events;
 
 namespace BetterFarmAnimalVariety.Framework.Patches
 {
+    [HarmonyPatch(typeof(AnimalHouse))]
+    [HarmonyPatch("addNewHatchedAnimal")]
     class AnimalHousePatch
     {
-        // StardewValley.Buildings.AnimalHouse.addNewHatchedAnimal
-        public static bool AddNewHatchedAnimalPrefix(ref AnimalHouse __instance, ref string name)
+        public static bool Prefix(ref AnimalHouse __instance, ref string name)
         {
             if (__instance.getBuilding() is Coop coop)
             {
@@ -35,7 +37,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches
 
         private static void HandleHatchling(ref AnimalHouse animalHouse, string name)
         {
-            StardewValley.Object incubator = Helpers.Utilities.GetIncubator(animalHouse);
+            StardewValley.Object incubator = Api.AnimalHouse.GetIncubator(animalHouse);
 
             if (incubator == null)
             {
@@ -43,37 +45,23 @@ namespace BetterFarmAnimalVariety.Framework.Patches
                 return;
             }
 
-            // Search for a type by the produce
-            string type = incubator.heldObject.Value == null
-                ? Helpers.Utilities.GetDefaultCoopDwellerType()
-                : Helpers.Utilities.GetRandomTypeFromProduce(incubator.heldObject.Value.ParentSheetIndex);
+            string type = Api.AnimalHouse.GetRandomTypeFromIncubator(incubator);
 
             Building building = animalHouse.getBuilding();
+            FarmAnimal animal = Api.FarmAnimal.CreateFarmAnimal(type, Game1.player.UniqueMultiplayerID, name, building);
 
-            FarmAnimal animal = Helpers.Utilities.CreateFarmAnimal(type, Game1.player.UniqueMultiplayerID, name, building);
-
-            Helpers.Utilities.AddFarmAnimalToBuilding(ref animal, ref building);
-            Helpers.Utilities.ResetIncubator(incubator, animalHouse);
+            Api.FarmAnimal.AddToBuilding(ref animal, ref building);
+            Api.AnimalHouse.ResetIncubator(incubator, animalHouse);
         }
 
         private static void HandleNewborn(ref AnimalHouse animalHouse, string name, ref QuestionEvent questionEvent)
         {
-            Multiplayer multiplayer = Helpers.Utilities.Multiplayer();
+            string type = Api.FarmAnimal.GetRandomTypeFromParent(questionEvent.animal);
             Building building = animalHouse.getBuilding();
+            FarmAnimal animal = Api.FarmAnimal.CreateFarmAnimal(type, Game1.player.UniqueMultiplayerID, name, building);
 
-            // TODO: randomize on bfav categories
-            string type = Helpers.Utilities.GetRandomTypeFromParent(questionEvent.animal);
-
-            FarmAnimal animal = new FarmAnimal(type, multiplayer.getNewID(), Game1.player.UniqueMultiplayerID)
-            {
-                Name = name,
-                displayName = name,
-                home = building
-            };
-
-            animal.parentId.Value = questionEvent.animal.myID.Value;
-
-            Helpers.Utilities.AddFarmAnimalToBuilding(ref animal, ref building);
+            Api.FarmAnimal.AssociateParent(ref animal, questionEvent.animal.myID.Value);
+            Api.FarmAnimal.AddToBuilding(ref animal, ref building);
 
             questionEvent.forceProceed = true;
         }

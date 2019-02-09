@@ -21,12 +21,12 @@ namespace BetterFarmAnimalVariety.Framework.Data
 
         public bool IsDirty()
         {
-            return !Helpers.Utilities.IsVanillaFarmAnimalType(this.SavedType);
+            return !Api.FarmAnimal.IsVanillaType(this.SavedType);
         }
 
         public bool IsVanilla()
         {
-            return Helpers.Utilities.IsVanillaFarmAnimalType(this.CurrentType);
+            return Api.FarmAnimal.IsVanillaType(this.CurrentType);
         }
     }
 }

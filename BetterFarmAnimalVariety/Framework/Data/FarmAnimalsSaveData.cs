@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using StardewModdingAPI;
-using StardewValley;
+﻿using StardewValley;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +7,7 @@ namespace BetterFarmAnimalVariety.Framework.Data
 {
     class FarmAnimalsSaveData : SaveData
     {
-        public Dictionary<long, TypeHistory> TypeHistory;
+        public Dictionary<long, TypeHistory> TypeHistory = new Dictionary<long, TypeHistory>();
 
         public static string GetPath()
         {
@@ -20,7 +18,9 @@ namespace BetterFarmAnimalVariety.Framework.Data
 
         public static FarmAnimalsSaveData Deserialize()
         {
-            return Data.SaveData.Deserialize<FarmAnimalsSaveData>(FarmAnimalsSaveData.GetPath());
+            FarmAnimalsSaveData data = Data.SaveData.Deserialize<FarmAnimalsSaveData>(FarmAnimalsSaveData.GetPath());
+
+            return data ?? new FarmAnimalsSaveData();
         }
 
         private void WriteChanges()
@@ -99,6 +99,16 @@ namespace BetterFarmAnimalVariety.Framework.Data
                 .ToList();
 
             this.RemoveTypeHistory(animalsToBeRemoved);
+        }
+
+        public string GetSavedTypeOrDefault(FarmAnimal animal)
+        {
+            if (this.TypeHistory.ContainsKey(animal.myID.Value))
+            {
+                return this.TypeHistory[animal.myID.Value].SavedType;
+            }
+
+            return Api.FarmAnimal.GetDefaultType(animal);
         }
     }
 }

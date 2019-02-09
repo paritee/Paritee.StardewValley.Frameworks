@@ -30,7 +30,7 @@
 
         public static bool Exists(string str)
         {
-            return typeof(Helpers.VanillaFarmAnimal).GetProperty(Helpers.VanillaFarmAnimal.Parse(str)) == null;
+            return typeof(Helpers.VanillaFarmAnimal).GetProperty(Helpers.VanillaFarmAnimal.Parse(str)) != null;
         }
     }
 }

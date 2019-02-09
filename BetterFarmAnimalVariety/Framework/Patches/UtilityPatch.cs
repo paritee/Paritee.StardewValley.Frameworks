@@ -1,17 +1,18 @@
-﻿using BetterFarmAnimalVariety.Framework.Data;
+﻿using Harmony;
+using StardewValley;
 
 namespace BetterFarmAnimalVariety.Framework.Patches
 {
-    class UtilityPatch
+    [HarmonyPatch(typeof(Utility))]
+    [HarmonyPatch("getPurchaseAnimalStock")]
+    class UtilityPatch : Patch
     {
         // TODO: StardewValley.Utility.getPurchaseAnimalStock
 
         // StardewValley.Utility.fixAllAnimals
-        public static void FixAllAnimalsPostfix()
+        public static void Postfix()
         {
-            FarmAnimalsSaveData saveData = FarmAnimalsSaveData.Deserialize();
-
-            saveData.CleanTypeHistory();
+            Patch.CleanSaveData();
         }
     }
 }

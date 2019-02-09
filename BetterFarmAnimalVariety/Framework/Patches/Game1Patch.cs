@@ -1,21 +1,20 @@
-﻿using BetterFarmAnimalVariety.Framework.Data;
+﻿using Harmony;
 using StardewValley;
 
 namespace BetterFarmAnimalVariety.Framework.Patches
 {
-    class Game1Patch
+    [HarmonyPatch(typeof(Game1))]
+    [HarmonyPatch("parseDebugInput")]
+    class Game1Patch : Patch
     {
-        // StardewValley.Game1.parseDebugInput
-        public static void ParseDebugInputPostfix(ref Game1 __instance, ref string debugInput)
+        public static void Postfix(ref Game1 __instance, ref string debugInput)
         {
             if (!debugInput.Equals("fixAnimals"))
             {
                 return;
             }
 
-            FarmAnimalsSaveData saveData = FarmAnimalsSaveData.Deserialize();
-
-            saveData.CleanTypeHistory();
+            Patch.CleanSaveData();
         }
     }
 }

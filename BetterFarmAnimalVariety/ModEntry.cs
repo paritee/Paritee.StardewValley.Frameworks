@@ -1,6 +1,6 @@
 ﻿using BetterFarmAnimalVariety.Editors;
 using BetterFarmAnimalVariety.Framework.Data;
-using BetterFarmAnimalVariety.Framework.Patches;
+using BetterFarmAnimalVariety.Framework.Events;
 using BetterFarmAnimalVariety.Models;
 using Harmony;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,14 +13,10 @@ using Paritee.StardewValleyAPI.Players.Actions;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.Buildings;
 using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using static StardewValley.Menus.LoadGameMenu;
 
 namespace BetterFarmAnimalVariety
 {
@@ -62,49 +58,36 @@ namespace BetterFarmAnimalVariety
             }
 
             // Harmony
-            this.ApplyHarmonyPatches();
+            this.SetupHarmonyPatches();
 
             // Commands
-            this.ApplyConsoleCommands();
+            this.SetupConsoleCommands();
 
             // Asset Editors
             this.Helper.Content.AssetEditors.Add(new AnimalBirthEditor(this));
 
             // Events
             this.Helper.Events.GameLoop.Saving += this.OnSaving;
+            this.Helper.Events.Input.ButtonPressed += this.OnButtonPressed;
             // this.Helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
             // this.Helper.Events.Display.RenderingActiveMenu += this.OnRenderingActiveMenu;
             // this.Helper.Events.Display.RenderedActiveMenu += this.OnRenderedActiveMenu;
-            // this.Helper.Events.Input.ButtonPressed += this.OnButtonPressed;
             // this.Helper.Events.Display.MenuChanged += this.OnMenuChanged;
         }
 
-        private void ApplyHarmonyPatches()
+        private void SetupHarmonyPatches()
         {
-            Dictionary<MethodInfo, HarmonyMethod> patches  = new Dictionary<MethodInfo, HarmonyMethod>()
-            {
-                // Remove the hardcoded check on the Vanilla stock categories
-                { AccessTools.Method(typeof(PurchaseAnimalsMenu), "getAnimalTitle"),  new HarmonyMethod(typeof(PurchaseAnimalsMenuPatch).GetMethod("getAnimalTitlePrefix")) },
-                { AccessTools.Method(typeof(PurchaseAnimalsMenu), "getAnimalDescription"), new HarmonyMethod(typeof(PurchaseAnimalsMenuPatch).GetMethod("getAnimalDescriptionPrefix")) }
-            };
-
             // Harmony
             HarmonyInstance harmony = HarmonyInstance.Create(Framework.Helpers.Constants.HarmonyKey);
 
-            foreach (KeyValuePair<MethodInfo, HarmonyMethod> patch in patches)
-            {
-                if (patch.Value.methodName.ToLower().Contains(Framework.Helpers.Constants.HarmonyPostFix))
-                {
-                    harmony.Patch(patch.Key, null, patch.Value);
-                }
-                else
-                {
-                    harmony.Patch(patch.Key, patch.Value, null);
-                }
-            }
+            // TODO:
+            // FarmInfoPage
+            // Forest
+
+            harmony.PatchAll();
         }
 
-        private void ApplyConsoleCommands()
+        private void SetupConsoleCommands()
         {
             this.Command = new ModCommand(this.Config, this.Helper, this.Monitor);
 
@@ -145,43 +128,44 @@ namespace BetterFarmAnimalVariety
         /// <param name="e">The event arguments.</param>
         private void OnSaving(object sender, SavingEventArgs e)
         {
-            // Convert FarmAnimals to defaults when saving the game, search 
-            // through all AnimalHouses and overwrite to not contaminate the saves
-            foreach (Building building in Game1.getFarm().buildings)
+            try
             {
-                if (building.indoors.Value is AnimalHouse animalHouse)
+                ConvertDirtyFarmAnimals.OnSaving(e);
+            }
+            catch (KeyNotFoundException exception)
+            {
+                // Somehow they removed the default animals... 
+                this.Monitor.Log(exception.Message, LogLevel.Error);
+
+                // ... this is a show stopper
+                throw exception;
+            }
+        }
+
+        /// <summary>Raised after the player pressed/released a keyboard, mouse, or controller button. This includes mouse clicks.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
+        {
+            try
+            {
+                if (ConvertDirtyFarmAnimals.OnButtonPressed(e, out List<TypeHistory> typesToBeMigrated))
                 {
-                    foreach (long id in animalHouse.animalsThatLiveHere)
-                    {
-                        FarmAnimal animal = Utility.getAnimal(id);
+                    // Report if any animals were migrated and save the migrations
+                    string message = typesToBeMigrated.Count > 0
+                        ? $"ConvertDirtyFarmAnimals: Migrated {typesToBeMigrated.Count} dirty farm animals:\n-- {String.Join("\n-- ", typesToBeMigrated.Select(o => $"{o.FarmAnimalId}: {o.CurrentType} saved as {o.SavedType}"))}"
+                        : $"ConvertDirtyFarmAnimals: No dirty farm animals found";
 
-                        // Only non-vanilla animals need to be updated before being saved
-                        if (!Framework.Helpers.Utilities.HasVanillaFarmAnimalType(animal))
-                        {
-                            string newType = animal.isCoopDweller()
-                                ? Framework.Helpers.Utilities.GetDefaultCoopDwellerType()
-                                : Framework.Helpers.Utilities.GetDefaultBarnDwellerType();
-
-                            // Convert it to vanilla
-                            KeyValuePair<string, string> contentDataEntry = Game1.content.Load<Dictionary<string, string>>("Data\\FarmAnimals").First(o => o.Key.Equals(newType));
-
-                            if (contentDataEntry.Key == null)
-                            {
-                                // Somehow they removed the default animals... 
-                                this.Monitor.Log($"Could not find {newType} to overwrite custom farm animal for saving. This is a fatal error. Please make sure you have {newType} in the game.");
-
-                                // This is a show stopper
-                                throw new KeyNotFoundException();
-                            }
-
-                            FarmAnimal animalToBeConverted = (animal.home.indoors.Value as AnimalHouse).animals.Values.First(o => o.myID.Value.Equals(animal.myID.Value));
-
-                            // Overwrite the animal
-                            Framework.Helpers.Utilities.OverwriteAnimalFromData(ref animalToBeConverted, contentDataEntry);
-                        }
-                    }
+                    this.Monitor.Log(message, LogLevel.Trace);
                 }
             }
+            catch (Exception exception)
+            {
+                this.Monitor.Log(exception.Message, LogLevel.Error);
+            }
+
+            // TODO: enable everything in bfav again
+            //Framework.Events.PurchaseFarmAnimal.OnButtonPressed(this.Player, this.AnimalShop, e);
         }
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
@@ -287,66 +271,6 @@ namespace BetterFarmAnimalVariety
         private void OnMenuChanged(object sender, MenuChangedEventArgs e)
         {
             this.ChangedPurchaseAnimalsMenuClickableComponents = false;
-        }
-
-        private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
-        {
-            this.AttemptToCleanSaves(e);
-
-            // Ignore if player hasn't loaded a save yet
-            if (!Context.IsWorldReady)
-            {
-                return;
-            }
-
-            // We only care about left mouse clicks right now
-            if (e.Button != SButton.MouseLeft)
-            {
-                return;
-            }
-
-            ActiveClickableMenu activeClickableMenu = new ActiveClickableMenu(Game1.activeClickableMenu);
-
-            if (!activeClickableMenu.IsOpen())
-            {
-                return;
-            }
-
-            if (!(activeClickableMenu.GetMenu() is StardewValley.Menus.PurchaseAnimalsMenu))
-            {
-                return;
-            }
-
-            // Purchasing a new animal
-            StardewValley.Menus.PurchaseAnimalsMenu purchaseAnimalsMenu = activeClickableMenu.GetMenu() as StardewValley.Menus.PurchaseAnimalsMenu;
-
-            PurchaseFarmAnimal purchaseFarmAnimal = new PurchaseFarmAnimal(this.Player, this.AnimalShop);
-            PurchaseFarmAnimalMenu purchaseFarmAnimalMenu = new PurchaseFarmAnimalMenu(purchaseAnimalsMenu, purchaseFarmAnimal);
-
-            purchaseFarmAnimalMenu.HandleTap(e);
-        }
-
-        private void AttemptToCleanSaves(ButtonPressedEventArgs e)
-        {
-            // Always attempt to clean up the animal types to prevent on save load crashes
-            // if the patch mod had been removed without the animals being sold/deleted.
-            // This will now also migrate users from bfav 2.x where types were saved directly 
-            // to 3.x where they are not.
-            if (Game1.activeClickableMenu is TitleMenu titleMenu && TitleMenu.subMenu is LoadGameMenu loadGameMenu)
-            {
-                for (int index = 0; index < loadGameMenu.slotButtons.Count; index++)
-                {
-                    if (loadGameMenu.slotButtons[index].containsPoint((int)e.Cursor.ScreenPixels.X, (int)e.Cursor.ScreenPixels.Y))
-                    {
-                        int currentItemIndex = this.Helper.Reflection.GetField<int>(loadGameMenu, "currentItemIndex").GetValue();
-                        SaveFileSlot saveFileSlot = this.Helper.Reflection.GetField<List<MenuSlot>>(loadGameMenu, "menuSlots").GetValue()[currentItemIndex + index] as SaveFileSlot;
-
-                        this.Helper.ConsoleCommands.Trigger("bfav_fa_fix", new string[] { saveFileSlot.Farmer.slotName });
-
-                        break;
-                    }
-                }
-            }
         }
     }
 }
