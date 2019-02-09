@@ -57,6 +57,9 @@
     <Compile Include="Commands\BaseCommands.cs" />
     <Compile Include="Commands\ConfigCommands.cs" />
     <Compile Include="Commands\FarmAnimalsCommands.cs" />
+    <Compile Include="Framework\Data\FarmAnimalData.cs" />
+    <Compile Include="Framework\Helpers\Constants.cs" />
+    <Compile Include="Framework\Helpers\Utilities.cs" />
     <Compile Include="ModApi.cs" />
     <Compile Include="ModCommand.cs" />
     <Compile Include="Models\AppSettings.cs" />
@@ -67,7 +70,14 @@
     <Compile Include="ModConfig.cs" />
     <Compile Include="Models\ConfigFarmAnimalAnimalShop.cs" />
     <Compile Include="ModEntry.cs" />
-    <Compile Include="Patches\PurchaseAnimalsMenuPatch.cs" />
+    <Compile Include="Framework\Patches\AnimalHousePatch.cs" />
+    <Compile Include="Framework\Patches\AnimalQueryMenuPatch.cs" />
+    <Compile Include="Framework\Patches\CoopPatch.cs" />
+    <Compile Include="Framework\Patches\FarmAnimalPatch.cs" />
+    <Compile Include="Framework\Patches\Game1Patch.cs" />
+    <Compile Include="Framework\Patches\PurchaseAnimalsMenuPatch.cs" />
+    <Compile Include="Framework\Patches\SoundInTheNightEventPatch.cs" />
+    <Compile Include="Framework\Patches\UtilityPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

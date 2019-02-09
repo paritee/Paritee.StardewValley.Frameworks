@@ -1,8 +1,8 @@
-﻿namespace BetterFarmAnimalVariety.Patches
+﻿namespace BetterFarmAnimalVariety.Framework.Patches
 {
     class PurchaseAnimalsMenuPatch
     {
-        public static bool getAnimalTitlePrefix(ref string name, ref string __result)
+        public static bool GetAnimalTitlePrefix(ref string name, ref string __result)
         {
             string[] parts = name.Split('_');
 
@@ -16,7 +16,7 @@
             return false;
         }
 
-        public static bool getAnimalDescriptionPrefix(ref string name, ref string __result)
+        public static bool GetAnimalDescriptionPrefix(ref string name, ref string __result)
         {
             string[] parts = name.Split('_');
 

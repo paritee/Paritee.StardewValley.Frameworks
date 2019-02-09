@@ -1,4 +1,6 @@
-﻿using BetterFarmAnimalVariety.Models;
+﻿using BetterFarmAnimalVariety.Framework.Data;
+using BetterFarmAnimalVariety.Models;
+using Microsoft.Xna.Framework;
 using Paritee.StardewValleyAPI.Buildings;
 using Paritee.StardewValleyAPI.Buildings.AnimalHouses;
 using Paritee.StardewValleyAPI.FarmAnimals;
@@ -10,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using System.Xml.Serialization;
 using PariteeAnimalHouse = Paritee.StardewValleyAPI.Buildings.AnimalHouses.AnimalHouse;
 
 namespace BetterFarmAnimalVariety.Commands
@@ -91,12 +94,12 @@ namespace BetterFarmAnimalVariety.Commands
                 return;
             }
 
-            // Baseline
-            FarmAnimalsData data = new FarmAnimalsData();
+            // Baselines
+            string defaultCoopDwellertype = Framework.Helpers.Utilities.GetDefaultCoopDwellerType();
+            StardewValley.FarmAnimal coopDweller = Framework.Helpers.Utilities.CreateFarmAnimal(defaultCoopDwellertype, Game1.player.UniqueMultiplayerID);
 
-            WhiteVariation whiteVariation = new WhiteVariation();
-            string coopDwellerSubstitute = whiteVariation.ApplyPrefix(Paritee.StardewValleyAPI.FarmAnimals.Type.Base.Chicken.ToString());
-            string barnDwellerSubstitute = whiteVariation.ApplyPrefix(Paritee.StardewValleyAPI.FarmAnimals.Type.Base.Cow.ToString());
+            string defaultBarnDwellertype = Framework.Helpers.Utilities.GetDefaultBarnDwellerType();
+            StardewValley.FarmAnimal barnDweller = Framework.Helpers.Utilities.CreateFarmAnimal(defaultBarnDwellertype, Game1.player.UniqueMultiplayerID);
 
             this.Monitor.Log($"Searching {saveFolder} for problematic farm animal types", LogLevel.Trace);
 
@@ -104,7 +107,7 @@ namespace BetterFarmAnimalVariety.Commands
             XmlDocument doc = new XmlDocument();
 
             // Track the types to be substituted
-            List<string> typesToBeSubstituted = new List<string>();
+            List<TypeHistory> typesToBeMigrated = new List<TypeHistory>();
 
             XmlNamespaceManager namespaceManager = new XmlNamespaceManager(doc.NameTable);
             namespaceManager.AddNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
@@ -123,30 +126,112 @@ namespace BetterFarmAnimalVariety.Commands
 
                 bool isCoop = building.Attributes["xsi:type"].Value.Equals("Coop");
 
-                // Grab only the animal types
-                XmlNodeList types = building.SelectNodes(".//FarmAnimal/type");
+                // Grab the animals
+                XmlNodeList animals = building.SelectNodes(".//FarmAnimal");
 
-                for (int k = 0; k < types.Count; k++)
+                for (int k = 0; k < animals.Count; k++)
                 {
-                    XmlNode type = types[k];
+                    XmlNode animal = animals[k];
 
-                    // If the type can't be found in the data entries
-                    // then substitute it with an appropriate basic animal
-                    if (!data.GetEntries().ContainsKey(type.InnerText))
+                    string currentType = animal.SelectSingleNode("type").InnerText;
+
+                    // We only need to update the animals if they aren't vanilla
+                    if (Framework.Helpers.Utilities.IsVanillaFarmAnimalType(currentType))
                     {
-                        typesToBeSubstituted.Add(type.InnerText);
-
-                        type.InnerText = isCoop ? coopDwellerSubstitute : barnDwellerSubstitute;
+                        continue;
                     }
+
+                    // Choose the baseline based on this building
+                    StardewValley.FarmAnimal dweller = isCoop ? coopDweller : barnDweller;
+                    
+                    long myId = long.Parse(animal.SelectSingleNode("myID").InnerText);
+
+                    // Go through ALL of their child nodes and prepare to 
+                    // overwrite with the default dwellers
+                    foreach (XmlNode child in animal.ChildNodes)
+                    {
+                        switch(child.Name)
+                        {
+                            case "defaultProduceIndex":
+                            case "deluxeProduceIndex":
+                            case "currentProduce":
+                            case "meatIndex":
+                            case "price":
+                            case "daysToLay":
+                            case "ageWhenMature":
+                            case "harvestType":
+                            case "showDifferentTextureWhenReadyForHarvest":
+                            case "sound":
+                            case "type":
+                            case "buildingTypeILiveIn":
+                            case "toolUsedForHarvest":
+                                {
+                                    child.InnerText = dweller.GetType().GetField(child.Name).GetValue(dweller).ToString();
+                                    break;
+                                }
+                            case "frontBackBoundingBox":
+                            case "sidewaysBoundingBox":
+                            case "frontBackSourceRect":
+                            case "sidewaysSourceRect":
+                                {
+                                    // TODO: this is gross.
+
+                                    XmlElement newChild = doc.CreateElement(child.Name);
+                                    Rectangle rectangle = (Rectangle)dweller.GetType().GetField(child.Name).GetValue(dweller);
+
+                                    XmlElement x = doc.CreateElement("X");
+                                    x.InnerText = rectangle.X.ToString();
+                                    newChild.AppendChild(x);
+
+                                    XmlElement y = doc.CreateElement("Y");
+                                    y.InnerText = rectangle.Y.ToString();
+                                    newChild.AppendChild(y);
+
+                                    XmlElement width = doc.CreateElement("Width");
+                                    width.InnerText = rectangle.Width.ToString();
+                                    newChild.AppendChild(width);
+
+                                    XmlElement height = doc.CreateElement("Height");
+                                    height.InnerText = rectangle.Height.ToString();
+                                    newChild.AppendChild(height);
+
+                                    XmlElement location = doc.CreateElement("Location");
+
+                                    XmlElement locationX = doc.CreateElement("X");
+                                    locationX.InnerText = rectangle.Location.X.ToString();
+                                    location.AppendChild(locationX);
+
+                                    XmlElement locationY = doc.CreateElement("Y");
+                                    locationY.InnerText = rectangle.Location.Y.ToString();
+                                    location.AppendChild(locationY);
+
+                                    newChild.AppendChild(location);
+
+                                    animal.ReplaceChild(newChild, child);
+                                    break;
+                                }
+                            default:
+                                // Do nothing; we don't need to change every 
+                                // part of the animal's save data
+                                break;
+                        }
+                    }
+
+                    // Track the migration of this type so we can save it in our save data
+                    typesToBeMigrated.Add(new TypeHistory(myId, currentType, dweller.type.Value));
                 }
             }
 
-            if (typesToBeSubstituted.Count > 0)
+            if (typesToBeMigrated.Count > 0)
             {
                 // save the XmlDocument back to disk
                 doc.Save(saveFile);
 
-                this.Monitor.Log($"- Converted {typesToBeSubstituted.Count} farm animals to White Cows or White Chickens: {String.Join(", ", typesToBeSubstituted.Distinct())}", LogLevel.Trace);
+                // Save data
+                FarmAnimalsSaveData saveData = FarmAnimalsSaveData.Deserialize();
+                saveData.AddTypeHistory(typesToBeMigrated);
+
+                this.Monitor.Log($"- Migrated {typesToBeMigrated.Count} farm animals to White Cows or White Chickens: {String.Join(", ", typesToBeMigrated.Distinct())}", LogLevel.Trace);
             }
             else
             {

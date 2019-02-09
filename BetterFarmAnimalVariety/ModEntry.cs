@@ -1,6 +1,7 @@
 ﻿using BetterFarmAnimalVariety.Editors;
+using BetterFarmAnimalVariety.Framework.Data;
+using BetterFarmAnimalVariety.Framework.Patches;
 using BetterFarmAnimalVariety.Models;
-using BetterFarmAnimalVariety.Patches;
 using Harmony;
 using Microsoft.Xna.Framework.Graphics;
 using Paritee.StardewValleyAPI.Buildings.AnimalShop;
@@ -12,9 +13,12 @@ using Paritee.StardewValleyAPI.Players.Actions;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.Buildings;
 using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using static StardewValley.Menus.LoadGameMenu;
 
@@ -45,7 +49,7 @@ namespace BetterFarmAnimalVariety
             {
                 this.Config = this.LoadConfig();
             }
-            catch(FormatException)
+            catch (FormatException)
             {
                 this.Monitor.Log($"Your config.json format is invalid and BFAV has shut down. You are running BFAV v{this.ModManifest.Version.ToString()} which requires a config.json format of {this.ModManifest.Version.MajorVersion.ToString()}.", LogLevel.Alert);
                 return;
@@ -67,30 +71,37 @@ namespace BetterFarmAnimalVariety
             this.Helper.Content.AssetEditors.Add(new AnimalBirthEditor(this));
 
             // Events
-            this.Helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
-            this.Helper.Events.Display.RenderingActiveMenu += this.OnRenderingActiveMenu;
-            this.Helper.Events.Display.RenderedActiveMenu += this.OnRenderedActiveMenu;
-            this.Helper.Events.Input.ButtonPressed += this.OnButtonPressed;
-            this.Helper.Events.Display.MenuChanged += this.OnMenuChanged;
+            this.Helper.Events.GameLoop.Saving += this.OnSaving;
+            // this.Helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
+            // this.Helper.Events.Display.RenderingActiveMenu += this.OnRenderingActiveMenu;
+            // this.Helper.Events.Display.RenderedActiveMenu += this.OnRenderedActiveMenu;
+            // this.Helper.Events.Input.ButtonPressed += this.OnButtonPressed;
+            // this.Helper.Events.Display.MenuChanged += this.OnMenuChanged;
         }
 
         private void ApplyHarmonyPatches()
         {
+            Dictionary<MethodInfo, HarmonyMethod> patches  = new Dictionary<MethodInfo, HarmonyMethod>()
+            {
+                // Remove the hardcoded check on the Vanilla stock categories
+                { AccessTools.Method(typeof(PurchaseAnimalsMenu), "getAnimalTitle"),  new HarmonyMethod(typeof(PurchaseAnimalsMenuPatch).GetMethod("getAnimalTitlePrefix")) },
+                { AccessTools.Method(typeof(PurchaseAnimalsMenu), "getAnimalDescription"), new HarmonyMethod(typeof(PurchaseAnimalsMenuPatch).GetMethod("getAnimalDescriptionPrefix")) }
+            };
+
             // Harmony
-            var harmony = HarmonyInstance.Create("paritee.betterfarmanimalvariety");
+            HarmonyInstance harmony = HarmonyInstance.Create(Framework.Helpers.Constants.HarmonyKey);
 
-            MethodInfo targetMethod;
-            HarmonyMethod prefixMethod;
-
-            // Remove the hardcoded check on the Vanilla stock categories
-            targetMethod = AccessTools.Method(typeof(PurchaseAnimalsMenu), "getAnimalTitle");
-            prefixMethod = new HarmonyMethod(typeof(PurchaseAnimalsMenuPatch).GetMethod("getAnimalTitlePrefix"));
-            harmony.Patch(targetMethod, prefixMethod, null);
-
-            // Remove the hardcoded check on the Vanilla stock categories
-            targetMethod = AccessTools.Method(typeof(PurchaseAnimalsMenu), "getAnimalDescription");
-            prefixMethod = new HarmonyMethod(typeof(PurchaseAnimalsMenuPatch).GetMethod("getAnimalDescriptionPrefix"));
-            harmony.Patch(targetMethod, prefixMethod, null);
+            foreach (KeyValuePair<MethodInfo, HarmonyMethod> patch in patches)
+            {
+                if (patch.Value.methodName.ToLower().Contains(Framework.Helpers.Constants.HarmonyPostFix))
+                {
+                    harmony.Patch(patch.Key, null, patch.Value);
+                }
+                else
+                {
+                    harmony.Patch(patch.Key, patch.Value, null);
+                }
+            }
         }
 
         private void ApplyConsoleCommands()
@@ -127,6 +138,50 @@ namespace BetterFarmAnimalVariety
             config.InitializeFarmAnimals();
 
             return config;
+        }
+
+        /// <summary>Raised before the game writes data to save file (except the initial save creation). The save won't be written until all mods have finished handling this event.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OnSaving(object sender, SavingEventArgs e)
+        {
+            // Convert FarmAnimals to defaults when saving the game, search 
+            // through all AnimalHouses and overwrite to not contaminate the saves
+            foreach (Building building in Game1.getFarm().buildings)
+            {
+                if (building.indoors.Value is AnimalHouse animalHouse)
+                {
+                    foreach (long id in animalHouse.animalsThatLiveHere)
+                    {
+                        FarmAnimal animal = Utility.getAnimal(id);
+
+                        // Only non-vanilla animals need to be updated before being saved
+                        if (!Framework.Helpers.Utilities.HasVanillaFarmAnimalType(animal))
+                        {
+                            string newType = animal.isCoopDweller()
+                                ? Framework.Helpers.Utilities.GetDefaultCoopDwellerType()
+                                : Framework.Helpers.Utilities.GetDefaultBarnDwellerType();
+
+                            // Convert it to vanilla
+                            KeyValuePair<string, string> contentDataEntry = Game1.content.Load<Dictionary<string, string>>("Data\\FarmAnimals").First(o => o.Key.Equals(newType));
+
+                            if (contentDataEntry.Key == null)
+                            {
+                                // Somehow they removed the default animals... 
+                                this.Monitor.Log($"Could not find {newType} to overwrite custom farm animal for saving. This is a fatal error. Please make sure you have {newType} in the game.");
+
+                                // This is a show stopper
+                                throw new KeyNotFoundException();
+                            }
+
+                            FarmAnimal animalToBeConverted = (animal.home.indoors.Value as AnimalHouse).animals.Values.First(o => o.myID.Value.Equals(animal.myID.Value));
+
+                            // Overwrite the animal
+                            Framework.Helpers.Utilities.OverwriteAnimalFromData(ref animalToBeConverted, contentDataEntry);
+                        }
+                    }
+                }
+            }
         }
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
@@ -234,27 +289,6 @@ namespace BetterFarmAnimalVariety
             this.ChangedPurchaseAnimalsMenuClickableComponents = false;
         }
 
-        private void AttemptToCleanSaves(ButtonPressedEventArgs e)
-        {
-            // Always attempt to clean up the animal types to prevent on save load crashes
-            // if the patch mod had been removed without the animals being sold/deleted
-            if (Game1.activeClickableMenu is TitleMenu titleMenu && TitleMenu.subMenu is LoadGameMenu loadGameMenu)
-            {
-                for (int index = 0; index < loadGameMenu.slotButtons.Count; index++)
-                {
-                    if (loadGameMenu.slotButtons[index].containsPoint((int)e.Cursor.ScreenPixels.X, (int)e.Cursor.ScreenPixels.Y))
-                    {
-                        int currentItemIndex = this.Helper.Reflection.GetField<int>(loadGameMenu, "currentItemIndex").GetValue();
-                        SaveFileSlot saveFileSlot = this.Helper.Reflection.GetField<List<MenuSlot>>(loadGameMenu, "menuSlots").GetValue()[currentItemIndex + index] as SaveFileSlot;
-
-                        this.Helper.ConsoleCommands.Trigger("bfav_fa_fix", new string[] { saveFileSlot.Farmer.slotName });
-
-                        break;
-                    }
-                }
-            }
-        }
-
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             this.AttemptToCleanSaves(e);
@@ -290,6 +324,29 @@ namespace BetterFarmAnimalVariety
             PurchaseFarmAnimalMenu purchaseFarmAnimalMenu = new PurchaseFarmAnimalMenu(purchaseAnimalsMenu, purchaseFarmAnimal);
 
             purchaseFarmAnimalMenu.HandleTap(e);
+        }
+
+        private void AttemptToCleanSaves(ButtonPressedEventArgs e)
+        {
+            // Always attempt to clean up the animal types to prevent on save load crashes
+            // if the patch mod had been removed without the animals being sold/deleted.
+            // This will now also migrate users from bfav 2.x where types were saved directly 
+            // to 3.x where they are not.
+            if (Game1.activeClickableMenu is TitleMenu titleMenu && TitleMenu.subMenu is LoadGameMenu loadGameMenu)
+            {
+                for (int index = 0; index < loadGameMenu.slotButtons.Count; index++)
+                {
+                    if (loadGameMenu.slotButtons[index].containsPoint((int)e.Cursor.ScreenPixels.X, (int)e.Cursor.ScreenPixels.Y))
+                    {
+                        int currentItemIndex = this.Helper.Reflection.GetField<int>(loadGameMenu, "currentItemIndex").GetValue();
+                        SaveFileSlot saveFileSlot = this.Helper.Reflection.GetField<List<MenuSlot>>(loadGameMenu, "menuSlots").GetValue()[currentItemIndex + index] as SaveFileSlot;
+
+                        this.Helper.ConsoleCommands.Trigger("bfav_fa_fix", new string[] { saveFileSlot.Farmer.slotName });
+
+                        break;
+                    }
+                }
+            }
         }
     }
 }
