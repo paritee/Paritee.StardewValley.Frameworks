@@ -9,7 +9,6 @@ namespace BetterFarmAnimalVariety.Framework.Patches
     {
         // TODO: StardewValley.Utility.getPurchaseAnimalStock
 
-        // StardewValley.Utility.fixAllAnimals
         public static void Postfix()
         {
             Patch.CleanSaveData();

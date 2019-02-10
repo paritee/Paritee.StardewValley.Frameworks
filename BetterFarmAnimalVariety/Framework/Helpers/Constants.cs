@@ -20,6 +20,7 @@
         public const string ContentPathDelimiter = "\\";
         public const string AnimalsContentDirectory = "Animals";
         public const string DataFarmAnimalsContentDirectory = "Data\\FarmAnimals";
+        public const string DataBlueprintsContentDirectory = "Data\\Blueprints";
         public const char DataValueDelimiter = '/';
         public const string None = "none";
         public const int StartingFrame = 0;

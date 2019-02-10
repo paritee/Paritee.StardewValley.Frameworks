@@ -54,17 +54,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\BaseCommands.cs" />
-    <Compile Include="Commands\ConfigCommands.cs" />
-    <Compile Include="Commands\FarmAnimalsCommands.cs" />
+    <Compile Include="Framework\Commands\BaseCommands.cs" />
+    <Compile Include="Framework\Commands\Command.cs" />
+    <Compile Include="Framework\Commands\ConfigCommands.cs" />
+    <Compile Include="Framework\Commands\FarmAnimalsCommands.cs" />
     <Compile Include="Framework\Api\AnimalHouse.cs" />
     <Compile Include="Framework\Api\Content.cs" />
     <Compile Include="Framework\Api\FarmAnimal.cs" />
+    <Compile Include="Framework\Commands\FarmAnimal\ListCommands.cs" />
+    <Compile Include="Framework\Commands\FarmAnimal\ResetCommand.cs" />
     <Compile Include="Framework\Data\FarmAnimalsSaveData.cs" />
     <Compile Include="Framework\Data\TypeHistory.cs" />
     <Compile Include="Framework\Data\SaveData.cs" />
     <Compile Include="Framework\Events\ConvertDirtyFarmAnimals.cs" />
     <Compile Include="Framework\Events\PurchaseFarmAnimal.cs" />
+    <Compile Include="Framework\Helpers\Commands.cs" />
     <Compile Include="Framework\Helpers\Constants.cs" />
     <Compile Include="Framework\Helpers\Data.cs" />
     <Compile Include="Framework\Helpers\Multiplayer.cs" />

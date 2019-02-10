@@ -89,9 +89,32 @@ namespace BetterFarmAnimalVariety
 
         private void SetupConsoleCommands()
         {
-            this.Command = new ModCommand(this.Config, this.Helper, this.Monitor);
+            List<Framework.Commands.Command> commands = new List<Framework.Commands.Command>()
+            {
+                // Config
+                new Framework.Commands.Config.ListCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.Config.VoidShopCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.Config.RandomizeFromCategoryCommand(this.Helper, this.Monitor, this.Config),
 
-            this.Command.SetUp();
+                // FarmAnimal
+                new Framework.Commands.FarmAnimal.ListCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.ResetCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.AddCategoryCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.RemoveCategoryCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.AddTypesCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.RemoveTypesCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.SetBuildingsCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.SetAnimalShopCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.SetAnimalShopNameCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.SetAnimalShopDescriptionCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.SetAnimalShopPriceCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.SetAnimalShopIconCommand(this.Helper, this.Monitor, this.Config),
+            };
+
+            foreach (Framework.Commands.Command command in commands)
+            {
+                this.Helper.ConsoleCommands.Add(command.Name, command.Description, command.Callback);
+            }
         }
 
         public override object GetApi()

@@ -1,4 +1,4 @@
-﻿using BetterFarmAnimalVariety.Commands;
+﻿using BetterFarmAnimalVariety.Framework.Commands;
 using StardewModdingAPI;
 
 namespace BetterFarmAnimalVariety
