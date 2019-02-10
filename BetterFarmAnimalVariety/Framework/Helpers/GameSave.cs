@@ -1,13 +1,75 @@
 ﻿using BetterFarmAnimalVariety.Framework.Data;
 using Netcode;
+using StardewValley;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Xml;
 
 namespace BetterFarmAnimalVariety.Framework.Helpers
 {
     internal class GameSave
     {
+        public static void OverwriteFarmAnimal(ref FarmAnimal animal, string requestedType)
+        {
+            // ==========
+            // TODO:
+            // WARNING:
+            // Don't sanitize a farm animal's type by blue/void/brown cow chance
+            // etc. or BFAV config existence here. These checks should be done 
+            // in the menus, etc.
+            // ==========
+
+            if (Api.FarmAnimal.IsVanilla(requestedType))
+            {
+                // We don't need to do anything for vanilla animals
+                // Saving to save data happens on saves
+                return;
+            }
+
+            long myId = animal.myID.Value;
+
+            // Check the save entry for reloaded animals that may have their 
+            // vanilla replacements saved which can't be used
+            KeyValuePair<long, TypeHistory> saveDataEntry = FarmAnimalsSaveData.Deserialize()
+                .GetTypeHistory().FirstOrDefault(kvp => kvp.Key.Equals(myId));
+
+            // If there's a save data entry, use that; otherwise this might be 
+            // an animal created before being saved (ie. created in current day)
+            string currentType = saveDataEntry.Key == default(long) ? requestedType : saveDataEntry.Value.CurrentType;
+
+            Debug.WriteLine($"saveDataEntry.Key == default(long) {saveDataEntry.Key == default(long)}");
+            Debug.WriteLine($"requestedType {requestedType}");
+            Debug.WriteLine($"saveDataEntry.Value.CurrentType {saveDataEntry.Value.CurrentType}");
+            Debug.WriteLine($"currentType {currentType}");
+
+            // Grab the new type's data to override if it exists
+            Dictionary<string, string> contentData = Api.Content.Load<Dictionary<string, string>>(Helpers.Constants.DataFarmAnimalsContentDirectory);
+            KeyValuePair<string, string> contentDataEntry = contentData.FirstOrDefault(kvp => kvp.Key.Equals(currentType));
+
+            // If the data doesn't exist, it somehow got past the safety checks
+            if (contentDataEntry.Key == null)
+            {
+                // Get a default type to use
+                string defaultType = Api.FarmAnimal.GetDefaultType(animal);
+
+                // Set it to the default before we continue
+                contentDataEntry = contentData.FirstOrDefault(kvp => kvp.Key.Equals(defaultType));
+
+                // Do a final check to make sure the default exists; otherwise 
+                // we need to kill everything. This should never happen unless 
+                // agressive mods are being used to REMOVE vanilla animals.
+                if (contentDataEntry.Key == null)
+                {
+                    throw new KeyNotFoundException($"Could not find {defaultType} to overwrite custom farm animal for saving. This is a fatal error. Please make sure you have {defaultType} in the game.");
+                }
+            }
+
+            // Set the animal with the new type's data values
+            Api.FarmAnimal.UpdateFromData(ref animal, contentDataEntry);
+        }
+
         public static void Fix(string saveFolder, out List<TypeHistory> typesToBeMigrated)
         {
             // Track the types to be migrated for reporting
@@ -19,6 +81,8 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             {
                 throw new FileNotFoundException($"{saveFile} does not exist");
             }
+
+            FarmAnimalsSaveData saveData = FarmAnimalsSaveData.Deserialize();
 
             // Replace barn animals with White Cows and coop animals with White Chickens
             XmlDocument doc = new XmlDocument();
@@ -46,10 +110,20 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
                     // This is the type that's saved... We're going to continue to
                     // associate the dweller's type as saved and this as the current
                     string currentType = animals[k].SelectSingleNode("type").InnerText;
+                    long myId = long.Parse(animals[k].SelectSingleNode("myID").InnerText);
 
                     // We only need to update the animals if they aren't vanilla
                     if (Framework.Api.FarmAnimal.IsVanilla(currentType))
                     {
+                        // But only if that animal hasn't been logged before; 
+                        // otherwise it would endlessly overwrite the animals. 
+                        // Non -vanilla migrations get saved later.
+                        if (!saveData.GetTypeHistory().ContainsKey(myId))
+                        {
+                            saveData.AddTypeHistory(myId, currentType, currentType);
+                        }
+
+                        // Always skip the migration for vanilla
                         continue;
                     }
 
@@ -58,34 +132,30 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
 
                     // Clean the node by replace the dirty saved values from the 
                     // content of the default dwellers
-                    Framework.Helpers.GameSave.CleanDirtyFarmAnimalXmlNode(ref doc, ref animals, k, typeToBeSaved, out long myId);
+                    Framework.Helpers.GameSave.CleanDirtyFarmAnimalXmlNode(ref doc, ref animals, k, typeToBeSaved, myId);
 
-                    // Track the migration of this type so we can save it in our save data
+                    // Track the migration of this type to save it in the save data
                     typesToBeMigrated.Add(new TypeHistory(myId, currentType, typeToBeSaved));
                 }
             }
 
-            // Report to the usre if any animals were migrated and save the migrations
+            // Save the migrations
             if (typesToBeMigrated.Count > 0)
             {
                 // Save the XmlDocument back to disk
                 doc.Save(saveFile);
-
-                // Deserialize the data to prepare for update
-                FarmAnimalsSaveData saveData = FarmAnimalsSaveData.Deserialize();
 
                 // Update the save data
                 saveData.AddTypeHistory(typesToBeMigrated);
             }
         }
 
-        private static void CleanDirtyFarmAnimalXmlNode(ref XmlDocument doc, ref XmlNodeList animals, int index, string defaultType, out long myId)
+        private static void CleanDirtyFarmAnimalXmlNode(ref XmlDocument doc, ref XmlNodeList animals, int index, string defaultType, long myId)
         {
             XmlNode animal = animals[index];
 
             // We will need this to pass to the dweller - myId is the 
             // only one that matters that it's the same between them
-            myId = long.Parse(animal.SelectSingleNode("myID").InnerText);
             long ownerId = long.Parse(animal.SelectSingleNode("ownerID").InnerText);
 
             // Passing the myID means this will be saved in the save data

@@ -37,7 +37,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
             string assetName = prefix + animal.type.Value;
 
             // Check if the asset exists (ex. vanilla fails on BabyDuck)
-            if (!Api.Content.Exists<Texture2D>(assetName))
+            if (!Api.Content.Exists<Texture2D>(Api.Content.BuildPath(new string[] { Helpers.Constants.AnimalsContentDirectory, assetName })))
             {
                 // Covers the BabyDuck scenario by using BabyWhite Chicken
                 assetName = Api.FarmAnimal.GetDefaultType(animal);
@@ -109,7 +109,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
             string[] values = Api.Content.ParseDataValue(contentDataEntry.Value);
 
             // Reset the instance's values based on the new type
-            animal.type.Value = contentDataEntry.Value;
+            animal.type.Value = contentDataEntry.Key;
             animal.daysToLay.Value = Convert.ToByte(values[(int)Helpers.Data.FarmAnimalsIndex.DaysToLay]);
             animal.ageWhenMature.Value = Convert.ToByte(values[(int)Helpers.Data.FarmAnimalsIndex.AgeWhenMature]);
             animal.defaultProduceIndex.Value = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.DefaultProduce]);

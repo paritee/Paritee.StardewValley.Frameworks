@@ -35,7 +35,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
 
         public static bool Exists(string str)
         {
-            return Helpers.Reflection.GetProperty(typeof(VanillaFarmAnimal), Helpers.VanillaFarmAnimal.Parse(str), BindingFlags.Static | BindingFlags.Public) != null;
+            return str == null ? false : (Helpers.Reflection.GetProperty(typeof(VanillaFarmAnimal), Helpers.VanillaFarmAnimal.Parse(str), BindingFlags.Static | BindingFlags.Public) != null);
         }
     }
 }

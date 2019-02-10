@@ -9,6 +9,11 @@ namespace BetterFarmAnimalVariety.Framework.Data
     {
         public Dictionary<long, TypeHistory> TypeHistory = new Dictionary<long, TypeHistory>();
 
+        public Dictionary<long, TypeHistory> GetTypeHistory()
+        {
+            return this.TypeHistory;
+        }
+
         public static string GetPath()
         {
             string saveDataDir = Path.Combine(StardewModdingAPI.Constants.DataPath, Helpers.Constants.ModKey);

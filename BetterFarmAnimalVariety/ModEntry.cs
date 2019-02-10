@@ -16,6 +16,7 @@ using StardewValley;
 using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace BetterFarmAnimalVariety
@@ -76,12 +77,12 @@ namespace BetterFarmAnimalVariety
 
         private void SetupHarmonyPatches()
         {
-            // Harmony
+            // Patch the game code directly
             HarmonyInstance harmony = HarmonyInstance.Create(Framework.Helpers.Constants.ModKey);
 
-            // TODO:
-            // FarmInfoPage
-            // Forest
+            // TODO: might want to adjust these after some testing
+            // - FarmInfoPage
+            // - Forest
 
             harmony.PatchAll();
         }
@@ -169,10 +170,17 @@ namespace BetterFarmAnimalVariety
         /// <param name="e">The event arguments.</param>
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
-            try
-            {
+
+            Debug.WriteLine($"OnButtonPressed");
+
+            //try
+            //{
+                Debug.WriteLine($"try");
+
                 if (ConvertDirtyFarmAnimals.OnButtonPressed(e, out List<TypeHistory> typesToBeMigrated))
                 {
+                    Debug.WriteLine($"typesToBeMigrated");
+
                     // Report if any animals were migrated and save the migrations
                     string message = typesToBeMigrated.Count > 0
                         ? $"ConvertDirtyFarmAnimals: Migrated {typesToBeMigrated.Count} dirty farm animals:\n-- {String.Join("\n-- ", typesToBeMigrated.Select(o => $"{o.FarmAnimalId}: {o.CurrentType} saved as {o.SavedType}"))}"
@@ -180,11 +188,13 @@ namespace BetterFarmAnimalVariety
 
                     this.Monitor.Log(message, LogLevel.Trace);
                 }
-            }
-            catch (Exception exception)
-            {
-                this.Monitor.Log(exception.Message, LogLevel.Error);
-            }
+                Debug.WriteLine($"after");
+            //}
+            //catch (Exception exception)
+            //{
+            //    Debug.WriteLine($"exception");
+            //    this.Monitor.Log(exception.Message, LogLevel.Error);
+            //}
 
             // TODO: enable everything in bfav again
             //Framework.Events.PurchaseFarmAnimal.OnButtonPressed(this.Player, this.AnimalShop, e);

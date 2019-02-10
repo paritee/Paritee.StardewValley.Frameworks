@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Diagnostics;
 using System.IO;
 
 namespace BetterFarmAnimalVariety.Framework.Data
@@ -12,9 +13,14 @@ namespace BetterFarmAnimalVariety.Framework.Data
 
         public static T Deserialize<T>(string path)
         {
-            return SaveData.Exists(path) 
-                ? JsonConvert.DeserializeObject<T>(path)
-                : default(T);
+            if (SaveData.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+
+                return JsonConvert.DeserializeObject<T>(json);
+            }
+
+            return default(T);
         }
 
         protected void WriteChanges(object obj, string filePath)

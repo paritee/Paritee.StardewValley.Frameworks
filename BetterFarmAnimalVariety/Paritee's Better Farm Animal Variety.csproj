@@ -54,15 +54,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Framework\Commands\BaseCommands.cs" />
     <Compile Include="Framework\Commands\Command.cs" />
-    <Compile Include="Framework\Commands\ConfigCommands.cs" />
-    <Compile Include="Framework\Commands\FarmAnimalsCommands.cs" />
     <Compile Include="Framework\Api\AnimalHouse.cs" />
     <Compile Include="Framework\Api\Content.cs" />
     <Compile Include="Framework\Api\FarmAnimal.cs" />
-    <Compile Include="Framework\Commands\FarmAnimal\ListCommands.cs" />
+    <Compile Include="Framework\Commands\Config\ListCommand.cs" />
+    <Compile Include="Framework\Commands\Config\RandomizeFromCategoryCommand.cs" />
+    <Compile Include="Framework\Commands\Config\VoidShopCommand.cs" />
+    <Compile Include="Framework\Commands\FarmAnimal\AddCategoryCommand.cs" />
+    <Compile Include="Framework\Commands\FarmAnimal\AddTypesCommand.cs" />
+    <Compile Include="Framework\Commands\FarmAnimal\ListCommand.cs" />
+    <Compile Include="Framework\Commands\FarmAnimal\RemoveCategoryCommand.cs" />
+    <Compile Include="Framework\Commands\FarmAnimal\RemoveTypesCommand.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\ResetCommand.cs" />
+    <Compile Include="Framework\Commands\FarmAnimal\SetAnimalShopCommand.cs" />
+    <Compile Include="Framework\Commands\FarmAnimal\SetAnimalShopDescriptionCommand.cs" />
+    <Compile Include="Framework\Commands\FarmAnimal\SetAnimalShopIconCommand.cs" />
+    <Compile Include="Framework\Commands\FarmAnimal\SetAnimalShopNameCommand.cs" />
+    <Compile Include="Framework\Commands\FarmAnimal\SetAnimalShopPriceCommand.cs" />
+    <Compile Include="Framework\Commands\FarmAnimal\SetBuildingsCommand.cs" />
     <Compile Include="Framework\Data\FarmAnimalsSaveData.cs" />
     <Compile Include="Framework\Data\TypeHistory.cs" />
     <Compile Include="Framework\Data\SaveData.cs" />
@@ -80,10 +90,8 @@
     <Compile Include="Framework\Patches\PurchaseAnimalsMenuPatch_getAnimalDescription.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenuPatch.cs" />
     <Compile Include="ModApi.cs" />
-    <Compile Include="ModCommand.cs" />
     <Compile Include="Models\AppSettings.cs" />
     <Compile Include="Models\AppSetting.cs" />
-    <Compile Include="Models\Command.cs" />
     <Compile Include="Models\ConfigFarmAnimal.cs" />
     <Compile Include="Editors\AnimalBirthEditor.cs" />
     <Compile Include="ModConfig.cs" />

@@ -7,7 +7,16 @@ namespace BetterFarmAnimalVariety.Framework.Api
     {
         public static bool Exists<T>(string name)
         {
-            return Api.Content.Load<T>(name) != null;
+            try
+            {
+                Api.Content.Load<T>(name);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public static T Load<T>(string name)

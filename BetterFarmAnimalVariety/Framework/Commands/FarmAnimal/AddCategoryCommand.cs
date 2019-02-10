@@ -11,7 +11,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
     class AddCategoryCommand : Command
     {
         public AddCategoryCommand(IModHelper helper, IMonitor monitor, ModConfig config)
-            : base("bfav_fa_addcategory", $"Add a unique category.\nUsage: bfav_fa_addcategory <category> <types> <buildings> <animalshop>\n- category: the unique animal category.\n- types: a comma separated string in quotes (ex \"White Cow,Brown Cow\").\n- buildings: a comma separated string in quotes (ex \"Barn,Deluxe Coop\").\n- animalshop: { SetAnimalShopCommand.EnableShop } or { SetAnimalShopCommand.DisableShop }.", helper, monitor, config) { }
+            : base("bfav_fa_addcategory", $"Add a unique category.\nUsage: bfav_fa_addcategory <category> <types> <buildings> <animalshop>\n- category: the unique animal category.\n- types: a comma separated string in quotes (ex \"White Cow,Brown Cow\").\n- buildings: a comma separated string in quotes (ex \"Barn,Deluxe Coop\").\n- animalshop: { Command.True} or { Command.False }.", helper, monitor, config) { }
 
         /// <param name="command">The name of the command invoked.</param>
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
@@ -56,9 +56,9 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
                     this.AssertBuildingsExist(buildings);
                 }
 
-                string animalShop = (args.Length < 4 ? SetAnimalShopCommand.DisableShop : args[3].Trim()).ToLower();
+                string animalShop = (args.Length < 4 ? Command.False : args[3].Trim()).ToLower();
 
-                this.AssertValidBoolean(animalShop);
+                this.AssertValidBoolean(animalShop, "animalShop", out bool result);
 
                 ConfigFarmAnimalAnimalShop configFarmAnimalAnimalShop;
 

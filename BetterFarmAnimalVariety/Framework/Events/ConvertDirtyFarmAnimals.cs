@@ -5,6 +5,7 @@ using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Menus;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using static StardewValley.Menus.LoadGameMenu;
@@ -16,6 +17,9 @@ namespace BetterFarmAnimalVariety.Framework.Events
         public static void OnSaving(SavingEventArgs e)
         {
             FarmAnimalsSaveData saveData = FarmAnimalsSaveData.Deserialize();
+
+            Debug.WriteLine($"OnSaving");
+
 
             // Convert FarmAnimals to defaults when saving the game, search 
             // through all AnimalHouses and overwrite to not contaminate the saves
@@ -34,6 +38,8 @@ namespace BetterFarmAnimalVariety.Framework.Events
                     // Only non-vanilla animals need to be updated before being saved
                     if (Framework.Api.FarmAnimal.IsVanilla(animal.type.Value))
                     {
+                        Debug.WriteLine($"Framework.Api.FarmAnimal.IsVanilla(animal.type.Value)");
+
                         continue;
                     }
 
@@ -43,6 +49,11 @@ namespace BetterFarmAnimalVariety.Framework.Events
                     KeyValuePair<string, string> contentDataEntry = Api.Content.Load<Dictionary<string, string>>(Helpers.Constants.DataFarmAnimalsContentDirectory)
                         .First(o => o.Key.Equals(savedType));
 
+                    Debug.WriteLine($"savedType {savedType}");
+                    Debug.WriteLine($"contentDataEntry.Key {contentDataEntry.Key}");
+                    Debug.WriteLine($"contentDataEntry.Key == null {contentDataEntry.Key == null}");
+
+
                     // Kill everything if for some reason the user removed the default dweller information from the game
                     if (contentDataEntry.Key == null)
                     {
@@ -50,7 +61,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                     }
 
                     FarmAnimal animalToBeConverted = (animal.home.indoors.Value as AnimalHouse).animals.Values
-                        .First(o => o.myID.Value.Equals(animal.myID.Value));
+                        .FirstOrDefault(o => o.myID.Value.Equals(animal.myID.Value));
 
                     // Overwrite the animal
                     Framework.Api.FarmAnimal.UpdateFromData(ref animalToBeConverted, contentDataEntry);
@@ -106,7 +117,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 }
 
                 // Scan only the most recent save if it can be found
-                Framework.Helpers.GameSave.Fix(Path.Combine(Constants.SavesPath, Game1.player.slotName), out typesToBeMigrated);
+                Framework.Helpers.GameSave.Fix(Path.Combine(Constants.SavesPath, saveFileSlot.Farmer.slotName), out typesToBeMigrated);
 
                 return true;
             }
