@@ -24,7 +24,6 @@ namespace BetterFarmAnimalVariety
     public class ModEntry : Mod
     {
         public ModConfig Config;
-        public ModCommand Command;
 
         public Player Player;
         public BlueVariation BlueFarmAnimals;
