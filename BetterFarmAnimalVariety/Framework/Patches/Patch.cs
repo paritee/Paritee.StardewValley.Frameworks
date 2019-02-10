@@ -8,7 +8,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches
         {
             FarmAnimalsSaveData saveData = FarmAnimalsSaveData.Deserialize();
 
-            saveData.CleanTypeHistory();
+            saveData.Clean();
         }
     }
 }

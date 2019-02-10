@@ -28,20 +28,17 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
                 return;
             }
 
-            long myId = animal.myID.Value;
-
             // Check the save entry for reloaded animals that may have their 
             // vanilla replacements saved which can't be used
-            KeyValuePair<long, TypeHistory> saveDataEntry = FarmAnimalsSaveData.Deserialize()
-                .GetTypeHistory().FirstOrDefault(kvp => kvp.Key.Equals(myId));
+            TypeLog typeHistory = FarmAnimalsSaveData.Deserialize().GetTypeHistory(animal.myID.Value);
 
             // If there's a save data entry, use that; otherwise this might be 
             // an animal created before being saved (ie. created in current day)
-            string currentType = saveDataEntry.Key == default(long) ? requestedType : saveDataEntry.Value.CurrentType;
+            string currentType = typeHistory == null ? requestedType : typeHistory.CurrentType;
 
-            Debug.WriteLine($"saveDataEntry.Key == default(long) {saveDataEntry.Key == default(long)}");
+            Debug.WriteLine($"typeHistory == null {typeHistory == null}");
             Debug.WriteLine($"requestedType {requestedType}");
-            Debug.WriteLine($"saveDataEntry.Value.CurrentType {saveDataEntry.Value.CurrentType}");
+            Debug.WriteLine($"typeHistory.CurrentType {typeHistory.CurrentType}");
             Debug.WriteLine($"currentType {currentType}");
 
             // Grab the new type's data to override if it exists
@@ -70,10 +67,10 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             Api.FarmAnimal.UpdateFromData(ref animal, contentDataEntry);
         }
 
-        public static void Fix(string saveFolder, out List<TypeHistory> typesToBeMigrated)
+        public static void Fix(string saveFolder, out Dictionary<long, TypeLog> typesToBeMigrated)
         {
             // Track the types to be migrated for reporting
-            typesToBeMigrated = new List<TypeHistory>();
+            typesToBeMigrated = new Dictionary<long, TypeLog>();
 
             string saveFile = Path.Combine(saveFolder, Path.GetFileName(saveFolder));
 
@@ -113,7 +110,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
                     long myId = long.Parse(animals[k].SelectSingleNode("myID").InnerText);
 
                     // We only need to update the animals if they aren't vanilla
-                    if (Framework.Api.FarmAnimal.IsVanilla(currentType))
+                    if (Api.FarmAnimal.IsVanilla(currentType))
                     {
                         // But only if that animal hasn't been logged before; 
                         // otherwise it would endlessly overwrite the animals. 
@@ -128,14 +125,14 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
                     }
 
                     // Choose the default dweller based on the building
-                    string typeToBeSaved = Framework.Api.FarmAnimal.GetDefaultType(buildingType);
+                    string typeToBeSaved = Api.FarmAnimal.GetDefaultType(buildingType);
 
                     // Clean the node by replace the dirty saved values from the 
                     // content of the default dwellers
-                    Framework.Helpers.GameSave.CleanDirtyFarmAnimalXmlNode(ref doc, ref animals, k, typeToBeSaved, myId);
+                    Helpers.GameSave.CleanDirtyFarmAnimalXmlNode(ref doc, ref animals, k, typeToBeSaved, myId);
 
                     // Track the migration of this type to save it in the save data
-                    typesToBeMigrated.Add(new TypeHistory(myId, currentType, typeToBeSaved));
+                    typesToBeMigrated.Add(myId, new TypeLog(currentType, typeToBeSaved));
                 }
             }
 
@@ -159,7 +156,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             long ownerId = long.Parse(animal.SelectSingleNode("ownerID").InnerText);
 
             // Passing the myID means this will be saved in the save data
-            StardewValley.FarmAnimal dweller = Framework.Api.FarmAnimal.CreateFarmAnimal(defaultType, ownerId, null, null, myId);
+            StardewValley.FarmAnimal dweller = Api.FarmAnimal.CreateFarmAnimal(defaultType, ownerId, null, null, myId);
 
             // Go through ALL of their child nodes and prepare to 
             // overwrite with the default dwellers
@@ -181,7 +178,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
                     case "buildingTypeILiveIn":
                     case "toolUsedForHarvest":
                         {
-                            string newValue = Framework.Helpers.Reflection.GetFieldValue<object>(dweller, child.Name).ToString();
+                            string newValue = Helpers.Reflection.GetFieldValue<object>(dweller, child.Name).ToString();
 
                             // Need to make bools lowercase for XML
                             if (newValue.ToString().Equals("True") || newValue.ToString().Equals("False"))
@@ -200,7 +197,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
                         {
                             // TODO: this is gross.
                             XmlElement newChild = doc.CreateElement(child.Name);
-                            NetRectangle rectangle = Framework.Helpers.Reflection.GetFieldValue<NetRectangle>(dweller, child.Name);
+                            NetRectangle rectangle = Helpers.Reflection.GetFieldValue<NetRectangle>(dweller, child.Name);
 
                             XmlElement x = doc.CreateElement("X");
                             x.InnerText = rectangle.X.ToString();

@@ -69,9 +69,9 @@ namespace BetterFarmAnimalVariety.Framework.Events
             }
         }
 
-        public static bool OnButtonPressed(ButtonPressedEventArgs e, out List<TypeHistory> typesToBeMigrated)
+        public static bool OnButtonPressed(ButtonPressedEventArgs e, out Dictionary<long, TypeLog> typesToBeMigrated)
         {
-            typesToBeMigrated = new List<TypeHistory>();
+            typesToBeMigrated = new Dictionary<long, TypeLog>();
 
             // Ignore if player has loaded a save
             if (Context.IsWorldReady)

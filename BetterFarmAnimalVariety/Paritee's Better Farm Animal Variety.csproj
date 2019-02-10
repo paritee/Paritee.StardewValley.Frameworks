@@ -74,7 +74,7 @@
     <Compile Include="Framework\Commands\FarmAnimal\SetAnimalShopPriceCommand.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\SetBuildingsCommand.cs" />
     <Compile Include="Framework\Data\FarmAnimalsSaveData.cs" />
-    <Compile Include="Framework\Data\TypeHistory.cs" />
+    <Compile Include="Framework\Data\TypeLog.cs" />
     <Compile Include="Framework\Data\SaveData.cs" />
     <Compile Include="Framework\Events\ConvertDirtyFarmAnimals.cs" />
     <Compile Include="Framework\Events\PurchaseFarmAnimal.cs" />
