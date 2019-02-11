@@ -1,6 +1,7 @@
 ﻿using Harmony;
 using StardewValley;
 using StardewValley.Buildings;
+using System.Collections.Generic;
 
 namespace BetterFarmAnimalVariety.Framework.Patches
 {
@@ -18,8 +19,14 @@ namespace BetterFarmAnimalVariety.Framework.Patches
                 return true;
             }
 
+            // Check the config
+            ModConfig config = Helpers.Config.Load();
+
+            // Grab the types with their associated categories in string form
+            Dictionary<string, List<string>> restrictions = Helpers.Config.ExtractTypesByCategory(config);
+
             // Search for a type by the produce
-            string type = Api.FarmAnimal.GetRandomTypeFromProduce(animalHouse.incubatingEgg.Y) ?? Api.FarmAnimal.GetDefaultCoopDwellerType();
+            string type = Api.FarmAnimal.GetRandomTypeFromProduce(animalHouse.incubatingEgg.Y, restrictions, config.RandomizeHatchlingFromCategory) ?? Api.FarmAnimal.GetDefaultCoopDwellerType();
 
             ////
             // Everything below is a rewrite of the original as it exists
@@ -29,8 +36,8 @@ namespace BetterFarmAnimalVariety.Framework.Patches
 
             Api.AnimalHouse.ResetIncubator(animalHouse);
 
-            animalHouse.map.GetLayer("Front").Tiles[1, 2].TileIndex = 45;
-            animalHouse.animals.Add(animal.myID.Value, animal); // TODO: Check if this needs to be done...
+            animalHouse.map.GetLayer("Front").Tiles[1, 2].TileIndex = 45; // TODO: check what this does - egg in incubator graphic?
+            animalHouse.animals.Add(animal.myID.Value, animal); // TODO: check if this needs to be done...
 
             // Always want to continue because setting the X and Y values will 
             // guarantee that it won't trigger the hatch again

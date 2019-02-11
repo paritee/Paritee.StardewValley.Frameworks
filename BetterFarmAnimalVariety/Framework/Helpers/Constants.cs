@@ -4,11 +4,13 @@
     {
         // Mod
         public const string ModKey = "paritee.betterfarmanimalvariety";
+        public const string ConfigFileName = "config.json";
         public const string FarmAnimalsSaveDataFileName = "farmanimals.json";
 
         // FarmAnimal
         public const string BabyPrefix = "Baby";
         public const string ShearedPrefix = "Sheared";
+        public const int FarmAnimalProduceNone = -1;
 
         // AnimalHouse
         public const string Coop = "Coop";

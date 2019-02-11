@@ -16,7 +16,6 @@ using StardewValley;
 using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace BetterFarmAnimalVariety
@@ -68,6 +67,7 @@ namespace BetterFarmAnimalVariety
 
             // Events
             this.Helper.Events.GameLoop.Saving += this.OnSaving;
+            this.Helper.Events.GameLoop.Saved += this.OnSaved;
             this.Helper.Events.Input.ButtonPressed += this.OnButtonPressed;
             // this.Helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
             // this.Helper.Events.Display.RenderingActiveMenu += this.OnRenderingActiveMenu;
@@ -159,6 +159,25 @@ namespace BetterFarmAnimalVariety
             {
                 // Somehow they removed the default animals... 
                 this.Monitor.Log(exception.Message, LogLevel.Error);
+            
+                // ... this is a show stopper
+                throw exception;
+            }
+        }
+
+        /// <summary>Raised before the game writes data to save file (except the initial save creation). The save won't be written until all mods have finished handling this event.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OnSaved(object sender, SavedEventArgs e)
+        {
+            try
+            {
+                ConvertDirtyFarmAnimals.OnSaved(e);
+            }
+            catch (KeyNotFoundException exception)
+            {
+                // Somehow they removed the default animals... 
+                this.Monitor.Log(exception.Message, LogLevel.Error);
 
                 // ... this is a show stopper
                 throw exception;
@@ -170,31 +189,22 @@ namespace BetterFarmAnimalVariety
         /// <param name="e">The event arguments.</param>
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
-
-            Debug.WriteLine($"OnButtonPressed");
-
-            //try
-            //{
-                Debug.WriteLine($"try");
-
+            try
+            {
                 if (ConvertDirtyFarmAnimals.OnButtonPressed(e, out Dictionary<long, TypeLog> typesToBeMigrated))
                 {
-                    Debug.WriteLine($"typesToBeMigrated");
-
                     // Report if any animals were migrated and save the migrations
-                    string message = typesToBeMigrated.Count > 0
+                    string message = typesToBeMigrated.Any()
                         ? $"ConvertDirtyFarmAnimals: Migrated {typesToBeMigrated.Count} dirty farm animals:\n-- {String.Join("\n-- ", typesToBeMigrated.Select(kvp => $"{kvp.Key}: {kvp.Value.CurrentType} saved as {kvp.Value.SavedType}"))}"
                         : $"ConvertDirtyFarmAnimals: No dirty farm animals found";
 
                     this.Monitor.Log(message, LogLevel.Trace);
                 }
-                Debug.WriteLine($"after");
-            //}
-            //catch (Exception exception)
-            //{
-            //    Debug.WriteLine($"exception");
-            //    this.Monitor.Log(exception.Message, LogLevel.Error);
-            //}
+            }
+            catch (Exception exception)
+            {
+                this.Monitor.Log(exception.Message, LogLevel.Error);
+            }
 
             // TODO: enable everything in bfav again
             //Framework.Events.PurchaseFarmAnimal.OnButtonPressed(this.Player, this.AnimalShop, e);

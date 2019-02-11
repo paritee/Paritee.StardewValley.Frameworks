@@ -2,6 +2,8 @@
 using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Events;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.Patches
 {
@@ -45,7 +47,13 @@ namespace BetterFarmAnimalVariety.Framework.Patches
                 return;
             }
 
-            string type = Api.AnimalHouse.GetRandomTypeFromIncubator(incubator);
+            // Check the config
+            ModConfig config = Helpers.Config.Load();
+
+            // Grab the types with their associated categories in string form
+            Dictionary<string, List<string>> restrictions = Helpers.Config.ExtractTypesByCategory(config);
+
+            string type = Api.AnimalHouse.GetRandomTypeFromIncubator(incubator, restrictions, config.RandomizeHatchlingFromCategory);
 
             Building building = animalHouse.getBuilding();
             FarmAnimal animal = Api.FarmAnimal.CreateFarmAnimal(type, Game1.player.UniqueMultiplayerID, name, building);
@@ -56,7 +64,14 @@ namespace BetterFarmAnimalVariety.Framework.Patches
 
         private static void HandleNewborn(ref AnimalHouse animalHouse, string name, ref QuestionEvent questionEvent)
         {
-            string type = Api.FarmAnimal.GetRandomTypeFromParent(questionEvent.animal);
+            // Check the config
+            ModConfig config = Helpers.Config.Load();
+
+            // Grab the types with their associated categories in string form
+            Dictionary<string, List<string>> restrictions = Helpers.Config.ExtractTypesByCategory(config);
+
+            string type = Api.FarmAnimal.GetRandomTypeFromParent(questionEvent.animal, restrictions, config.RandomizeNewbornFromCategory, config.IgnoreParentProduceCheck);
+
             Building building = animalHouse.getBuilding();
             FarmAnimal animal = Api.FarmAnimal.CreateFarmAnimal(type, Game1.player.UniqueMultiplayerID, name, building);
 

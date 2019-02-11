@@ -1,6 +1,7 @@
 ﻿using Netcode;
 using StardewValley;
 using StardewValley.Buildings;
+using System.Collections.Generic;
 
 namespace BetterFarmAnimalVariety.Framework.Api
 {
@@ -19,14 +20,14 @@ namespace BetterFarmAnimalVariety.Framework.Api
             return null;
         }
 
-        public static string GetRandomTypeFromIncubator(StardewValley.Object incubator)
+        public static string GetRandomTypeFromIncubator(StardewValley.Object incubator, Dictionary<string, List<string>> restrictions, bool includeNonProducing)
         {
             string type = null;
 
             // Search for a type by the produce
             if (incubator.heldObject.Value != null)
             {
-                type = Api.FarmAnimal.GetRandomTypeFromProduce(incubator.heldObject.Value.ParentSheetIndex);
+                type = Api.FarmAnimal.GetRandomTypeFromProduce(incubator.heldObject.Value.ParentSheetIndex, restrictions, includeNonProducing);
             }
 
             return type ?? Api.FarmAnimal.GetDefaultCoopDwellerType();

@@ -21,6 +21,12 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             // in the menus, etc.
             // ==========
 
+            if (animal.Name == null)
+            {
+                // TODO: Debug why this happens on reload on game save
+                return;
+            }
+
             if (Api.FarmAnimal.IsVanilla(requestedType))
             {
                 // We don't need to do anything for vanilla animals
@@ -36,16 +42,11 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             // an animal created before being saved (ie. created in current day)
             string currentType = typeHistory == null ? requestedType : typeHistory.CurrentType;
 
-            Debug.WriteLine($"typeHistory == null {typeHistory == null}");
-            Debug.WriteLine($"requestedType {requestedType}");
-            Debug.WriteLine($"typeHistory.CurrentType {typeHistory.CurrentType}");
-            Debug.WriteLine($"currentType {currentType}");
-
             // Grab the new type's data to override if it exists
             Dictionary<string, string> contentData = Api.Content.Load<Dictionary<string, string>>(Helpers.Constants.DataFarmAnimalsContentDirectory);
             KeyValuePair<string, string> contentDataEntry = contentData.FirstOrDefault(kvp => kvp.Key.Equals(currentType));
 
-            // If the data doesn't exist, it somehow got past the safety checks
+            // Always validate if the type we're trying to use exists
             if (contentDataEntry.Key == null)
             {
                 // Get a default type to use
@@ -67,7 +68,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             Api.FarmAnimal.UpdateFromData(ref animal, contentDataEntry);
         }
 
-        public static void Fix(string saveFolder, out Dictionary<long, TypeLog> typesToBeMigrated)
+        public static void CleanFarmAnimals(string saveFolder, out Dictionary<long, TypeLog> typesToBeMigrated)
         {
             // Track the types to be migrated for reporting
             typesToBeMigrated = new Dictionary<long, TypeLog>();
@@ -137,7 +138,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             }
 
             // Save the migrations
-            if (typesToBeMigrated.Count > 0)
+            if (typesToBeMigrated.Any())
             {
                 // Save the XmlDocument back to disk
                 doc.Save(saveFile);

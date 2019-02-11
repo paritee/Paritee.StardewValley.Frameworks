@@ -73,7 +73,7 @@ namespace BetterFarmAnimalVariety.Framework.Data
 
         public void Clean()
         {
-            if (this.TypeHistory.Count < 1)
+            if (!this.TypeHistory.Any())
             {
                 // Nothing to do
                 return;

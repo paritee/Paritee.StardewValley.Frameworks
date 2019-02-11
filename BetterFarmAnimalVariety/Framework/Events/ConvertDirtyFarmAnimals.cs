@@ -2,10 +2,8 @@
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.Buildings;
 using StardewValley.Menus;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using static StardewValley.Menus.LoadGameMenu;
@@ -18,54 +16,103 @@ namespace BetterFarmAnimalVariety.Framework.Events
         {
             FarmAnimalsSaveData saveData = FarmAnimalsSaveData.Deserialize();
 
-            Debug.WriteLine($"OnSaving");
-
-
-            // Convert FarmAnimals to defaults when saving the game, search 
-            // through all AnimalHouses and overwrite to not contaminate the saves
-            foreach (Building building in Game1.getFarm().buildings)
+            // Need to go through each locations(farm)/buildings(ah indoors)/animals 
+            // to convert any "dirty" types to their vanilla version prior to save. 
+            // All types (vanilla or dirty) are logged in the save data to be 
+            // restored during the "Saved" event.
+            for (int index = 0; index < Game1.locations.Count; ++index)
             {
-                // We only care about animal houses (ie. barns and coops)
-                if (!(building.indoors.Value is AnimalHouse animalHouse))
+                if (!(Game1.locations[index] is Farm farm))
                 {
                     continue;
                 }
 
-                foreach (long id in animalHouse.animalsThatLiveHere)
+                for (int j = 0; j < farm.buildings.Count; ++j)
                 {
-                    FarmAnimal animal = Utility.getAnimal(id);
-
-                    // Only non-vanilla animals need to be updated before being saved
-                    if (Framework.Api.FarmAnimal.IsVanilla(animal.type.Value))
+                    if (!(farm.buildings[j].indoors.Value is AnimalHouse animalHouse))
                     {
-                        Debug.WriteLine($"Framework.Api.FarmAnimal.IsVanilla(animal.type.Value)");
-
                         continue;
                     }
 
-                    string savedType = saveData.GetSavedTypeOrDefault(animal);
-
-                    // Convert it to the proper vanilla
-                    KeyValuePair<string, string> contentDataEntry = Api.Content.Load<Dictionary<string, string>>(Helpers.Constants.DataFarmAnimalsContentDirectory)
-                        .First(o => o.Key.Equals(savedType));
-
-                    Debug.WriteLine($"savedType {savedType}");
-                    Debug.WriteLine($"contentDataEntry.Key {contentDataEntry.Key}");
-                    Debug.WriteLine($"contentDataEntry.Key == null {contentDataEntry.Key == null}");
-
-
-                    // Kill everything if for some reason the user removed the default dweller information from the game
-                    if (contentDataEntry.Key == null)
+                    for (int k = 0; k < animalHouse.animalsThatLiveHere.Count(); ++k)
                     {
-                        throw new KeyNotFoundException($"Could not find {savedType} to overwrite custom farm animal for saving. This is a fatal error. Please make sure you have {savedType} in the game.");
+                        long id = animalHouse.animalsThatLiveHere.ElementAt(k);
+                        FarmAnimal animal = animalHouse.animals[id];
+
+                        // Only non-vanilla animals need to be migrated, but...
+                        if (Framework.Api.FarmAnimal.IsVanilla(animal.type.Value))
+                        {
+                            // ... always log the animal's type in the history 
+                            // for convenience
+                            if (!saveData.Exists(animal.myID.Value))
+                            {
+                                saveData.AddTypeHistory(animal.myID.Value, animal.type.Value, animal.type.Value);
+                            }
+
+                            continue;
+                        }
+
+                        // Return the type that is logged for saves or 
+                        // automatically default the coop/barn dwellers
+                        string savedType = saveData.GetSavedTypeOrDefault(animal);
+
+                        // Convert it to the proper vanilla animal
+                        KeyValuePair<string, string> contentDataEntry = Api.Content.Load<Dictionary<string, string>>(Helpers.Constants.DataFarmAnimalsContentDirectory)
+                            .First(kvp => kvp.Key.Equals(savedType));
+
+                        // Kill everything if for some reason the user removed 
+                        // the default dweller information from the game
+                        if (contentDataEntry.Key == null)
+                        {
+                            throw new KeyNotFoundException($"Could not find {savedType} to overwrite custom farm animal for saving. This is a fatal error. Please make sure you have {savedType} in the game.");
+                        }
+
+                        // Make sure this animal exists in the save data and 
+                        // has the most updated information. Could have been 
+                        // created /purchased today and not saved yet.
+                        saveData.AddTypeHistory(animal.myID.Value, animal.type.Value, savedType);
+
+                        // Overwrite the animal
+                        // animal.reload() will be called in the "Saved" event
+                        Framework.Api.FarmAnimal.UpdateFromData(ref animal, contentDataEntry);
+                    }
+                }
+
+                break;
+            }
+        }
+
+        public static void OnSaved(SavedEventArgs e)
+        {
+            FarmAnimalsSaveData saveData = FarmAnimalsSaveData.Deserialize();
+
+            // Need to reload each animal after save because the game and 
+            // SMAPI does a strange thing where the reload happens prior to 
+            // the "Saving" event
+            for (int index = 0; index < Game1.locations.Count; ++index)
+            {
+                if (!(Game1.locations[index] is Farm farm))
+                {
+                    continue;
+                }
+
+                for (int j = 0; j < farm.buildings.Count; ++j)
+                {
+                    if (!(farm.buildings[j].indoors.Value is AnimalHouse animalHouse))
+                    {
+                        continue;
                     }
 
-                    FarmAnimal animalToBeConverted = (animal.home.indoors.Value as AnimalHouse).animals.Values
-                        .FirstOrDefault(o => o.myID.Value.Equals(animal.myID.Value));
+                    for (int k = 0; k < animalHouse.animalsThatLiveHere.Count(); ++k)
+                    {
+                        long id = animalHouse.animalsThatLiveHere.ElementAt(k);
+                        FarmAnimal animal = animalHouse.animals[id];
 
-                    // Overwrite the animal
-                    Framework.Api.FarmAnimal.UpdateFromData(ref animalToBeConverted, contentDataEntry);
+                        animal.reload(animal.home);
+                    }
                 }
+
+                break;
             }
         }
 
@@ -117,7 +164,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 }
 
                 // Scan only the most recent save if it can be found
-                Framework.Helpers.GameSave.Fix(Path.Combine(Constants.SavesPath, saveFileSlot.Farmer.slotName), out typesToBeMigrated);
+                Framework.Helpers.GameSave.CleanFarmAnimals(Path.Combine(Constants.SavesPath, saveFileSlot.Farmer.slotName), out typesToBeMigrated);
 
                 return true;
             }

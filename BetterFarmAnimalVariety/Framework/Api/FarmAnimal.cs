@@ -6,6 +6,8 @@ using StardewValley.Buildings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BetterFarmAnimalVariety.Models;
+using StardewValley.SDKs;
 
 namespace BetterFarmAnimalVariety.Framework.Api
 {
@@ -154,46 +156,140 @@ namespace BetterFarmAnimalVariety.Framework.Api
             animal.price.Value = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.Price]);
         }
 
-        public static List<string> GetTypesFromProduce(int produceId)
+        public static List<string> GetTypesFromProduce(int produceId, Dictionary<string, List<string>> restrictions, bool includeNonProducing)
         {
+            List<string> potentialCategories = new List<string>();
             List<string> potentialTypes = new List<string>();
+            Dictionary<string, List<string>> nonProducingTypes = new Dictionary<string, List<string>>();
 
-            // TODO: check BFAVs config instead
-            // Someone could have the data set up, but not add it to BFAV so that it's hidden from the game
+            // Someone could have the data set up, but not add it to BFAV so that
+            // it's hidden from the game so we must use BFAV's restrictions
             Dictionary<string, string> contentData = Api.Content.Load<Dictionary<string, string>>(Helpers.Constants.DataFarmAnimalsContentDirectory);
-
-            foreach (KeyValuePair<string, string> entry in contentData)
+            
+            foreach (KeyValuePair<string, List<string>> entry in restrictions)
             {
-                string[] values = Api.Content.ParseDataValue(entry.Value);
-
-                int defaultProduceId = Int32.Parse(values[(int)Helpers.Data.FarmAnimalsIndex.DefaultProduce]);
-                int deluxeProduceId = Int32.Parse(values[(int)Helpers.Data.FarmAnimalsIndex.DeluxeProduce]);
-
-                if (produceId.Equals(defaultProduceId) || produceId.Equals(deluxeProduceId))
+                foreach (string type in entry.Value)
                 {
-                    potentialTypes.Add(entry.Key);
+                    string[] values = Api.Content.ParseDataValue(contentData[type]);
+
+                    int defaultProduceId = Int32.Parse(values[(int)Helpers.Data.FarmAnimalsIndex.DefaultProduce]);
+                    int deluxeProduceId = Int32.Parse(values[(int)Helpers.Data.FarmAnimalsIndex.DeluxeProduce]);
+
+                    // TODO: configure for category randomization here
+                    if (Api.FarmAnimal.ProduceAtLeastOne(defaultProduceId, deluxeProduceId, new int[] { produceId }))
+                    {
+                        potentialTypes.Add(type);
+                        potentialCategories.Add(entry.Key);
+                    }
+                    else if (includeNonProducing && Api.FarmAnimal.ProducesNothing(defaultProduceId, deluxeProduceId))
+                    {
+                        // Animals that don't produce anything (ex. bulls)
+                        // should be considered if the flag is on
+                        if (!nonProducingTypes.ContainsKey(entry.Key))
+                        {
+                            nonProducingTypes.Add(entry.Key, new List<string>());
+                        }
+
+                        nonProducingTypes[entry.Key].Add(type);
+                    }
                 }
             }
 
-            // TODO: bfav category search
+            // includeNonProducing must be true to have a chance at entering
+            if (nonProducingTypes.Any())
+            {
+                if (!potentialCategories.Any())
+                {
+                    // There were no producing types found (unlikely...) so let's
+                    // return the unproducing types only
+                    potentialTypes = nonProducingTypes.SelectMany(kvp => kvp.Value).ToList();
+                }
+                else
+                {
+                    // Include the non-producing types into consideration
+                    potentialTypes = potentialTypes.Concat(nonProducingTypes.Where(kvp => potentialCategories.Contains(kvp.Key)).SelectMany(kvp => kvp.Value)).ToList();
+                }
+            }
 
             return potentialTypes;
         }
 
-        public static string GetRandomTypeFromProduce(int produceIndex)
+        public static bool ProduceAtLeastOne(int defaultProduceId, int deluxeProduceId, int[] targets)
         {
-            List<string> potentialTypes = Api.FarmAnimal.GetTypesFromProduce(produceIndex);
+            // Must actualy be a product
+            return targets.Where(o => !o.Equals(Helpers.Constants.FarmAnimalProduceNone))
+                .Intersect(new int[] { defaultProduceId, deluxeProduceId })
+                .Any();
+        }
+
+        public static bool ProducesNothing(int defaultProduceId, int deluxeProduceId)
+        {
+            return defaultProduceId.Equals(Helpers.Constants.FarmAnimalProduceNone) && deluxeProduceId.Equals(Helpers.Constants.FarmAnimalProduceNone);
+        }
+
+        public static string GetRandomTypeFromProduce(int produceIndex, Dictionary<string, List<string>> restrictions, bool includeNonProducing)
+        {
+            List<string> potentialTypes = Api.FarmAnimal.GetTypesFromProduce(produceIndex, restrictions, includeNonProducing);
 
             // Check to make sure types came back
-            return potentialTypes.Count >= 1
-                ? potentialTypes.ElementAt(Game1.random.Next(potentialTypes.Count - 1))
+            return potentialTypes.Any()
+                ? potentialTypes.ElementAt(Game1.random.Next(potentialTypes.Count))
                 : null;
         }
 
-        public static string GetRandomTypeFromParent(StardewValley.FarmAnimal parent)
+        public static string GetRandomTypeFromParent(StardewValley.FarmAnimal parent, Dictionary<string, List<string>> restrictions, bool includeNonProducing, bool ignoreParentProduceCheck)
         {
-            // TODO: randomize on bfav categories
-            return parent.type.Value;
+            string randomType = parent.type.Value;
+
+            if (includeNonProducing)
+            {
+                // Find the category this parent is a part of
+                List<string> potentialTypes = new List<string>();
+
+                // Someone could have the data set up, but not add it to BFAV so that
+                // it's hidden from the game so we must use BFAV's restrictions
+                Dictionary<string, string> contentData = Api.Content.Load<Dictionary<string, string>>(Helpers.Constants.DataFarmAnimalsContentDirectory);
+
+                string[] parentValues = Api.Content.ParseDataValue(contentData[parent.type.Value]);
+
+                int parentDefaultProduceId = Int32.Parse(parentValues[(int)Helpers.Data.FarmAnimalsIndex.DefaultProduce]);
+                int parentDeluxeProduceId = Int32.Parse(parentValues[(int)Helpers.Data.FarmAnimalsIndex.DeluxeProduce]);
+
+                foreach (KeyValuePair<string, List<string>> entry in restrictions)
+                {
+                    // Consider types in the category if the parent belongs to it
+                    if (!entry.Value.Contains(parent.type.Value))
+                    {
+                        continue;
+                    }
+
+                    foreach (string type in entry.Value)
+                    {
+                        string[] values = Api.Content.ParseDataValue(contentData[type]);
+
+                        int defaultProduceId = Int32.Parse(values[(int)Helpers.Data.FarmAnimalsIndex.DefaultProduce]);
+                        int deluxeProduceId = Int32.Parse(values[(int)Helpers.Data.FarmAnimalsIndex.DeluxeProduce]);
+
+                        if (includeNonProducing && Api.FarmAnimal.ProducesNothing(defaultProduceId, deluxeProduceId))
+                        {
+                            potentialTypes.Add(type);
+                        }
+
+                        if (ignoreParentProduceCheck || Api.FarmAnimal.ProduceAtLeastOne(defaultProduceId, deluxeProduceId, new int[] { parentDefaultProduceId, parentDeluxeProduceId}))
+                        {
+                            // Don't need to check on a match on produce
+                            potentialTypes.Add(type);
+                        }
+                    }
+
+                    // Use the first category the parent belongs to
+                    break;
+                }
+
+                randomType = potentialTypes[Game1.random.Next(potentialTypes.Count)];
+            }
+
+            return randomType;
         }
 
         public static void AddToBuilding(ref StardewValley.FarmAnimal animal, ref Building building)
