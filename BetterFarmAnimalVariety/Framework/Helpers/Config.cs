@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace BetterFarmAnimalVariety.Framework.Helpers
 {
@@ -9,7 +10,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
     {
         public static ModConfig Load()
         {
-            string path = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, Helpers.Constants.ConfigFileName);
+            string path = Path.Combine(Helpers.Constants.ModPath, Helpers.Constants.ConfigFileName);
             string json = File.ReadAllText(path);
 
             return JsonConvert.DeserializeObject<ModConfig>(json);

@@ -1,4 +1,7 @@
-﻿namespace BetterFarmAnimalVariety.Framework.Helpers
+﻿using System.IO;
+using System.Reflection;
+
+namespace BetterFarmAnimalVariety.Framework.Helpers
 {
     class Constants
     {
@@ -6,11 +9,12 @@
         public const string ModKey = "paritee.betterfarmanimalvariety";
         public const string ConfigFileName = "config.json";
         public const string FarmAnimalsSaveDataFileName = "farmanimals.json";
+        public static string ModPath { get { return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location); } }
 
         // FarmAnimal
         public const string BabyPrefix = "Baby";
         public const string ShearedPrefix = "Sheared";
-        public const int FarmAnimalProduceNone = -1;
+        public const int FarmAnimalProduceNone = default(int);
 
         // AnimalHouse
         public const string Coop = "Coop";

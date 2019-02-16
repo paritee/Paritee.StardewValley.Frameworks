@@ -22,7 +22,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             configFarmAnimalAnimalShop.Price = ConfigFarmAnimalAnimalShop.PRICE_PLACEHOLDER;
             configFarmAnimalAnimalShop.Icon = configFarmAnimalAnimalShop.GetDefaultIconPath();
 
-            string fullPathToIcon = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, configFarmAnimalAnimalShop.Icon);
+            string fullPathToIcon = Path.Combine(Helpers.Constants.ModPath, configFarmAnimalAnimalShop.Icon);
 
             if (!File.Exists(fullPathToIcon))
             {
