@@ -15,6 +15,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         public static VanillaFarmAnimal Sheep { get { return new VanillaFarmAnimal("Sheep"); } }
         public static VanillaFarmAnimal Rabbit { get { return new VanillaFarmAnimal("Rabbit"); } }
         public static VanillaFarmAnimal Pig { get { return new VanillaFarmAnimal("Pig"); } }
+        public static VanillaFarmAnimal Dinosaur { get { return new VanillaFarmAnimal("Dinosaur"); } }
 
         public string Type { get; set; }
 
