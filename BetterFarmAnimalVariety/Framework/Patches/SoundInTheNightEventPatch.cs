@@ -3,8 +3,8 @@ using StardewValley.Events;
 
 namespace BetterFarmAnimalVariety.Framework.Patches
 {
-    [HarmonyPatch(typeof(SoundInTheNightEvent))]
-    [HarmonyPatch("makeChangesToLocation")]
+    //[HarmonyPatch(typeof(SoundInTheNightEvent))]
+    //[HarmonyPatch("makeChangesToLocation")]
     class SoundInTheNightEventPatch : Patch
     {
         public static void Postfix(ref SoundInTheNightEvent __instance)

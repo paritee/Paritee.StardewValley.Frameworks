@@ -1,6 +1,6 @@
 ﻿namespace BetterFarmAnimalVariety.Framework.Patches
 {
-    class PurchaseAnimalsMenuPatch : Patch
+    abstract class PurchaseAnimalsMenuPatch : Patch
     {
         protected static bool TryParse(string str, out string[] parts)
         {

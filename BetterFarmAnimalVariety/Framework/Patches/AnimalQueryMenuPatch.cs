@@ -5,8 +5,8 @@ using StardewValley.Menus;
 
 namespace BetterFarmAnimalVariety.Framework.Patches
 {
-    [HarmonyPatch(typeof(AnimalQueryMenu))]
-    [HarmonyPatch("receiveLeftClick")]
+    //[HarmonyPatch(typeof(AnimalQueryMenu))]
+    //[HarmonyPatch("receiveLeftClick")]
     class AnimalQueryMenuPatch
     {
         public static void Postfix(ref AnimalQueryMenu __instance, ref int x, ref int y, ref bool playSound)

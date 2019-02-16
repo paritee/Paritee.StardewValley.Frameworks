@@ -3,12 +3,11 @@ using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Events;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.Patches
 {
-    [HarmonyPatch(typeof(AnimalHouse))]
-    [HarmonyPatch("addNewHatchedAnimal")]
+    //[HarmonyPatch(typeof(AnimalHouse))]
+    //[HarmonyPatch("addNewHatchedAnimal")]
     class AnimalHousePatch
     {
         public static bool Prefix(ref AnimalHouse __instance, ref string name)

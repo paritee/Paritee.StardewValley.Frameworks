@@ -5,9 +5,8 @@ using StardewValley;
 using StardewValley.Buildings;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using BetterFarmAnimalVariety.Models;
-using StardewValley.SDKs;
 
 namespace BetterFarmAnimalVariety.Framework.Api
 {
@@ -154,6 +153,11 @@ namespace BetterFarmAnimalVariety.Framework.Api
             animal.toolUsedForHarvest.Value = values[(int)Helpers.Data.FarmAnimalsIndex.ToolUsedForHarvest].Equals(Helpers.Constants.None) ? null : values[(int)Helpers.Data.FarmAnimalsIndex.ToolUsedForHarvest];
             animal.meatIndex.Value = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.MeatIndex]);
             animal.price.Value = Convert.ToInt32(values[(int)Helpers.Data.FarmAnimalsIndex.Price]);
+
+            Debug.WriteLine($"END OF UpdateFromData");
+            Debug.WriteLine($"animal.Name {animal.Name} (#{animal.myID})");
+            Debug.WriteLine($"animal.Position == null {animal.Position == null}");
+            Debug.WriteLine($"animal.Sprite == null {animal.Sprite == null}");
         }
 
         public static List<string> GetTypesFromProduce(int produceId, Dictionary<string, List<string>> restrictions, bool includeNonProducing)
@@ -175,7 +179,6 @@ namespace BetterFarmAnimalVariety.Framework.Api
                     int defaultProduceId = Int32.Parse(values[(int)Helpers.Data.FarmAnimalsIndex.DefaultProduce]);
                     int deluxeProduceId = Int32.Parse(values[(int)Helpers.Data.FarmAnimalsIndex.DeluxeProduce]);
 
-                    // TODO: configure for category randomization here
                     if (Api.FarmAnimal.ProduceAtLeastOne(defaultProduceId, deluxeProduceId, new int[] { produceId }))
                     {
                         potentialTypes.Add(type);
@@ -257,7 +260,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
                 foreach (KeyValuePair<string, List<string>> entry in restrictions)
                 {
-                    // Consider types in the category if the parent belongs to it
+                    // Only consider types in the category if the parent belongs to it
                     if (!entry.Value.Contains(parent.type.Value))
                     {
                         continue;
@@ -265,6 +268,14 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
                     foreach (string type in entry.Value)
                     {
+                        // If this is the parent's type, add it always
+                        if (type.Equals(parent.type.Value))
+                        {
+                            potentialTypes.Add(type);
+
+                            continue;
+                        }
+
                         string[] values = Api.Content.ParseDataValue(contentData[type]);
 
                         int defaultProduceId = Int32.Parse(values[(int)Helpers.Data.FarmAnimalsIndex.DefaultProduce]);
@@ -277,7 +288,6 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
                         if (ignoreParentProduceCheck || Api.FarmAnimal.ProduceAtLeastOne(defaultProduceId, deluxeProduceId, new int[] { parentDefaultProduceId, parentDeluxeProduceId}))
                         {
-                            // Don't need to check on a match on produce
                             potentialTypes.Add(type);
                         }
                     }

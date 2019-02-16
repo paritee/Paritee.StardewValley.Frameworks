@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 namespace BetterFarmAnimalVariety.Framework.Patches
 {
-    [HarmonyPatch(typeof(Coop))]
-    [HarmonyPatch("dayUpdate")]
+    //[HarmonyPatch(typeof(Coop))]
+    //[HarmonyPatch("dayUpdate")]
     class CoopPatch
     {
         public static bool Prefix(ref Coop __instance, ref int dayOfMonth)
