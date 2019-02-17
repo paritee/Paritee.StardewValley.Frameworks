@@ -1,0 +1,10 @@
+﻿{
+   "Name": "Paritee's Stardrop Collection",
+   "Author": "Paritee",
+   "Version": "1.0.0",
+   "Description": "Stardrop Collection",
+   "UniqueID": "Paritee.StardropCollection",
+   "EntryDll": "StardropCollection.dll",
+   "MinimumApiVersion": "2.10.1",
+   "UpdateKeys": [ "Nexus:0000" ]
+}
