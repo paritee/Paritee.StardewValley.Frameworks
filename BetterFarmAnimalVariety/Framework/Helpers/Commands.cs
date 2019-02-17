@@ -1,5 +1,4 @@
-﻿using BetterFarmAnimalVariety.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -7,9 +6,9 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
 {
     class Commands
     {
-        public static ConfigFarmAnimalAnimalShop GetAnimalShopConfig(string category, string animalShop)
+        public static Framework.Config.FarmAnimalStock GetAnimalShopConfig(string category, string animalShop)
         {
-            ConfigFarmAnimalAnimalShop configFarmAnimalAnimalShop = new ConfigFarmAnimalAnimalShop();
+            Framework.Config.FarmAnimalStock configFarmAnimalAnimalShop = new Framework.Config.FarmAnimalStock();
 
             if (animalShop.Equals(false.ToString().ToLower()))
             {
@@ -18,11 +17,11 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
 
             configFarmAnimalAnimalShop.Category = category;
             configFarmAnimalAnimalShop.Name = category;
-            configFarmAnimalAnimalShop.Description = configFarmAnimalAnimalShop.GetDescriptionPlaceholder();
-            configFarmAnimalAnimalShop.Price = ConfigFarmAnimalAnimalShop.PRICE_PLACEHOLDER;
+            configFarmAnimalAnimalShop.Description = Constants.Config.AnimalShopDescriptionPlaceholder;
+            configFarmAnimalAnimalShop.Price = Constants.Config.AnimalShopPricePlaceholder;
             configFarmAnimalAnimalShop.Icon = configFarmAnimalAnimalShop.GetDefaultIconPath();
 
-            string fullPathToIcon = Path.Combine(Helpers.Constants.ModPath, configFarmAnimalAnimalShop.Icon);
+            string fullPathToIcon = Path.Combine(Constants.Mod.ModPath, configFarmAnimalAnimalShop.Icon);
 
             if (!File.Exists(fullPathToIcon))
             {
@@ -32,7 +31,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             return configFarmAnimalAnimalShop;
         }
 
-        public static string DescribeFarmAnimalCategory(KeyValuePair<string, ConfigFarmAnimal> entry)
+        public static string DescribeFarmAnimalCategory(KeyValuePair<string, Framework.Config.FarmAnimal> entry)
         {
             string output = "";
 

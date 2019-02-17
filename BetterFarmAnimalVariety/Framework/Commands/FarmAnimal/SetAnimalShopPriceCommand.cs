@@ -1,5 +1,4 @@
-﻿using BetterFarmAnimalVariety.Models;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using System;
 using System.Collections.Generic;
 
@@ -26,11 +25,11 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
                 this.AssertRequiredArgumentOrder(args.Length, 2, "price");
                 this.AssertValidMoneyAmount(args[1]);
 
-                this.Config.FarmAnimals[category].AnimalShop.Price = args[1].Trim();
+                this.Config.FarmAnimals[category].AnimalShop.Price = Int32.Parse(args[1].Trim());
 
                 this.Helper.WriteConfig(this.Config);
 
-                string output = Helpers.Commands.DescribeFarmAnimalCategory(new KeyValuePair<string, ConfigFarmAnimal>(category, this.Config.FarmAnimals[category]));
+                string output = Helpers.Commands.DescribeFarmAnimalCategory(new KeyValuePair<string, Framework.Config.FarmAnimal>(category, this.Config.FarmAnimals[category]));
 
                 this.Monitor.Log(output, LogLevel.Info);
             }

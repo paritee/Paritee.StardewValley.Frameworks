@@ -1,5 +1,4 @@
-﻿using BetterFarmAnimalVariety.Models;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +36,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 
                 this.Helper.WriteConfig(this.Config);
 
-                string output = Helpers.Commands.DescribeFarmAnimalCategory(new KeyValuePair<string, ConfigFarmAnimal>(category, this.Config.FarmAnimals[category]));
+                string output = Helpers.Commands.DescribeFarmAnimalCategory(new KeyValuePair<string, Framework.Config.FarmAnimal>(category, this.Config.FarmAnimals[category]));
 
                 this.Monitor.Log(output, LogLevel.Info);
             }

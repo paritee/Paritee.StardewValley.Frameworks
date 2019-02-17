@@ -1,11 +1,10 @@
-﻿using BetterFarmAnimalVariety.Framework.Data;
-using Netcode;
+﻿using Netcode;
 using StardewValley;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using BetterFarmAnimalVariety.Framework.SaveData;
 
 namespace BetterFarmAnimalVariety.Framework.Helpers
 {
@@ -43,8 +42,8 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             string currentType = typeHistory == null ? requestedType : typeHistory.CurrentType;
 
             // Grab the new type's data to override if it exists
-            Dictionary<string, string> contentData = Api.Content.Load<Dictionary<string, string>>(Helpers.Constants.DataFarmAnimalsContentDirectory);
-            KeyValuePair<string, string> contentDataEntry = contentData.FirstOrDefault(kvp => kvp.Key.Equals(currentType));
+            Dictionary<string, string> contentData = Api.Content.LoadData<string, string>(Constants.Content.DataFarmAnimalsContentPath);
+            KeyValuePair<string, string> contentDataEntry = Api.Content.GetDataEntry<string, string>(contentData, currentType);
 
             // Always validate if the type we're trying to use exists
             if (contentDataEntry.Key == null)

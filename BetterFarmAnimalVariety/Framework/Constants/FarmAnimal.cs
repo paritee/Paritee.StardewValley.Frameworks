@@ -1,8 +1,12 @@
-﻿namespace BetterFarmAnimalVariety.Framework.Helpers
+﻿namespace BetterFarmAnimalVariety.Framework.Constants
 {
-    class Data
+    class FarmAnimal
     {
-        public enum FarmAnimalsIndex
+        public const string BabyPrefix = "Baby";
+        public const string ShearedPrefix = "Sheared";
+        public const int FarmAnimalProduceNone = default(int);
+
+        public enum DataValueIndex
         {
             DaysToLay = 0,
             AgeWhenMature = 1,

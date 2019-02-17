@@ -1,10 +1,6 @@
-﻿using BetterFarmAnimalVariety.Framework.Data;
-using Harmony;
+﻿using Harmony;
 using StardewValley;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.Patches
 {

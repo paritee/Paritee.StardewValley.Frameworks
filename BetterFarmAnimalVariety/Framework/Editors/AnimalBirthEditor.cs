@@ -1,11 +1,11 @@
-﻿using StardewModdingAPI;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using StardewModdingAPI;
 
-namespace BetterFarmAnimalVariety.Editors
+namespace BetterFarmAnimalVariety.Framework.Editors
 {
     class AnimalBirthEditor : IAssetEditor
     {
-        private ModEntry Mod;
+        private readonly ModEntry Mod;
 
         public AnimalBirthEditor(ModEntry mod)
         {

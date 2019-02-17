@@ -1,5 +1,8 @@
 ﻿using StardewValley;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.Api
 {
@@ -19,19 +22,49 @@ namespace BetterFarmAnimalVariety.Framework.Api
             }
         }
 
-        public static T Load<T>(string name)
+        public static T Load<T>(string path)
         {
-            return Game1.content.Load<T>(name);
+            return Game1.content.Load<T>(path);
+        }
+
+        public static string LoadString(string path)
+        {
+            return Game1.content.LoadString(path);
+        }
+
+        public static KeyValuePair<T, U> GetDataEntry<T, U>(Dictionary<T, U> data, T id)
+        {
+            return data.First(kvp => kvp.Key.Equals(id));
+        }
+
+        public static U GetDataValue<T, U>(string path, T id, int index)
+        {
+            Dictionary<T, U> data = Api.Content.LoadData<T, U>(Constants.Content.DataBlueprintsContentPath);
+            KeyValuePair<T, U> entry = Api.Content.GetDataEntry<T, U>(data, id);
+
+            return (U)System.Convert.ChangeType(Api.Content.ParseDataValue(entry.Value.ToString())[index], typeof(U));
+        }
+
+        public static KeyValuePair<T, U> LoadDataEntry<T, U>(string path, T id)
+        {
+            Dictionary<T, U> data = Api.Content.Load<Dictionary<T, U>>(path);
+
+            return Api.Content.GetDataEntry<T, U>(data, id);
+        }
+
+        public static Dictionary<T, U> LoadData<T, U>(string path)
+        {
+            return Api.Content.Load<Dictionary<T, U>>(path);
         }
 
         public static string BuildPath(string[] parts)
         {
-            return String.Join(Helpers.Constants.ContentPathDelimiter, parts);
+            return Path.Combine(parts);
         }
 
         public static string[] ParseDataValue(string str)
         {
-            return str.Split(Helpers.Constants.DataValueDelimiter);
+            return str.Split(Constants.Content.DataValueDelimiter);
         }
     }
 }

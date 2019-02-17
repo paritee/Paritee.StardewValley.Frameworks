@@ -11,7 +11,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches
         {
             int behavior = Helpers.Reflection.GetFieldValue<int>(__instance, "behavior");
 
-            if (!behavior.Equals(Helpers.Constants.SoundInTheNightAnimalEatenEvent))
+            if (!behavior.Equals(Constants.Event.SoundInTheNightAnimalEatenEvent))
             {
                 return;
             }

@@ -23,7 +23,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches
             ModConfig config = Helpers.Config.Load();
 
             // Grab the types with their associated categories in string form
-            Dictionary<string, List<string>> restrictions = Helpers.Config.ExtractTypesByCategory(config);
+            Dictionary<string, List<string>> restrictions = config.GroupTypesByCategory();
 
             // Search for a type by the produce
             string type = Api.FarmAnimal.GetRandomTypeFromProduce(animalHouse.incubatingEgg.Y, restrictions, config.RandomizeHatchlingFromCategory) ?? Api.FarmAnimal.GetDefaultCoopDwellerType();

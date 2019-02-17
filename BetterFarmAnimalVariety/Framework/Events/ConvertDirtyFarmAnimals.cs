@@ -1,11 +1,11 @@
-﻿using BetterFarmAnimalVariety.Framework.Data;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Menus;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BetterFarmAnimalVariety.Framework.SaveData;
 using static StardewValley.Menus.LoadGameMenu;
 
 namespace BetterFarmAnimalVariety.Framework.Events
@@ -57,8 +57,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         string savedType = saveData.GetSavedTypeOrDefault(animal);
 
                         // Convert it to the proper vanilla animal
-                        KeyValuePair<string, string> contentDataEntry = Api.Content.Load<Dictionary<string, string>>(Helpers.Constants.DataFarmAnimalsContentDirectory)
-                            .First(kvp => kvp.Key.Equals(savedType));
+                        KeyValuePair<string, string> contentDataEntry = Api.Content.LoadDataEntry<string, string>(Constants.Content.DataFarmAnimalsContentPath, savedType);
 
                         // Kill everything if for some reason the user removed 
                         // the default dweller information from the game
@@ -158,13 +157,13 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
                 // Need to manually parse the XML since casting to a FarmAnimal 
                 // triggers the data search crash that this command aims to avoid
-                if (!Directory.Exists(Constants.SavesPath))
+                if (!Directory.Exists(StardewModdingAPI.Constants.SavesPath))
                 {
                     throw new DirectoryNotFoundException($"cannot find saves path directory");
                 }
 
                 // Scan only the most recent save if it can be found
-                Framework.Helpers.GameSave.CleanFarmAnimals(Path.Combine(Constants.SavesPath, saveFileSlot.Farmer.slotName), out typesToBeMigrated);
+                Framework.Helpers.GameSave.CleanFarmAnimals(Path.Combine(StardewModdingAPI.Constants.SavesPath, saveFileSlot.Farmer.slotName), out typesToBeMigrated);
 
                 return true;
             }

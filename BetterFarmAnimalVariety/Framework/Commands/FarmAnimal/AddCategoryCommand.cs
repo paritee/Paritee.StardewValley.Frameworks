@@ -1,6 +1,4 @@
-﻿using BetterFarmAnimalVariety.Models;
-using StardewModdingAPI;
-using StardewValley;
+﻿using StardewModdingAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,21 +30,21 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
                 
                 this.AssertFarmAnimalTypesExist(types);
 
-                string building = args.Length < 3 ? Framework.Helpers.Constants.Barn : args[2].Trim();
+                string building = args.Length < 3 ? Constants.AnimalHouse.Barn : args[2].Trim();
                 List<string> buildings = new List<string>();
 
-                if (building.ToLower().Equals(Framework.Helpers.Constants.Coop.ToLower()))
+                if (building.ToLower().Equals(Constants.AnimalHouse.Coop.ToLower()))
                 {
                     foreach (PariteeAnimalHouse.Size size in Enum.GetValues(typeof(Paritee.StardewValleyAPI.Buildings.AnimalHouses.Coop.Size)))
                     {
-                        buildings.Add(PariteeAnimalHouse.FormatBuilding(Framework.Helpers.Constants.Coop, size));
+                        buildings.Add(PariteeAnimalHouse.FormatBuilding(Constants.AnimalHouse.Coop, size));
                     }
                 }
-                else if (building.ToLower().Equals(Framework.Helpers.Constants.Barn.ToLower()))
+                else if (building.ToLower().Equals(Constants.AnimalHouse.Barn.ToLower()))
                 {
                     foreach (PariteeAnimalHouse.Size size in Enum.GetValues(typeof(Paritee.StardewValleyAPI.Buildings.AnimalHouses.Barn.Size)))
                     {
-                        buildings.Add(PariteeAnimalHouse.FormatBuilding(Framework.Helpers.Constants.Barn, size));
+                        buildings.Add(PariteeAnimalHouse.FormatBuilding(Constants.AnimalHouse.Barn, size));
                     }
                 }
                 else
@@ -60,20 +58,18 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 
                 this.AssertValidBoolean(animalShop, "animalShop", out bool result);
 
-                ConfigFarmAnimalAnimalShop configFarmAnimalAnimalShop;
+                Framework.Config.FarmAnimalStock farmAnimalStock = Framework.Helpers.Commands.GetAnimalShopConfig(category, animalShop);
 
-                configFarmAnimalAnimalShop = Framework.Helpers.Commands.GetAnimalShopConfig(category, animalShop);
-
-                this.Config.FarmAnimals.Add(category, new ConfigFarmAnimal());
+                this.Config.FarmAnimals.Add(category, new Framework.Config.FarmAnimal());
 
                 this.Config.FarmAnimals[category].Category = category;
                 this.Config.FarmAnimals[category].Types = types.Distinct().ToArray();
                 this.Config.FarmAnimals[category].Buildings = buildings.ToArray();
-                this.Config.FarmAnimals[category].AnimalShop = configFarmAnimalAnimalShop;
+                this.Config.FarmAnimals[category].AnimalShop = farmAnimalStock;
 
                 this.Helper.WriteConfig(this.Config);
 
-                string output = Helpers.Commands.DescribeFarmAnimalCategory(new KeyValuePair<string, ConfigFarmAnimal>(category, this.Config.FarmAnimals[category]));
+                string output = Helpers.Commands.DescribeFarmAnimalCategory(new KeyValuePair<string, Framework.Config.FarmAnimal>(category, this.Config.FarmAnimals[category]));
 
                 this.Monitor.Log(output, LogLevel.Info);
             }

@@ -1,5 +1,4 @@
-﻿using BetterFarmAnimalVariety.Models;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using System;
 using System.Collections.Generic;
 
@@ -29,13 +28,13 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
                 this.AssertValidBoolean(animalShop, "animalshop", out bool result);
                 this.AssertAnimalShopChange(animalShop, this.Config.FarmAnimals[category].CanBePurchased());
 
-                ConfigFarmAnimalAnimalShop configFarmAnimalAnimalShop = Framework.Helpers.Commands.GetAnimalShopConfig(category, animalShop);
+                Framework.Config.FarmAnimalStock configFarmAnimalAnimalShop = Framework.Helpers.Commands.GetAnimalShopConfig(category, animalShop);
 
                 this.Config.FarmAnimals[category].AnimalShop = configFarmAnimalAnimalShop;
 
                 this.Helper.WriteConfig(this.Config);
 
-                string output = Helpers.Commands.DescribeFarmAnimalCategory(new KeyValuePair<string, ConfigFarmAnimal>(category, this.Config.FarmAnimals[category]));
+                string output = Helpers.Commands.DescribeFarmAnimalCategory(new KeyValuePair<string, Framework.Config.FarmAnimal>(category, this.Config.FarmAnimals[category]));
 
                 this.Monitor.Log(output, LogLevel.Info);
             }

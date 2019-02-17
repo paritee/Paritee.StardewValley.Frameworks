@@ -7,11 +7,21 @@ namespace BetterFarmAnimalVariety.Framework.Api
 {
     class AnimalHouse
     {
+        public static string FormatSize(string buildingName, Constants.AnimalHouse.Size size)
+        {
+            if (size.Equals(Constants.AnimalHouse.Size.Small))
+            {
+                return buildingName;
+            }
+
+            return $"{size.ToString()} {buildingName}";
+        }
+
         public static StardewValley.Object GetIncubator(StardewValley.AnimalHouse animalHouse)
         {
             foreach (StardewValley.Object @object in animalHouse.objects.Values)
             {
-                if (@object.bigCraftable.Value && @object.Name.Contains(Helpers.Constants.Incubator) && (@object.heldObject.Value != null && @object.MinutesUntilReady <= 0) && !animalHouse.isFull())
+                if (@object.bigCraftable.Value && @object.Name.Contains(Constants.AnimalHouse.Incubator) && (@object.heldObject.Value != null && @object.MinutesUntilReady <= 0) && !animalHouse.isFull())
                 {
                     return @object;
                 }
@@ -42,7 +52,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
         public static void ResetIncubator(StardewValley.Object incubator, StardewValley.AnimalHouse animalHouse)
         {
             incubator.heldObject.Value = (StardewValley.Object)null;
-            incubator.ParentSheetIndex = Helpers.Constants.DefaultIncubatorItem;
+            incubator.ParentSheetIndex = Constants.AnimalHouse.DefaultIncubatorItem;
 
             Api.AnimalHouse.ResetIncubator(animalHouse);
         }

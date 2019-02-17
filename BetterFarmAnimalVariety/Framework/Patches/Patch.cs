@@ -1,4 +1,4 @@
-﻿using BetterFarmAnimalVariety.Framework.Data;
+﻿using BetterFarmAnimalVariety.Framework.SaveData;
 
 namespace BetterFarmAnimalVariety.Framework.Patches
 {

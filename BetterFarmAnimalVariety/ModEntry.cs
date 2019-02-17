@@ -1,11 +1,9 @@
-﻿using BetterFarmAnimalVariety.Editors;
-using BetterFarmAnimalVariety.Framework.Data;
+﻿using BetterFarmAnimalVariety.Framework.Editors;
 using BetterFarmAnimalVariety.Framework.Events;
-using BetterFarmAnimalVariety.Models;
+using BetterFarmAnimalVariety.Framework.SaveData;
 using Harmony;
 using Microsoft.Xna.Framework.Graphics;
 using Paritee.StardewValleyAPI.Buildings.AnimalShop;
-using Paritee.StardewValleyAPI.Buildings.AnimalShop.FarmAnimals;
 using Paritee.StardewValleyAPI.FarmAnimals.Variations;
 using Paritee.StardewValleyAPI.Menus;
 using Paritee.StardewValleyAPI.Players;
@@ -78,7 +76,7 @@ namespace BetterFarmAnimalVariety
         private void SetupHarmonyPatches()
         {
             // Patch the game code directly
-            HarmonyInstance harmony = HarmonyInstance.Create(Framework.Helpers.Constants.ModKey);
+            HarmonyInstance harmony = HarmonyInstance.Create(Framework.Constants.Mod.ModKey);
 
             // TODO: might want to adjust these after some testing
             // - FarmInfoPage
@@ -89,11 +87,11 @@ namespace BetterFarmAnimalVariety
 
         private void SetupConsoleCommands()
         {
+            // TODO: AnimalShop.Exclude
             List<Framework.Commands.Command> commands = new List<Framework.Commands.Command>()
             {
                 // Config
                 new Framework.Commands.Config.ListCommand(this.Helper, this.Monitor, this.Config),
-                new Framework.Commands.Config.VoidShopCommand(this.Helper, this.Monitor, this.Config),
                 new Framework.Commands.Config.RandomizeFromCategoryCommand(this.Helper, this.Monitor, this.Config),
 
                 // FarmAnimal
@@ -133,8 +131,6 @@ namespace BetterFarmAnimalVariety
             if (config.Format == null)
             {
                 config.Format = targetFormat;
-
-                this.Helper.WriteConfig<ModConfig>(config);
             }
             else if (!config.IsValidFormat(targetFormat))
             {
@@ -142,6 +138,9 @@ namespace BetterFarmAnimalVariety
             }
 
             config.InitializeFarmAnimals();
+
+            // Write back the config
+            this.Helper.WriteConfig<ModConfig>(config);
 
             return config;
         }
@@ -217,15 +216,6 @@ namespace BetterFarmAnimalVariety
             // Set up everything else
             BlueConfig blueConfig = new BlueConfig(this.Player.HasSeenEvent(BlueVariation.EVENT_ID));
             this.BlueFarmAnimals = new BlueVariation(blueConfig);
-
-            VoidConfig voidConfig = new VoidConfig(this.Config.VoidFarmAnimalsInShop, this.Player.HasCompletedQuest(VoidVariation.QUEST_ID));
-            this.VoidFarmAnimals = new VoidVariation(voidConfig);
-
-            List<FarmAnimalForPurchase> farmAnimalsForPurchase = this.Config.GetFarmAnimalsForPurchase(Game1.getFarm());
-            StockConfig stockConfig = new StockConfig(farmAnimalsForPurchase, this.BlueFarmAnimals, this.VoidFarmAnimals);
-            Stock stock = new Stock(stockConfig);
-
-            this.AnimalShop = new AnimalShop(stock);
         }
 
         private void OnRenderingActiveMenu(object sender, RenderingActiveMenuEventArgs e)
@@ -245,7 +235,7 @@ namespace BetterFarmAnimalVariety
 
             if (namingMenu.GetType() == typeof(StardewValley.Menus.NamingMenu))
             {
-                Dictionary<string, List<string>> farmAnimals = this.Config.GetFarmAnimalTypes();
+                Dictionary<string, List<string>> farmAnimals = this.Config.GroupTypesByCategory();
                 BreedFarmAnimalConfig breedFarmAnimalConfig = new BreedFarmAnimalConfig(farmAnimals, this.BlueFarmAnimals, this.Config.RandomizeNewbornFromCategory, this.Config.RandomizeHatchlingFromCategory, this.Config.IgnoreParentProduceCheck);
                 BreedFarmAnimal breedFarmAnimal = new BreedFarmAnimal(this.Player, breedFarmAnimalConfig);
 
@@ -282,7 +272,7 @@ namespace BetterFarmAnimalVariety
                 Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
                 int iconHeight = 0;
 
-                foreach (KeyValuePair<string, ConfigFarmAnimal> entry in this.Config.FarmAnimals)
+                foreach (KeyValuePair<string, Framework.Config.FarmAnimal> entry in this.Config.FarmAnimals)
                 {
                     if (entry.Value.CanBePurchased())
                     {

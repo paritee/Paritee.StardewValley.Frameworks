@@ -1,4 +1,4 @@
-﻿namespace BetterFarmAnimalVariety.Framework.Data
+﻿namespace BetterFarmAnimalVariety.Framework.SaveData
 {
     class TypeLog
     {

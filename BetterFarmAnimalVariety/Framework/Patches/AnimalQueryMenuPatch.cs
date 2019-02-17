@@ -1,4 +1,4 @@
-﻿using BetterFarmAnimalVariety.Framework.Data;
+﻿using BetterFarmAnimalVariety.Framework.SaveData;
 using Harmony;
 using StardewValley;
 using StardewValley.Menus;

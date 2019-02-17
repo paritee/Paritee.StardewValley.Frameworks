@@ -1,10 +1,7 @@
-﻿using Paritee.StardewValleyAPI.Buildings.AnimalShop;
-using Paritee.StardewValleyAPI.Buildings.AnimalShop.FarmAnimals;
-using Paritee.StardewValleyAPI.FarmAnimals.Variations;
+﻿using Paritee.StardewValleyAPI.FarmAnimals.Variations;
 using Paritee.StardewValleyAPI.Players;
 using Paritee.StardewValleyAPI.Players.Actions;
 using StardewModdingAPI;
-using StardewValley;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,41 +56,7 @@ namespace BetterFarmAnimalVariety
 
             return new BlueVariation(blueConfig);
         }
-
-        /// <param name="version">string</param>
-        /// <param name="player">Paritee.StardewValleyAPI.Players</param>
-        /// <returns>Returns Paritee.StardewValleyAPI.FarmAnimals.Variations.Void</returns>
-        public VoidVariation GetVoidFarmAnimals(string version, Player player)
-        {
-            if (!this.IsVersionSupported(version))
-            {
-                throw new NotSupportedException();
-            }
-
-            VoidConfig voidConfig = new VoidConfig(this.Config.VoidFarmAnimalsInShop, player.HasCompletedQuest(VoidVariation.QUEST_ID));
-
-            return new VoidVariation(voidConfig);
-        }
-
-        /// <param name="version">string</param>
-        /// <param name="farm">StardewValley.Farm</param>
-        /// <param name="blueFarmAnimals">Paritee.StardewValleyAPI.FarmAnimals.Variations.BlueVariation</param>
-        /// <param name="voidFarmAnimals">Paritee.StardewValleyAPI.FarmAnimals.Variations.VoidVariation</param>
-        /// <returns>Returns Paritee.StardewValleyAPI.Buidlings.AnimalShop</returns>
-        public AnimalShop GetAnimalShop(string version, Farm farm, BlueVariation blueFarmAnimals, VoidVariation voidFarmAnimals)
-        {
-            if (!this.IsVersionSupported(version))
-            {
-                throw new NotSupportedException();
-            }
-
-            List<FarmAnimalForPurchase> farmAnimalsForPurchase = this.Config.GetFarmAnimalsForPurchase(farm);
-            StockConfig stockConfig = new StockConfig(farmAnimalsForPurchase, blueFarmAnimals, voidFarmAnimals);
-            Stock stock = new Stock(stockConfig);
-
-            return new AnimalShop(stock);
-        }
-
+        
         /// <param name="version">string</param>
         /// <param name="player">Paritee.StardewValleyAPI.Players</param>
         /// <param name="blueFarmAnimals">Paritee.StardewValleyAPI.FarmAnimals.Variations.BlueVariation</param>
@@ -105,7 +68,7 @@ namespace BetterFarmAnimalVariety
                 throw new NotSupportedException();
             }
 
-            Dictionary<string, List<string>> farmAnimals = this.Config.GetFarmAnimalTypes();
+            Dictionary<string, List<string>> farmAnimals = this.Config.GroupTypesByCategory();
             BreedFarmAnimalConfig breedFarmAnimalConfig = new BreedFarmAnimalConfig(farmAnimals, blueFarmAnimals, this.Config.RandomizeNewbornFromCategory, this.Config.RandomizeHatchlingFromCategory, this.Config.IgnoreParentProduceCheck);
             return new BreedFarmAnimal(player, breedFarmAnimalConfig);
         }

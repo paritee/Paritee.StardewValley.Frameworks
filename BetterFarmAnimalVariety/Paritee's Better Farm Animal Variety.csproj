@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,13 +55,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Framework\Api\AnimalShop.cs" />
     <Compile Include="Framework\Commands\Command.cs" />
     <Compile Include="Framework\Api\AnimalHouse.cs" />
     <Compile Include="Framework\Api\Content.cs" />
     <Compile Include="Framework\Api\FarmAnimal.cs" />
     <Compile Include="Framework\Commands\Config\ListCommand.cs" />
     <Compile Include="Framework\Commands\Config\RandomizeFromCategoryCommand.cs" />
-    <Compile Include="Framework\Commands\Config\VoidShopCommand.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\AddCategoryCommand.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\AddTypesCommand.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\ListCommand.cs" />
@@ -73,30 +74,36 @@
     <Compile Include="Framework\Commands\FarmAnimal\SetAnimalShopNameCommand.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\SetAnimalShopPriceCommand.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\SetBuildingsCommand.cs" />
-    <Compile Include="Framework\Data\FarmAnimalsSaveData.cs" />
-    <Compile Include="Framework\Data\TypeLog.cs" />
-    <Compile Include="Framework\Data\SaveData.cs" />
+    <Compile Include="Framework\Config\FarmAnimalStock.cs" />
+    <Compile Include="Framework\Config\FarmAnimal.cs" />
+    <Compile Include="Framework\Constants\AnimalHouse.cs" />
+    <Compile Include="Framework\Constants\AnimalShop.cs" />
+    <Compile Include="Framework\Constants\Blueprint.cs" />
+    <Compile Include="Framework\Constants\Config.cs" />
+    <Compile Include="Framework\Constants\Content.cs" />
+    <Compile Include="Framework\Constants\Event.cs" />
+    <Compile Include="Framework\Constants\FarmAnimal.cs" />
+    <Compile Include="Framework\Constants\Mod.cs" />
+    <Compile Include="Framework\SaveData\FarmAnimalsSaveData.cs" />
+    <Compile Include="Framework\SaveData\TypeLog.cs" />
+    <Compile Include="Framework\SaveData\SaveData.cs" />
     <Compile Include="Framework\Events\ConvertDirtyFarmAnimals.cs" />
     <Compile Include="Framework\Events\PurchaseFarmAnimal.cs" />
     <Compile Include="Framework\Helpers\Commands.cs" />
     <Compile Include="Framework\Helpers\Config.cs" />
-    <Compile Include="Framework\Helpers\Constants.cs" />
-    <Compile Include="Framework\Helpers\Data.cs" />
     <Compile Include="Framework\Helpers\Multiplayer.cs" />
     <Compile Include="Framework\Helpers\Reflection.cs" />
     <Compile Include="Framework\Helpers\GameSave.cs" />
-    <Compile Include="Framework\Helpers\VanillaFarmAnimal.cs" />
+    <Compile Include="Framework\Constants\PropertyConstant.cs" />
+    <Compile Include="Framework\Constants\FarmAnimalCategory.cs" />
+    <Compile Include="Framework\Constants\FarmAnimalType.cs" />
     <Compile Include="Framework\Patches\FarmAnimalPatch_reload.cs" />
     <Compile Include="Framework\Patches\Patch.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenuPatch_getAnimalDescription.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenuPatch.cs" />
     <Compile Include="ModApi.cs" />
-    <Compile Include="Models\AppSettings.cs" />
-    <Compile Include="Models\AppSetting.cs" />
-    <Compile Include="Models\ConfigFarmAnimal.cs" />
-    <Compile Include="Editors\AnimalBirthEditor.cs" />
+    <Compile Include="Framework\Editors\AnimalBirthEditor.cs" />
     <Compile Include="ModConfig.cs" />
-    <Compile Include="Models\ConfigFarmAnimalAnimalShop.cs" />
     <Compile Include="ModEntry.cs" />
     <Compile Include="Framework\Patches\AnimalHousePatch.cs" />
     <Compile Include="Framework\Patches\AnimalQueryMenuPatch.cs" />
@@ -114,9 +121,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="i18n\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -131,11 +135,34 @@
     <Analyzer Include="..\packages\Pathoschild.Stardew.ModBuildConfig.2.2.0\analyzers\dotnet\cs\StardewModdingAPI.ModBuildConfig.Analyzer.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="assets\*">
+    <Content Include="assets\AnimalShop\BrownCow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\AnimalShop\Chicken.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\AnimalShop\DairyCow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\AnimalShop\Duck.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\AnimalShop\Goat.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\AnimalShop\Hog.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\AnimalShop\Pig.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\AnimalShop\Rabbit.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\AnimalShop\Sheep.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Pathoschild.Stardew.ModBuildConfig.2.2.0\build\Pathoschild.Stardew.ModBuildConfig.targets" Condition="Exists('..\packages\Pathoschild.Stardew.ModBuildConfig.2.2.0\build\Pathoschild.Stardew.ModBuildConfig.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -1,5 +1,4 @@
-﻿using BetterFarmAnimalVariety.Models;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using System.Collections.Generic;
 
 namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
@@ -15,7 +14,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
         {
             string output = "Listing BFAV farm animals\n";
 
-            foreach (KeyValuePair<string, ConfigFarmAnimal> entry in this.Config.FarmAnimals)
+            foreach (KeyValuePair<string, Framework.Config.FarmAnimal> entry in this.Config.FarmAnimals)
             {
                 output += Helpers.Commands.DescribeFarmAnimalCategory(entry);
             }

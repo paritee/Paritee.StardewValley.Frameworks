@@ -61,7 +61,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands
 
         protected void AssertFarmAnimalTypesExist(List<string> types)
         {
-            Dictionary<string, string> contentData = Api.Content.Load<Dictionary<string, string>>(Framework.Helpers.Constants.DataFarmAnimalsContentDirectory);
+            Dictionary<string, string> contentData = Api.Content.LoadData<string, string>(Constants.Content.DataFarmAnimalsContentPath);
 
             // Check if these new types are valid
             foreach (string key in types)
@@ -75,7 +75,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands
 
         protected void AssertBuildingsExist(List<string> buildings)
         {
-            Dictionary<string, string> blueprintsData = Api.Content.Load<Dictionary<string, string>>(Framework.Helpers.Constants.DataBlueprintsContentDirectory);
+            Dictionary<string, string> blueprintsData = Api.Content.Load<Dictionary<string, string>>(Constants.Content.DataBlueprintsContentPath);
 
             // Check if these new types are valid
             foreach (string key in buildings)
@@ -148,7 +148,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands
         {
             filename = Path.GetFileName(filename);
 
-            string pathToIcon = Path.Combine(Properties.Settings.Default.AssetsDirectory, filename);
+            string pathToIcon = Path.Combine(Constants.Mod.AssetsDirectory, filename);
             string fullPathToIcon = Path.Combine(this.Helper.DirectoryPath, pathToIcon);
 
             if (!File.Exists(fullPathToIcon))

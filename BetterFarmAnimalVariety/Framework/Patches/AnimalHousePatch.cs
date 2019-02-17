@@ -50,7 +50,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches
             ModConfig config = Helpers.Config.Load();
 
             // Grab the types with their associated categories in string form
-            Dictionary<string, List<string>> restrictions = Helpers.Config.ExtractTypesByCategory(config);
+            Dictionary<string, List<string>> restrictions = config.GroupTypesByCategory();
 
             string type = Api.AnimalHouse.GetRandomTypeFromIncubator(incubator, restrictions, config.RandomizeHatchlingFromCategory);
 
@@ -67,7 +67,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches
             ModConfig config = Helpers.Config.Load();
 
             // Grab the types with their associated categories in string form
-            Dictionary<string, List<string>> restrictions = Helpers.Config.ExtractTypesByCategory(config);
+            Dictionary<string, List<string>> restrictions = config.GroupTypesByCategory();
 
             string type = Api.FarmAnimal.GetRandomTypeFromParent(questionEvent.animal, restrictions, config.RandomizeNewbornFromCategory, config.IgnoreParentProduceCheck);
 

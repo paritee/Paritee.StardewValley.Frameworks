@@ -1,9 +1,9 @@
-﻿using StardewValley;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using StardewValley;
 
-namespace BetterFarmAnimalVariety.Framework.Data
+namespace BetterFarmAnimalVariety.Framework.SaveData
 {
     class FarmAnimalsSaveData : SaveData
     {
@@ -16,21 +16,21 @@ namespace BetterFarmAnimalVariety.Framework.Data
 
         public static string GetPath()
         {
-            string saveDataDir = Path.Combine(StardewModdingAPI.Constants.DataPath, Helpers.Constants.ModKey);
+            string saveDataDir = Path.Combine(StardewModdingAPI.Constants.DataPath, Constants.Mod.ModKey);
 
-            return Path.Combine(saveDataDir, Helpers.Constants.FarmAnimalsSaveDataFileName);
+            return Path.Combine(saveDataDir, Constants.Mod.FarmAnimalsSaveDataFileName);
         }
 
         public static FarmAnimalsSaveData Deserialize()
         {
-            FarmAnimalsSaveData data = Data.SaveData.Deserialize<FarmAnimalsSaveData>(Data.FarmAnimalsSaveData.GetPath());
+            FarmAnimalsSaveData data = SaveData.Deserialize<FarmAnimalsSaveData>(FarmAnimalsSaveData.GetPath());
 
             return data ?? new FarmAnimalsSaveData();
         }
 
         private void WriteChanges()
         {
-            base.WriteChanges(this, Data.FarmAnimalsSaveData.GetPath());
+            base.WriteChanges(this, FarmAnimalsSaveData.GetPath());
         }
 
         public void AddTypeHistory(Dictionary<long, TypeLog> history)

@@ -1,17 +1,19 @@
 ﻿using Harmony;
 using StardewValley;
+using System.Collections.Generic;
 
 namespace BetterFarmAnimalVariety.Framework.Patches
 {
-    //[HarmonyPatch(typeof(Utility))]
-    //[HarmonyPatch("getPurchaseAnimalStock")]
+    [HarmonyPatch(typeof(Utility))]
+    [HarmonyPatch("getPurchaseAnimalStock")]
     class UtilityPatch : Patch
     {
-        // TODO: StardewValley.Utility.getPurchaseAnimalStock
-
-        public static void Postfix()
+        public static bool Prefix(ref List<StardewValley.Object> __result)
         {
-            Patch.CleanSaveData();
+            // Load the config and grab the farm animals for purchase
+            __result = Helpers.Config.Load().GetPurchaseAnimalStock(Game1.getFarm());
+
+            return false;
         }
     }
 }

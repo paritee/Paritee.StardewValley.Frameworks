@@ -1,8 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
+using Newtonsoft.Json;
 
-namespace BetterFarmAnimalVariety.Framework.Data
+namespace BetterFarmAnimalVariety.Framework.SaveData
 {
     class SaveData
     {

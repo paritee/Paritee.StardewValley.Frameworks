@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 
-namespace BetterFarmAnimalVariety.Framework.Helpers
+namespace BetterFarmAnimalVariety.Framework.Constants
 {
     class Constants
     {
