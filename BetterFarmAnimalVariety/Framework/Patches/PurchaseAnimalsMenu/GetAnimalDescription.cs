@@ -1,5 +1,4 @@
 ﻿using Harmony;
-using System.Diagnostics;
 using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
@@ -10,8 +9,6 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
     {
         public static bool Prefix(ref string name, ref string __result)
         {
-            Debug.WriteLine($"getAnimalDescription hoverText {name}");
-
             // Get the description from the config
             string category = name;
 
