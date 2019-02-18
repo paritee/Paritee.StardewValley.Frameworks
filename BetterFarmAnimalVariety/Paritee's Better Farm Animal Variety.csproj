@@ -85,6 +85,8 @@
     <Compile Include="Framework\Constants\Event.cs" />
     <Compile Include="Framework\Constants\FarmAnimal.cs" />
     <Compile Include="Framework\Constants\Mod.cs" />
+    <Compile Include="Framework\Constants\VanillaFarmAnimalCategory.cs" />
+    <Compile Include="Framework\Models\FarmAnimalType.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\Constructor.cs" />
     <Compile Include="Framework\SaveData\FarmAnimalsSaveData.cs" />
     <Compile Include="Framework\SaveData\TypeLog.cs" />
@@ -94,9 +96,9 @@
     <Compile Include="Framework\Helpers\Multiplayer.cs" />
     <Compile Include="Framework\Helpers\Reflection.cs" />
     <Compile Include="Framework\Helpers\GameSave.cs" />
-    <Compile Include="Framework\Constants\PropertyConstant.cs" />
-    <Compile Include="Framework\Constants\FarmAnimalCategory.cs" />
-    <Compile Include="Framework\Constants\FarmAnimalType.cs" />
+    <Compile Include="Framework\Models\PropertyConstant.cs" />
+    <Compile Include="Framework\Models\FarmAnimalCategory.cs" />
+    <Compile Include="Framework\Constants\VanillaFarmAnimalType.cs" />
     <Compile Include="Framework\Patches\FarmAnimal\Reload.cs" />
     <Compile Include="Framework\Patches\Patch.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\GetAnimalDescription.cs" />

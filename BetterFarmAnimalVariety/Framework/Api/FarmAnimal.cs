@@ -65,7 +65,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
         public static bool IsVanilla(string type)
         {
-            return FarmAnimalType.Exists(type);
+            return VanillaFarmAnimalType.Exists(type);
         }
 
         public static bool IsCoopDweller(StardewValley.FarmAnimal animal)
@@ -96,12 +96,12 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
         public static string GetDefaultCoopDwellerType()
         {
-            return FarmAnimalType.WhiteChicken.ToString();
+            return VanillaFarmAnimalType.WhiteChicken.ToString();
         }
 
         public static string GetDefaultBarnDwellerType()
         {
-            return FarmAnimalType.WhiteCow.ToString();
+            return VanillaFarmAnimalType.WhiteCow.ToString();
         }
 
         public static void UpdateFromData(ref StardewValley.FarmAnimal animal, KeyValuePair<string, string> contentDataEntry)

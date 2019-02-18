@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace BetterFarmAnimalVariety.Framework.Constants
+namespace BetterFarmAnimalVariety.Framework.Models
 {
     public class PropertyConstant
     {

@@ -106,7 +106,7 @@ namespace BetterFarmAnimalVariety
         private ModConfig LoadConfig()
         {
             // Load the config
-            ModConfig config = Framework.Helpers.Config.Load<ModConfig>();
+            ModConfig config = this.Helper.ReadConfig<ModConfig>();
 
             string targetFormat = this.ModManifest.Version.MajorVersion.ToString();
 

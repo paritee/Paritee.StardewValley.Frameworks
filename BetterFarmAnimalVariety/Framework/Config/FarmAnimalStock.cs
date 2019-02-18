@@ -28,7 +28,7 @@ namespace BetterFarmAnimalVariety.Framework.Config
             // Do nothing; this is for loading an existing config
         }
 
-        public FarmAnimalStock(Constants.FarmAnimalCategory farmAnimalStock)
+        public FarmAnimalStock(Models.FarmAnimalCategory farmAnimalStock)
         {
             this.Name = farmAnimalStock.DisplayName;
             this.Description = farmAnimalStock.Description;

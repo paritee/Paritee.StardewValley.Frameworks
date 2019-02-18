@@ -1,4 +1,5 @@
-﻿using StardewValley;
+﻿using BetterFarmAnimalVariety.Framework.Models;
+using StardewValley;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -57,7 +58,7 @@ namespace BetterFarmAnimalVariety
 
         public void SeedVanillaFarmAnimals()
         {
-            this.FarmAnimals = Framework.Constants.FarmAnimalCategory.All()
+            this.FarmAnimals = Framework.Constants.VanillaFarmAnimalCategory.All()
                 .Select(o => new Framework.Config.FarmAnimal(o))
                 .ToList();
         }
