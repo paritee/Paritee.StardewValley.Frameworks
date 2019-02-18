@@ -152,7 +152,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
             // if the patch mod had been removed without the animals being sold/deleted.
             // This will now also migrate users from bfav 2.x where types were saved directly 
             // to 3.x where they are not.
-            if (!(Game1.activeClickableMenu is TitleMenu titleMenu))
+            if (!(Api.Game.GetActiveMenu() is TitleMenu titleMenu))
             {
                 return false;
             }

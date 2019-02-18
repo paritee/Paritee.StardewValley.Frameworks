@@ -1,5 +1,4 @@
 ﻿using StardewModdingAPI;
-using StardewValley;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -56,7 +55,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands
 
         protected void AssertGameNotLoaded()
         {
-            if (Game1.hasLoadedGame)
+            if (Api.Game.IsSaveLoaded())
             {
                 throw new Exception($"this cannot be done after loading a save");
             }

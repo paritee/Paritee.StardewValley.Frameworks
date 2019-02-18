@@ -114,7 +114,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
             animal.ageWhenMature.Value = Convert.ToByte(values[(int)Constants.FarmAnimal.DataValueIndex.AgeWhenMature]);
             animal.defaultProduceIndex.Value = Convert.ToInt32(values[(int)Constants.FarmAnimal.DataValueIndex.DefaultProduce]);
             animal.deluxeProduceIndex.Value = Convert.ToInt32(values[(int)Constants.FarmAnimal.DataValueIndex.DeluxeProduce]);
-            animal.sound.Value = values[(int)Constants.FarmAnimal.DataValueIndex.Sound].Equals(Constants.Content.None) ? null : values[(int)Constants.FarmAnimal.DataValueIndex.Sound];
+            animal.sound.Value = Api.FarmAnimal.IsDataValueNull(values[(int)Constants.FarmAnimal.DataValueIndex.Sound]) ? null : values[(int)Constants.FarmAnimal.DataValueIndex.Sound];
 
             int x, y, width, height;
 
@@ -149,9 +149,14 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
             animal.fullnessDrain.Value = Convert.ToByte(values[(int)Constants.FarmAnimal.DataValueIndex.FullnessDrain]);
             animal.happinessDrain.Value = Convert.ToByte(values[(int)Constants.FarmAnimal.DataValueIndex.HappinessDrain]);
-            animal.toolUsedForHarvest.Value = values[(int)Constants.FarmAnimal.DataValueIndex.ToolUsedForHarvest].Equals(Constants.Content.None) ? null : values[(int)Constants.FarmAnimal.DataValueIndex.ToolUsedForHarvest];
+            animal.toolUsedForHarvest.Value = Api.FarmAnimal.IsDataValueNull(values[(int)Constants.FarmAnimal.DataValueIndex.ToolUsedForHarvest]) ? null : values[(int)Constants.FarmAnimal.DataValueIndex.ToolUsedForHarvest];
             animal.meatIndex.Value = Convert.ToInt32(values[(int)Constants.FarmAnimal.DataValueIndex.MeatIndex]);
             animal.price.Value = Convert.ToInt32(values[(int)Constants.FarmAnimal.DataValueIndex.Price]);
+        }
+
+        private static bool IsDataValueNull(string value)
+        {
+            return value.Equals(null) || value.Equals("null") || value.Equals(default(string)) || value.Equals(Constants.Content.None);
         }
 
         public static List<string> GetTypesFromProduce(int produceId, Dictionary<string, List<string>> restrictions, bool includeNonProducing)
@@ -219,7 +224,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
         public static bool ProducesAtLeastOne(int defaultProduceId, int deluxeProduceId, int[] targets)
         {
             // Must actualy be a product
-            return targets.Where(o => !o.Equals(Constants.FarmAnimal.FarmAnimalProduceNone))
+            return targets.Where(o => !o.Equals(Constants.FarmAnimal.NoProduce))
                 .Intersect(new int[] { defaultProduceId, deluxeProduceId })
                 .Any();
         }
@@ -231,7 +236,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
         public static bool ProducesNothing(int defaultProduceId, int deluxeProduceId)
         {
-            return defaultProduceId.Equals(Constants.FarmAnimal.FarmAnimalProduceNone) && deluxeProduceId.Equals(Constants.FarmAnimal.FarmAnimalProduceNone);
+            return defaultProduceId.Equals(Constants.FarmAnimal.NoProduce) && deluxeProduceId.Equals(Constants.FarmAnimal.NoProduce);
         }
 
         public static string GetRandomTypeFromProduce(int produceIndex, Dictionary<string, List<string>> restrictions, bool includeNonProducing)
@@ -240,7 +245,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
             // Check to make sure types came back
             return potentialTypes.Any()
-                ? potentialTypes.ElementAt(Game1.random.Next(potentialTypes.Count))
+                ? potentialTypes.ElementAt(Helpers.Random.Next(potentialTypes.Count))
                 : null;
         }
 
@@ -295,15 +300,21 @@ namespace BetterFarmAnimalVariety.Framework.Api
                     break;
                 }
 
-                randomType = potentialTypes[Game1.random.Next(potentialTypes.Count)];
+                randomType = potentialTypes[Helpers.Random.Next(potentialTypes.Count)];
             }
 
             return randomType;
         }
 
+        public static bool CanLiveIn(StardewValley.FarmAnimal animal, Building building)
+        {
+            return building.buildingType.Value.Contains(animal.buildingTypeILiveIn.Value);
+        }
+
         public static void AddToBuilding(ref StardewValley.FarmAnimal animal, ref Building building)
         {
-            animal.homeLocation.Value = new Vector2((float)building.tileX.Value, (float)building.tileY.Value);
+            animal.home = building;
+            animal.homeLocation.Value = new Vector2(building.tileX.Value, building.tileY.Value);
             animal.setRandomPosition(animal.home.indoors.Value);
 
             StardewValley.AnimalHouse animalHouse = building.indoors.Value as StardewValley.AnimalHouse;
@@ -315,6 +326,38 @@ namespace BetterFarmAnimalVariety.Framework.Api
         public static void AssociateParent(ref StardewValley.FarmAnimal animal, long parentId)
         {
             animal.parentId.Value = parentId;
+        }
+
+        public static bool BlueChickenIsUnlocked(StardewValley.Farmer farmer)
+        {
+            return Api.Farmer.HasSeenEvent(farmer, Constants.Event.BlueChicken);
+        }
+
+        public static bool RollBlueChickenChance(StardewValley.Farmer farmer)
+        {
+            if (!Api.FarmAnimal.BlueChickenIsUnlocked(farmer))
+            {
+                return false;
+            }
+
+            return Helpers.Random.NextDouble() >= Constants.FarmAnimal.BlueChickenChance;
+        }
+
+        public static bool HasHarvestType(StardewValley.FarmAnimal animal, int harvestType)
+        {
+            return animal.harvestType.Value.Equals(harvestType);
+        }
+
+        public static bool CanBeNamed(StardewValley.FarmAnimal animal)
+        {
+            // "It" harvest type doesn't allow you to name the animal. This is 
+            // mostly unused and is only seen on the Hog
+            return Api.FarmAnimal.HasHarvestType(animal, Constants.FarmAnimal.ItHarvestType);
+        }
+
+        public static bool MakesSound(StardewValley.FarmAnimal animal)
+        {
+            return animal.sound.Value != null;
         }
     }
 }

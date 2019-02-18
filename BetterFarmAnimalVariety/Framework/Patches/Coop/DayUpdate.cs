@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.Coop
 {
-    //[HarmonyPatch(typeof(Coop))]
-    //[HarmonyPatch("dayUpdate")]
+    //[HarmonyPatch(typeof(Coop), "dayUpdate")]
     class DayUpdate
     {
         public static bool Prefix(ref StardewValley.Buildings.Coop __instance, ref int dayOfMonth)

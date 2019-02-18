@@ -1,6 +1,5 @@
 ﻿using Harmony;
 using Microsoft.Xna.Framework.Graphics;
-using StardewValley;
 using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
@@ -28,7 +27,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
                 .ToDictionary(o => o.Category, o => o.AnimalShop.GetIconTexture());
 
             // We need to completely redo the animalsToPurchase to account for the custom sprites
-            __instance.animalsToPurchase = Api.AnimalShop.GetAnimalsToPurchaseComponents(__instance, config.GetPurchaseAnimalStock(Game1.getFarm()), icons, out iconHeight);
+            __instance.animalsToPurchase = Api.AnimalShop.GetAnimalsToPurchaseComponents(__instance, config.GetPurchaseAnimalStock(Api.Game.GetFarm()), icons, out iconHeight);
         }
 
         private static void AdjustMenuHeight(ref StardewValley.Menus.PurchaseAnimalsMenu __instance, int iconHeight)

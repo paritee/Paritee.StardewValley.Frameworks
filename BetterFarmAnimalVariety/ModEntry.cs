@@ -4,7 +4,6 @@ using BetterFarmAnimalVariety.Framework.SaveData;
 using Harmony;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
-using StardewValley;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -197,28 +196,23 @@ namespace BetterFarmAnimalVariety
         private void OnRenderingActiveMenu(object sender, RenderingActiveMenuEventArgs e)
         {
             // Ignore if player hasn't loaded a save yet
-            if (!Context.IsWorldReady || Game1.activeClickableMenu == null)
+            if (!Context.IsWorldReady || Framework.Api.Game.ActiveMenuExists())
             {
                 return;
             }
 
-            if (!(Game1.activeClickableMenu is StardewValley.Menus.NamingMenu))
+            if (!(Framework.Api.Game.GetActiveMenu() is StardewValley.Menus.NamingMenu namingMenu))
             {
                 return;
             }
 
-            StardewValley.Menus.NamingMenu namingMenu = Game1.activeClickableMenu as StardewValley.Menus.NamingMenu;
+            //Dictionary<string, List<string>> farmAnimals = this.Config.GroupTypesByCategory();
+            //BreedFarmAnimalConfig breedFarmAnimalConfig = new BreedFarmAnimalConfig(farmAnimals, this.BlueFarmAnimals, this.Config.RandomizeNewbornFromCategory, this.Config.RandomizeHatchlingFromCategory, this.Config.IgnoreParentProduceCheck);
+            //BreedFarmAnimal breedFarmAnimal = new BreedFarmAnimal(this.Player, breedFarmAnimalConfig);
 
-            if (namingMenu.GetType() == typeof(StardewValley.Menus.NamingMenu))
-            {
-                //Dictionary<string, List<string>> farmAnimals = this.Config.GroupTypesByCategory();
-                //BreedFarmAnimalConfig breedFarmAnimalConfig = new BreedFarmAnimalConfig(farmAnimals, this.BlueFarmAnimals, this.Config.RandomizeNewbornFromCategory, this.Config.RandomizeHatchlingFromCategory, this.Config.IgnoreParentProduceCheck);
-                //BreedFarmAnimal breedFarmAnimal = new BreedFarmAnimal(this.Player, breedFarmAnimalConfig);
+            //NameFarmAnimalMenu nameFarmAnimalMenu = new NameFarmAnimalMenu(namingMenu, breedFarmAnimal);
 
-                //NameFarmAnimalMenu nameFarmAnimalMenu = new NameFarmAnimalMenu(namingMenu, breedFarmAnimal);
-
-                //nameFarmAnimalMenu.HandleChange();
-            }
+            //nameFarmAnimalMenu.HandleChange();
         }
     }
 }

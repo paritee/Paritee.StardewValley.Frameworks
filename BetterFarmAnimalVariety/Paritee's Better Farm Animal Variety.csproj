@@ -54,6 +54,9 @@
   <ItemGroup>
     <Compile Include="Framework\Api\AnimalShop.cs" />
     <Compile Include="Framework\Api\Asset.cs" />
+    <Compile Include="Framework\Api\Farmer.cs" />
+    <Compile Include="Framework\Api\BellsAndWhistles.cs" />
+    <Compile Include="Framework\Api\Game.cs" />
     <Compile Include="Framework\Commands\Command.cs" />
     <Compile Include="Framework\Api\AnimalHouse.cs" />
     <Compile Include="Framework\Api\Content.cs" />
@@ -83,8 +86,10 @@
     <Compile Include="Framework\Constants\FarmAnimal.cs" />
     <Compile Include="Framework\Constants\Mod.cs" />
     <Compile Include="Framework\Constants\VanillaFarmAnimalCategory.cs" />
+    <Compile Include="Framework\Helpers\Random.cs" />
     <Compile Include="Framework\Models\FarmAnimalType.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\Constructor.cs" />
+    <Compile Include="Framework\Patches\PurchaseAnimalsMenu\ReceiveLeftClick.cs" />
     <Compile Include="Framework\SaveData\FarmAnimalsSaveData.cs" />
     <Compile Include="Framework\SaveData\TypeLog.cs" />
     <Compile Include="Framework\SaveData\SaveData.cs" />

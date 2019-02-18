@@ -3,8 +3,7 @@ using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
 {
-    [HarmonyPatch(typeof(StardewValley.Menus.PurchaseAnimalsMenu))]
-    [HarmonyPatch("getAnimalDescription")]
+    [HarmonyPatch(typeof(StardewValley.Menus.PurchaseAnimalsMenu), "getAnimalDescription")]
     class GetAnimalDescription : Patch
     {
         public static bool Prefix(ref string name, ref string __result)

@@ -28,6 +28,20 @@ namespace BetterFarmAnimalVariety
             return this.FarmAnimals.ToDictionary(o => o.Category, o => new List<string>(o.Types));
         }
 
+        public List<string> TypesInShop(Framework.Config.FarmAnimal animal)
+        {
+            return animal.CanBePurchased()
+                ? animal.Types.Where(t => !animal.AnimalShop.Exclude.Contains(t)).ToList()
+                : new List<string>();
+        }
+
+        public Dictionary<string, List<string>> GroupPurchaseableTypesByCategory()
+        {
+            return this.FarmAnimals.ToDictionary(o => o.Category, this.TypesInShop)
+                .Where(kvp => kvp.Value.Any()) // Filter out empty lists
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
         public bool CategoryExists(string category)
         {
             if (this.FarmAnimals == null)

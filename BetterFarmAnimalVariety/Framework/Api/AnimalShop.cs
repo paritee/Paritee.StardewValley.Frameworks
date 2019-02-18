@@ -86,5 +86,10 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
             return animalsToPurchase;
         }
+
+        public static bool BlueChickenIsAvailableForPurchase(StardewValley.Farmer farmer)
+        {
+            return Api.FarmAnimal.RollBlueChickenChance(farmer);
+        }
     }
 }

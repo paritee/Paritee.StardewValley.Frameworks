@@ -49,7 +49,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
             animalHouse.incubatingEgg.Y = -1;
         }
 
-        public static void ResetIncubator(StardewValley.Object incubator, StardewValley.AnimalHouse animalHouse)
+        public static void ResetIncubator(StardewValley.AnimalHouse animalHouse, StardewValley.Object incubator)
         {
             incubator.heldObject.Value = (StardewValley.Object)null;
             incubator.ParentSheetIndex = Constants.AnimalHouse.DefaultIncubatorItem;
@@ -61,6 +61,16 @@ namespace BetterFarmAnimalVariety.Framework.Api
         {
             NetRef<GameLocation> indoors = Helpers.Reflection.GetFieldValue<NetRef<GameLocation>>(building, "indoors");
             return indoors.Value as StardewValley.AnimalHouse;
+        }
+
+        public static bool IsFull(StardewValley.AnimalHouse animalHouse)
+        {
+            return animalHouse.isFull();
+        }
+
+        public static bool IsFull(Building building)
+        {
+            return Api.AnimalHouse.IsFull(Api.AnimalHouse.GetIndoors(building));
         }
 
         public static bool IsEggReadyToHatch(StardewValley.AnimalHouse animalHouse)

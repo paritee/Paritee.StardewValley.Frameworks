@@ -1,4 +1,5 @@
-﻿using StardewValley;
+﻿using Microsoft.Xna.Framework.Graphics;
+using StardewValley;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,11 @@ namespace BetterFarmAnimalVariety.Framework.Api
 {
     class Content
     {
+        public static GraphicsDevice GetGraphicsDevice()
+        {
+            return Game1.game1.GraphicsDevice;
+        }
+
         public static bool Exists<T>(string name)
         {
             try
@@ -29,6 +35,26 @@ namespace BetterFarmAnimalVariety.Framework.Api
         public static string LoadString(string path)
         {
             return Game1.content.LoadString(path);
+        }
+
+        public static string LoadString(string path, object sub1)
+        {
+            return Game1.content.LoadString(path, sub1);
+        }
+
+        public static string LoadString(string path, object sub1, object sub2)
+        {
+            return Game1.content.LoadString(path, sub1, sub2);
+        }
+
+        public static string LoadString(string path, object sub1, object sub2, object sub3)
+        {
+            return Game1.content.LoadString(path, sub1, sub2, sub3);
+        }
+
+        public static string LoadString(string path, params string[] substitutions)
+        {
+            return Game1.content.LoadString(path, substitutions);
         }
 
         public static KeyValuePair<T, U> GetDataEntry<T, U>(Dictionary<T, U> data, T id)

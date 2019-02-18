@@ -2,6 +2,10 @@
 {
     class Event
     {
-        public const int SoundInTheNightAnimalEatenEvent = 2;
+        // Farmer events
+        public const int BlueChicken = 3900074;
+
+        // Farm events
+        public const int SoundInTheNightAnimalEaten = 2;
     }
 }

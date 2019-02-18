@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using StardewValley;
 using System.IO;
 
 namespace BetterFarmAnimalVariety.Framework.Api
@@ -12,7 +11,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
             using (var fileStream = new FileStream(filePath, FileMode.Open))
             {
-                texture = Texture2D.FromStream(Game1.game1.GraphicsDevice, fileStream);
+                texture = Texture2D.FromStream(Api.Content.GetGraphicsDevice(), fileStream);
             }
 
             return texture;
