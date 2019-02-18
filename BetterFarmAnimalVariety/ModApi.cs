@@ -1,4 +1,5 @@
-﻿using Paritee.StardewValleyAPI.FarmAnimals.Variations;
+﻿using BetterFarmAnimalVariety.Framework.Models;
+using Paritee.StardewValleyAPI.FarmAnimals.Variations;
 using Paritee.StardewValleyAPI.Players;
 using Paritee.StardewValleyAPI.Players.Actions;
 using StardewModdingAPI;
@@ -19,6 +20,7 @@ namespace BetterFarmAnimalVariety
             this.ModVersion = modVersion;
         }
 
+        /// <param name="version">string</param>
         /// <returns>Returns bool</returns>
         public bool IsEnabled(string version)
         {
@@ -32,45 +34,27 @@ namespace BetterFarmAnimalVariety
 
         /// <param name="version">string</param>
         /// <returns>Returns Dictionary<string, string[]></returns>
-        public Dictionary<string, string[]> GetFarmAnimalsByCategory(string version)
+        public List<FarmAnimalCategory> GetFarmAnimalCategories(string version)
         {
             if (!this.IsVersionSupported(version))
             {
                 throw new NotSupportedException();
             }
 
-            return this.Config.FarmAnimals.ToDictionary(o => o.Category, o => o.Types);
-        }
+            List<FarmAnimalCategory> categories = new List<FarmAnimalCategory>();
 
-        /// <param name="version">string</param>
-        /// <param name="player">Paritee.StardewValleyAPI.Players</param>
-        /// <returns>Returns Paritee.StardewValleyAPI.FarmAnimals.Variations.Blue</returns>
-        public BlueVariation GetBlueFarmAnimals(string version, Player player)
-        {
-            if (!this.IsVersionSupported(version))
+            int order = 0;
+
+            foreach (Framework.Config.FarmAnimal animal in this.Config.FarmAnimals)
             {
-                throw new NotSupportedException();
+                FarmAnimalCategory category = animal.CanBePurchased()
+                    ? new FarmAnimalCategory(animal.Category, order++, animal.AnimalShop.Name, animal.AnimalShop.Description, animal.AnimalShop.Price, animal.Types, animal.Buildings, animal.AnimalShop.Exclude)
+                    : new FarmAnimalCategory(animal.Category, order++, animal.Types, animal.Buildings);
+
+                categories.Add(category);
             }
 
-            BlueConfig blueConfig = new BlueConfig(player.HasSeenEvent(BlueVariation.EVENT_ID));
-
-            return new BlueVariation(blueConfig);
-        }
-        
-        /// <param name="version">string</param>
-        /// <param name="player">Paritee.StardewValleyAPI.Players</param>
-        /// <param name="blueFarmAnimals">Paritee.StardewValleyAPI.FarmAnimals.Variations.BlueVariation</param>
-        /// <returns>Returns Paritee.StardewValleyAPI.Players.Actions.BreedFarmAnimal</returns>
-        public BreedFarmAnimal GetBreedFarmAnimal(string version, Player player, BlueVariation blueFarmAnimals)
-        {
-            if (!this.IsVersionSupported(version))
-            {
-                throw new NotSupportedException();
-            }
-
-            Dictionary<string, List<string>> farmAnimals = this.Config.GroupTypesByCategory();
-            BreedFarmAnimalConfig breedFarmAnimalConfig = new BreedFarmAnimalConfig(farmAnimals, blueFarmAnimals, this.Config.RandomizeNewbornFromCategory, this.Config.RandomizeHatchlingFromCategory, this.Config.IgnoreParentProduceCheck);
-            return new BreedFarmAnimal(player, breedFarmAnimalConfig);
+            return categories;
         }
 
         private bool IsVersionSupported(string version)

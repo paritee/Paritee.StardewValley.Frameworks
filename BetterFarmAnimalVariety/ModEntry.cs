@@ -47,7 +47,7 @@ namespace BetterFarmAnimalVariety
             this.SetupConsoleCommands();
 
             // Asset Editors
-            this.Helper.Content.AssetEditors.Add(new AnimalBirthEditor(this));
+            this.Helper.Content.AssetEditors.Add(new AnimalBirth(this));
 
             // Events
             this.Helper.Events.GameLoop.Saving += this.OnSaving;
@@ -74,22 +74,22 @@ namespace BetterFarmAnimalVariety
             List<Framework.Commands.Command> commands = new List<Framework.Commands.Command>()
             {
                 // Config
-                new Framework.Commands.Config.ListCommand(this.Helper, this.Monitor, this.Config),
-                new Framework.Commands.Config.RandomizeFromCategoryCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.Config.List(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.Config.RandomizeFromCategory(this.Helper, this.Monitor, this.Config),
 
                 // FarmAnimal
-                new Framework.Commands.FarmAnimal.ListCommand(this.Helper, this.Monitor, this.Config),
-                new Framework.Commands.FarmAnimal.ResetCommand(this.Helper, this.Monitor, this.Config),
-                new Framework.Commands.FarmAnimal.AddCategoryCommand(this.Helper, this.Monitor, this.Config),
-                new Framework.Commands.FarmAnimal.RemoveCategoryCommand(this.Helper, this.Monitor, this.Config),
-                new Framework.Commands.FarmAnimal.AddTypesCommand(this.Helper, this.Monitor, this.Config),
-                new Framework.Commands.FarmAnimal.RemoveTypesCommand(this.Helper, this.Monitor, this.Config),
-                new Framework.Commands.FarmAnimal.SetBuildingsCommand(this.Helper, this.Monitor, this.Config),
-                new Framework.Commands.FarmAnimal.SetAnimalShopCommand(this.Helper, this.Monitor, this.Config),
-                new Framework.Commands.FarmAnimal.SetAnimalShopNameCommand(this.Helper, this.Monitor, this.Config),
-                new Framework.Commands.FarmAnimal.SetAnimalShopDescriptionCommand(this.Helper, this.Monitor, this.Config),
-                new Framework.Commands.FarmAnimal.SetAnimalShopPriceCommand(this.Helper, this.Monitor, this.Config),
-                new Framework.Commands.FarmAnimal.SetAnimalShopIconCommand(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.List(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.Reset(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.AddCategory(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.RemoveCategory(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.AddTypes(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.RemoveTypes(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.SetBuildings(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.SetAnimalShop(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.SetAnimalShopName(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.SetAnimalShopDescription(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.SetAnimalShopPrice(this.Helper, this.Monitor, this.Config),
+                new Framework.Commands.FarmAnimal.SetAnimalShopIcon(this.Helper, this.Monitor, this.Config),
             };
 
             foreach (Framework.Commands.Command command in commands)
