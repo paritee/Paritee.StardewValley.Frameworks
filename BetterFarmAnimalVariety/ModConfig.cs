@@ -28,6 +28,28 @@ namespace BetterFarmAnimalVariety
             return this.FarmAnimals.ToDictionary(o => o.Category, o => new List<string>(o.Types));
         }
 
+        public bool CategoryExists(string category)
+        {
+            if (this.FarmAnimals == null)
+            {
+                return false;
+            }
+
+            return this.FarmAnimals.Exists(o => o.Category.Equals(category));
+        }
+
+        public Framework.Config.FarmAnimal GetCategory(string category)
+        {
+            return this.CategoryExists(category)
+                ? this.FarmAnimals.First(o => o.Category.Equals(category))
+                : null;
+        }
+
+        public void RemoveCategory(string category)
+        {
+            this.FarmAnimals.RemoveAll(o => o.Category.Equals(category));
+        }
+
         public bool IsValidFormat(string targetFormat)
         {
             return this.Format != null && this.Format.Equals(targetFormat);

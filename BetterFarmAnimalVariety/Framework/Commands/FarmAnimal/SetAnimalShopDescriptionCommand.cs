@@ -25,7 +25,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
                 this.AssertFarmAnimalCanBePurchased(category);
                 this.AssertRequiredArgumentOrder(args.Length, 2, "description");
 
-                Framework.Config.FarmAnimal animal = this.Config.FarmAnimals.First(o => o.Category.Equals(category));
+                Framework.Config.FarmAnimal animal = this.Config.GetCategory(category);
 
                 animal.AnimalShop.Description = args[1].Trim();
 

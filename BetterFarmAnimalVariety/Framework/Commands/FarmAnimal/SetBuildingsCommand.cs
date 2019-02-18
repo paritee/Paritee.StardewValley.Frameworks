@@ -29,7 +29,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 
                 this.AssertBuildingsExist(buildings);
 
-                Framework.Config.FarmAnimal animal = this.Config.FarmAnimals.First(o => o.Category.Equals(category));
+                Framework.Config.FarmAnimal animal = this.Config.GetCategory(category);
 
                 animal.Buildings = buildings.ToArray();
 

@@ -26,7 +26,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
                 this.AssertRequiredArgumentOrder(args.Length, 2, "price");
                 this.AssertValidMoneyAmount(args[1]);
 
-                Framework.Config.FarmAnimal animal = this.Config.FarmAnimals.First(o => o.Category.Equals(category));
+                Framework.Config.FarmAnimal animal = this.Config.GetCategory(category);
 
                 animal.AnimalShop.Price = Int32.Parse(args[1].Trim());
 

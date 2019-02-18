@@ -121,7 +121,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands
 
         protected void AssertFarmAnimalCategoryExists(string category)
         {
-            if (!this.Config.FarmAnimals.Exists(o => o.Category.Equals(category)))
+            if (!this.Config.CategoryExists(category))
             {
                 throw new Exception($"{category} is not a category in config.json");
             }

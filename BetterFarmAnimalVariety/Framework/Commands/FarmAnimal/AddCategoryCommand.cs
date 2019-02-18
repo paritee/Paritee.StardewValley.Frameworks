@@ -88,7 +88,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 
         private void AssertUniqueFarmAnimalCategory(string category)
         {
-            if (this.Config.FarmAnimals.Exists(o => o.Category.Equals(category)))
+            if (this.Config.CategoryExists(category))
             {
                 throw new Exception($"{category} already exists in config.json");
             }

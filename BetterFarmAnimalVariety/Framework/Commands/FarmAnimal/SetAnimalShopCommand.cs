@@ -28,7 +28,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 
                 this.AssertValidBoolean(animalShop, "animalshop", out bool result);
 
-                Framework.Config.FarmAnimal animal = this.Config.FarmAnimals.First(o => o.Category.Equals(category));
+                Framework.Config.FarmAnimal animal = this.Config.GetCategory(category);
 
                 this.AssertAnimalShopChange(animalShop, animal.CanBePurchased());
 

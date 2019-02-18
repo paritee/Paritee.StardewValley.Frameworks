@@ -12,9 +12,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
             // Get the description from the config
             string category = name;
 
-            __result = Helpers.Config.Load<ModConfig>().FarmAnimals
-                .First(o => o.Category.Equals(category))
-                .AnimalShop.Name;
+            __result = Helpers.Config.Load<ModConfig>().GetCategory(category).AnimalShop.Name;
 
             return false;
         }
