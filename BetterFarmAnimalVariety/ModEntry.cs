@@ -177,12 +177,12 @@ namespace BetterFarmAnimalVariety
         {
             try
             {
-                if (ConvertDirtyFarmAnimals.OnButtonPressed(e, out Dictionary<long, TypeLog> typesToBeMigrated))
+                if (ConvertDirtyFarmAnimals.OnButtonPressed(e, out string slotName, out Dictionary<long, TypeLog> typesToBeMigrated))
                 {
                     // Report if any animals were migrated and save the migrations
                     string message = typesToBeMigrated.Any()
-                        ? $"ConvertDirtyFarmAnimals: Migrated {typesToBeMigrated.Count} dirty farm animals:\n-- {String.Join("\n-- ", typesToBeMigrated.Select(kvp => $"{kvp.Key}: {kvp.Value.CurrentType} saved as {kvp.Value.SavedType}"))}"
-                        : $"ConvertDirtyFarmAnimals: No dirty farm animals found";
+                        ? $"ConvertDirtyFarmAnimals in {slotName}: Migrated {typesToBeMigrated.Count} dirty farm animals:\n-- {String.Join("\n-- ", typesToBeMigrated.Select(kvp => $"{kvp.Key}: {kvp.Value.CurrentType} saved as {kvp.Value.SavedType}"))}"
+                        : $"ConvertDirtyFarmAnimals in {slotName}: No dirty farm animals found";
 
                     this.Monitor.Log(message, LogLevel.Trace);
                 }

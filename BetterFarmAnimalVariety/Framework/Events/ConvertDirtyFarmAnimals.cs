@@ -132,8 +132,9 @@ namespace BetterFarmAnimalVariety.Framework.Events
             }
         }
 
-        public static bool OnButtonPressed(ButtonPressedEventArgs e, out Dictionary<long, TypeLog> typesToBeMigrated)
+        public static bool OnButtonPressed(ButtonPressedEventArgs e, out string slotName, out Dictionary<long, TypeLog> typesToBeMigrated)
         {
+            slotName = default(string);
             typesToBeMigrated = new Dictionary<long, TypeLog>();
 
             // Ignore if player has loaded a save
@@ -162,15 +163,22 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 return false;
             }
 
+            int currentItemIndex = Framework.Helpers.Reflection.GetFieldValue<int>(loadGameMenu, "currentItemIndex");
+            List<MenuSlot> menuSlots = Framework.Helpers.Reflection.GetFieldValue<List<MenuSlot>>(loadGameMenu, "menuSlots");
+
             for (int index = 0; index < loadGameMenu.slotButtons.Count; index++)
             {
+                if (currentItemIndex + index >= menuSlots.Count)
+                {
+                    break;
+                }
+
                 if (!loadGameMenu.slotButtons[index].containsPoint((int)e.Cursor.ScreenPixels.X, (int)e.Cursor.ScreenPixels.Y))
                 {
                     continue;
                 }
 
-                int currentItemIndex = Framework.Helpers.Reflection.GetFieldValue<int>(loadGameMenu, "currentItemIndex");
-                SaveFileSlot saveFileSlot = Framework.Helpers.Reflection.GetFieldValue<List<MenuSlot>>(loadGameMenu, "menuSlots")[currentItemIndex + index] as SaveFileSlot;
+                SaveFileSlot saveFileSlot = menuSlots[currentItemIndex + index] as SaveFileSlot;
 
                 // Need to manually parse the XML since casting to a FarmAnimal 
                 // triggers the data search crash that this command aims to avoid
@@ -178,6 +186,8 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 {
                     throw new DirectoryNotFoundException($"cannot find saves path directory");
                 }
+
+                slotName = saveFileSlot.Farmer.slotName;
 
                 // Scan only the most recent save if it can be found
                 Framework.Helpers.GameSave.CleanFarmAnimals(Path.Combine(StardewModdingAPI.Constants.SavesPath, saveFileSlot.Farmer.slotName), out typesToBeMigrated);
