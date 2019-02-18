@@ -54,9 +54,7 @@ namespace BetterFarmAnimalVariety
 
         public Framework.Config.FarmAnimal GetCategory(string category)
         {
-            return this.CategoryExists(category)
-                ? this.FarmAnimals.First(o => o.Category.Equals(category))
-                : null;
+            return this.FarmAnimals.FirstOrDefault(o => o.Category.Equals(category));
         }
 
         public void RemoveCategory(string category)

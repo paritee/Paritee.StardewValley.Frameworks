@@ -13,7 +13,6 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         public static void OverwriteFarmAnimal(ref FarmAnimal animal, string requestedType)
         {
             // ==========
-            // TODO:
             // WARNING:
             // Don't sanitize a farm animal's type by blue/void/brown cow chance
             // etc. or BFAV config existence here. These checks should be done 
@@ -39,7 +38,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
 
             // If there's a save data entry, use that; otherwise this might be 
             // an animal created before being saved (ie. created in current day)
-            string currentType = typeHistory == null ? requestedType : typeHistory.CurrentType;
+            string currentType = typeHistory == null ? (requestedType ?? animal.type.Value) : typeHistory.CurrentType;
 
             // Grab the new type's data to override if it exists
             Dictionary<string, string> contentData = Api.Content.LoadData<string, string>(Constants.Content.DataFarmAnimalsContentPath);

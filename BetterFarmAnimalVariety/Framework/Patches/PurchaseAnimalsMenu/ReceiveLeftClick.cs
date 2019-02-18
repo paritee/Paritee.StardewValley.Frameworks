@@ -42,10 +42,9 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
         {
             // Copy all of the logic checkpoints and try to return to the base 
             // code as much as possible
-
             ClickableTextureComponent textureComponent = __instance.animalsToPurchase
-                .Where(o => (o.item as StardewValley.Object).Type != null)
-                .First(o => o.containsPoint(x, y));
+                .Where(o => (o.item as StardewValley.Object).Type == null)
+                .FirstOrDefault(o => o.containsPoint(x, y));
 
             if (textureComponent == null)
             {
