@@ -1,13 +1,8 @@
-﻿using BetterFarmAnimalVariety.Framework.Commands.FarmAnimal;
-using Paritee.StardewValleyAPI.FarmAnimals.Variations;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using StardewValley;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BetterFarmAnimalVariety.Framework.Commands
 {
@@ -183,14 +178,6 @@ namespace BetterFarmAnimalVariety.Framework.Commands
             if (!Path.GetExtension(fullPathToIcon).ToLower().Equals(".png"))
             {
                 throw new Exception($"{filename} must be a .png");
-            }
-        }
-
-        protected void AssertValidVoidInShop(string inShop, out VoidConfig.InShop flag)
-        {
-            if (!Enum.TryParse(inShop, true, out flag))
-            {
-                throw new Exception($"{inShop} is not a valid flag");
             }
         }
     }

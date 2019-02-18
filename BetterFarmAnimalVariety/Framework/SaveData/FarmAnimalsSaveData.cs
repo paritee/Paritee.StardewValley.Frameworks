@@ -16,7 +16,7 @@ namespace BetterFarmAnimalVariety.Framework.SaveData
 
         public static string GetPath()
         {
-            string saveDataDir = Path.Combine(StardewModdingAPI.Constants.DataPath, Constants.Mod.ModKey);
+            string saveDataDir = Path.Combine(StardewModdingAPI.Constants.DataPath, Constants.Mod.Key);
 
             return Path.Combine(saveDataDir, Constants.Mod.FarmAnimalsSaveDataFileName);
         }

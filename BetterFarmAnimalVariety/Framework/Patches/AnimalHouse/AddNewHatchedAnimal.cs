@@ -47,7 +47,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
             }
 
             // Check the config
-            ModConfig config = Helpers.Config.Load<ModConfig>();
+            ModConfig config = Helpers.Mod.LoadConfig<ModConfig>();
 
             // Grab the types with their associated categories in string form
             Dictionary<string, List<string>> restrictions = config.GroupTypesByCategory();
@@ -64,7 +64,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
         private static void HandleNewborn(ref StardewValley.AnimalHouse animalHouse, string name, ref QuestionEvent questionEvent)
         {
             // Check the config
-            ModConfig config = Helpers.Config.Load<ModConfig>();
+            ModConfig config = Helpers.Mod.LoadConfig<ModConfig>();
 
             // Grab the types with their associated categories in string form
             Dictionary<string, List<string>> restrictions = config.GroupTypesByCategory();

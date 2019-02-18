@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PariteeAnimalHouse = Paritee.StardewValleyAPI.Buildings.AnimalHouses.AnimalHouse;
 
 namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 {
@@ -35,16 +34,16 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 
                 if (building.ToLower().Equals(Constants.AnimalHouse.Coop.ToLower()))
                 {
-                    foreach (PariteeAnimalHouse.Size size in Enum.GetValues(typeof(Paritee.StardewValleyAPI.Buildings.AnimalHouses.Coop.Size)))
+                    foreach (Constants.AnimalHouse.Size size in Enum.GetValues(typeof(Constants.AnimalHouse.Size)))
                     {
-                        buildings.Add(PariteeAnimalHouse.FormatBuilding(Constants.AnimalHouse.Coop, size));
+                        buildings.Add(Api.AnimalHouse.FormatSize(Constants.AnimalHouse.Coop, size));
                     }
                 }
                 else if (building.ToLower().Equals(Constants.AnimalHouse.Barn.ToLower()))
                 {
-                    foreach (PariteeAnimalHouse.Size size in Enum.GetValues(typeof(Paritee.StardewValleyAPI.Buildings.AnimalHouses.Barn.Size)))
+                    foreach (Constants.AnimalHouse.Size size in Enum.GetValues(typeof(Constants.AnimalHouse.Size)))
                     {
-                        buildings.Add(PariteeAnimalHouse.FormatBuilding(Constants.AnimalHouse.Barn, size));
+                        buildings.Add(Api.AnimalHouse.FormatSize(Constants.AnimalHouse.Barn, size));
                     }
                 }
                 else

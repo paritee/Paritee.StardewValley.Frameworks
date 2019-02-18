@@ -1,5 +1,4 @@
-﻿using BetterFarmAnimalVariety.Framework.Models;
-using StardewValley;
+﻿using StardewValley;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -1,11 +1,7 @@
 ﻿using BetterFarmAnimalVariety.Framework.Models;
-using Paritee.StardewValleyAPI.FarmAnimals.Variations;
-using Paritee.StardewValleyAPI.Players;
-using Paritee.StardewValleyAPI.Players.Actions;
 using StardewModdingAPI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BetterFarmAnimalVariety
 {

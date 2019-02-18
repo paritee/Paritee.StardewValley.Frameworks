@@ -30,7 +30,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.Coop
         private static string GetRandomType(StardewValley.AnimalHouse animalHouse)
         {
             // Check the config
-            ModConfig config = Helpers.Config.Load<ModConfig>();
+            ModConfig config = Helpers.Mod.LoadConfig<ModConfig>();
 
             // Grab the types with their associated categories in string form
             Dictionary<string, List<string>> restrictions = config.GroupTypesByCategory();

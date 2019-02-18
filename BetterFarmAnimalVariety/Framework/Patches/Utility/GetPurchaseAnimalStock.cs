@@ -10,7 +10,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.Utility
         public static bool Prefix(ref List<StardewValley.Object> __result)
         {
             // Load the config and grab the farm animals for purchase
-            __result = Helpers.Config.Load<ModConfig>().GetPurchaseAnimalStock(StardewValley.Game1.getFarm());
+            __result = Helpers.Mod.LoadConfig<ModConfig>().GetPurchaseAnimalStock(StardewValley.Game1.getFarm());
 
             return false;
         }

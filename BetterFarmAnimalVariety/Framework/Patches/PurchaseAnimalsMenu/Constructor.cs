@@ -19,7 +19,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
         private static void RefreshAnimalsToPurchase(ref StardewValley.Menus.PurchaseAnimalsMenu __instance, out int iconHeight)
         {
             // Load the config
-            ModConfig config = Helpers.Config.Load<ModConfig>();
+            ModConfig config = Helpers.Mod.LoadConfig<ModConfig>();
            
             // Grab the icons from the config by category
             Dictionary<string, Texture2D> icons = config.FarmAnimals

@@ -39,7 +39,7 @@ namespace BetterFarmAnimalVariety.Framework.Config
 
         public Texture2D GetIconTexture()
         {
-            return Api.Asset.LoadTexture(Path.Combine(Constants.Mod.ModPath, this.Icon));
+            return Api.Asset.LoadTexture(Path.Combine(Constants.Mod.Path, this.Icon));
         }
 
         public string GetDefaultIconPath(string category)
@@ -63,7 +63,7 @@ namespace BetterFarmAnimalVariety.Framework.Config
 
             placeholder.Icon = placeholder.GetDefaultIconPath(category);
 
-            string fullPathToIcon = Path.Combine(Constants.Mod.ModPath, placeholder.Icon);
+            string fullPathToIcon = Path.Combine(Constants.Mod.Path, placeholder.Icon);
 
             if (!File.Exists(fullPathToIcon))
             {
