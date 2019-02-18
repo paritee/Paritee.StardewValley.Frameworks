@@ -89,7 +89,7 @@
     <Compile Include="Framework\SaveData\TypeLog.cs" />
     <Compile Include="Framework\SaveData\SaveData.cs" />
     <Compile Include="Framework\Events\ConvertDirtyFarmAnimals.cs" />
-    <Compile Include="Framework\Helpers\Config.cs" />
+    <Compile Include="Framework\Helpers\Mod.cs" />
     <Compile Include="Framework\Helpers\Multiplayer.cs" />
     <Compile Include="Framework\Helpers\Reflection.cs" />
     <Compile Include="Framework\Helpers\GameSave.cs" />

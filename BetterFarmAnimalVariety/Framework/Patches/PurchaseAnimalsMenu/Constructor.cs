@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using Microsoft.Xna.Framework.Graphics;
+using StardewValley;
 using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
         public static void Postfix(ref StardewValley.Menus.PurchaseAnimalsMenu __instance, ref List<StardewValley.Object> stock)
         {
             Constructor.RefreshAnimalsToPurchase(ref __instance, out int iconHeight);
-            Constructor.AdjustHeight(ref __instance, iconHeight);
+            Constructor.AdjustMenuHeight(ref __instance, iconHeight);
         }
 
         private static void RefreshAnimalsToPurchase(ref StardewValley.Menus.PurchaseAnimalsMenu __instance, out int iconHeight)
@@ -27,10 +28,10 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
                 .ToDictionary(o => o.Category, o => o.AnimalShop.GetIconTexture());
 
             // We need to completely redo the animalsToPurchase to account for the custom sprites
-            __instance.animalsToPurchase = Api.AnimalShop.GetAnimalsToPurchaseComponents(__instance, config.GetPurchaseAnimalStock(StardewValley.Game1.getFarm()), icons, out iconHeight);
+            __instance.animalsToPurchase = Api.AnimalShop.GetAnimalsToPurchaseComponents(__instance, config.GetPurchaseAnimalStock(Game1.getFarm()), icons, out iconHeight);
         }
 
-        private static void AdjustHeight(ref StardewValley.Menus.PurchaseAnimalsMenu __instance, int iconHeight)
+        private static void AdjustMenuHeight(ref StardewValley.Menus.PurchaseAnimalsMenu __instance, int iconHeight)
         {
             int rows = (int)Math.Ceiling((float)__instance.animalsToPurchase.Count / 3); // Always at least one row
 

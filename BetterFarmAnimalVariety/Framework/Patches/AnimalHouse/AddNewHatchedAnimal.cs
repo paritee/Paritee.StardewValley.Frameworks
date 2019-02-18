@@ -16,7 +16,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
             {
                 AddNewHatchedAnimal.HandleHatchling(ref __instance, name);
             }
-            else if (StardewValley.Game1.farmEvent != null && StardewValley.Game1.farmEvent is QuestionEvent questionEvent)
+            else if (Game1.farmEvent != null && Game1.farmEvent is QuestionEvent questionEvent)
             {
                 AddNewHatchedAnimal.HandleNewborn(ref __instance, name, ref questionEvent);
             }
@@ -25,12 +25,12 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
             // Everything below is a rewrite of the original as it exists
             ////
 
-            if (StardewValley.Game1.currentLocation.currentEvent != null)
+            if (Game1.currentLocation.currentEvent != null)
             {
-                ++StardewValley.Game1.currentLocation.currentEvent.CurrentCommand;
+                ++Game1.currentLocation.currentEvent.CurrentCommand;
             }
 
-            StardewValley.Game1.exitActiveMenu();
+            Game1.exitActiveMenu();
 
             // Everything in this function was handled here
             return false;
@@ -55,7 +55,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
             string type = Api.AnimalHouse.GetRandomTypeFromIncubator(incubator, restrictions, config.RandomizeHatchlingFromCategory);
 
             Building building = animalHouse.getBuilding();
-            FarmAnimal animal = Api.FarmAnimal.CreateFarmAnimal(type, StardewValley.Game1.player.UniqueMultiplayerID, name, building);
+            FarmAnimal animal = Api.FarmAnimal.CreateFarmAnimal(type, Game1.player.UniqueMultiplayerID, name, building);
 
             Api.FarmAnimal.AddToBuilding(ref animal, ref building);
             Api.AnimalHouse.ResetIncubator(incubator, animalHouse);
@@ -72,7 +72,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
             string type = Api.FarmAnimal.GetRandomTypeFromParent(questionEvent.animal, restrictions, config.RandomizeNewbornFromCategory, config.IgnoreParentProduceCheck);
 
             Building building = animalHouse.getBuilding();
-            FarmAnimal animal = Api.FarmAnimal.CreateFarmAnimal(type, StardewValley.Game1.player.UniqueMultiplayerID, name, building);
+            FarmAnimal animal = Api.FarmAnimal.CreateFarmAnimal(type, Game1.player.UniqueMultiplayerID, name, building);
 
             Api.FarmAnimal.AssociateParent(ref animal, questionEvent.animal.myID.Value);
             Api.FarmAnimal.AddToBuilding(ref animal, ref building);
