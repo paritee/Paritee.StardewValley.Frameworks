@@ -25,16 +25,18 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
                 this.AssertFarmAnimalCategoryExists(category);
                 this.AssertRequiredArgumentOrder(args.Length, 2, "type");
 
-                List<string> types = new List<string>(this.Config.FarmAnimals[category].Types);
+                Framework.Config.FarmAnimal animal = this.Config.FarmAnimals.First(o => o.Category.Equals(category));
+
+                List<string> types = new List<string>(animal.Types);
                 List<string> newTypes = args[1].Split(',').Select(i => i.Trim()).ToList();
 
                 this.AssertFarmAnimalTypesExist(newTypes);
 
-                this.Config.FarmAnimals[category].Types = types.Concat(newTypes).Distinct().ToArray();
+                animal.Types = types.Concat(newTypes).Distinct().ToArray();
 
                 this.Helper.WriteConfig(this.Config);
 
-                string output = Helpers.Commands.DescribeFarmAnimalCategory(new KeyValuePair<string, Framework.Config.FarmAnimal>(category, this.Config.FarmAnimals[category]));
+                string output = this.DescribeFarmAnimalCategory(animal);
 
                 this.Monitor.Log(output, LogLevel.Info);
             }

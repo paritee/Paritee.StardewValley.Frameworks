@@ -21,12 +21,12 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 
                 string category = args[0];
 
-                if (!this.Config.FarmAnimals.ContainsKey(category))
+                if (!this.Config.FarmAnimals.Exists(o => o.Category.Equals(category)))
                 {
                     throw new Exception($"{category} is not a category in config.json");
                 }
 
-                this.Config.FarmAnimals.Remove(category);
+                this.Config.FarmAnimals.RemoveAll(o => o.Category.Equals(category));
 
                 this.Helper.WriteConfig(this.Config);
 

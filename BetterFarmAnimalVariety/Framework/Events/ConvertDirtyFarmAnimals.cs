@@ -16,6 +16,11 @@ namespace BetterFarmAnimalVariety.Framework.Events
         {
             FarmAnimalsSaveData saveData = FarmAnimalsSaveData.Deserialize();
 
+            // Track the animal ID because we're going to remove 
+            // animals that no longer exist from the save data 
+            // (ex. sold, sound in the night event, etc.)
+            List<long> animalIds = new List<long>();
+
             // Need to go through each locations(farm)/buildings(ah indoors)/animals 
             // to convert any "dirty" types to their vanilla version prior to save. 
             // All types (vanilla or dirty) are logged in the save data to be 
@@ -38,6 +43,8 @@ namespace BetterFarmAnimalVariety.Framework.Events
                     {
                         long id = animalHouse.animalsThatLiveHere.ElementAt(k);
                         FarmAnimal animal = animalHouse.animals[id];
+
+                        animalIds.Add(id);
 
                         // Only non-vanilla animals need to be migrated, but...
                         if (Framework.Api.FarmAnimal.IsVanilla(animal.type.Value))
@@ -78,6 +85,16 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 }
 
                 break;
+            }
+
+            if (saveData.TypeHistory.Any())
+            {
+                // Remove any ids from the save data that should not be there
+                List<long> keysToBeRemoved = saveData.TypeHistory.Keys
+                    .Where(key => !animalIds.Contains(key))
+                    .ToList();
+
+                saveData.RemoveTypeHistory(keysToBeRemoved);
             }
         }
 

@@ -35,6 +35,11 @@ namespace BetterFarmAnimalVariety.Framework.SaveData
 
         public void AddTypeHistory(Dictionary<long, TypeLog> history)
         {
+            if (!history.Any())
+            {
+                return;
+            }
+
             // Clean up the data file
             foreach (KeyValuePair<long, TypeLog> typeHistory in history)
             {
@@ -57,6 +62,11 @@ namespace BetterFarmAnimalVariety.Framework.SaveData
 
         public void RemoveTypeHistory(List<long> keys)
         {
+            if (!keys.Any())
+            {
+                return;
+            }
+
             // Clean up the data file
             this.TypeHistory = this.TypeHistory.Where(o => !keys.Contains(o.Key)).ToDictionary(o => o.Key, o => o.Value);
 
@@ -69,28 +79,6 @@ namespace BetterFarmAnimalVariety.Framework.SaveData
             this.TypeHistory.Remove(key);
 
             this.WriteChanges();
-        }
-
-        public void Clean()
-        {
-            if (!this.TypeHistory.Any())
-            {
-                // Nothing to do
-                return;
-            }
-
-            // Validate if any animals exist in the save data, but not in the game
-            List<long> remainingAnimals = Game1.getFarm().buildings
-                .Where(o => o.indoors.Value is AnimalHouse)
-                .SelectMany(o => (o.indoors.Value as AnimalHouse).animals.Keys.Cast<long>())
-                .ToList();
-
-            // Find the difference
-            List<long> animalsToBeRemoved = this.TypeHistory.Keys
-                .Where(o => !remainingAnimals.Contains(o))
-                .ToList();
-
-            this.RemoveTypeHistory(animalsToBeRemoved);
         }
 
         public bool Exists(long myId)

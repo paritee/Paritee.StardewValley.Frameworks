@@ -58,18 +58,23 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 
                 this.AssertValidBoolean(animalShop, "animalShop", out bool result);
 
-                Framework.Config.FarmAnimalStock farmAnimalStock = Framework.Helpers.Commands.GetAnimalShopConfig(category, animalShop);
+                Framework.Config.FarmAnimalStock farmAnimalStock = result
+                    ? Framework.Config.FarmAnimalStock.CreateWithPlaceholders(category)
+                    : null;
 
-                this.Config.FarmAnimals.Add(category, new Framework.Config.FarmAnimal());
+                Framework.Config.FarmAnimal animal = new Framework.Config.FarmAnimal
+                {
+                    Category = category,
+                    Types = types.Distinct().ToArray(),
+                    Buildings = buildings.ToArray(),
+                    AnimalShop = farmAnimalStock
+                };
 
-                this.Config.FarmAnimals[category].Category = category;
-                this.Config.FarmAnimals[category].Types = types.Distinct().ToArray();
-                this.Config.FarmAnimals[category].Buildings = buildings.ToArray();
-                this.Config.FarmAnimals[category].AnimalShop = farmAnimalStock;
+                this.Config.FarmAnimals.Add(animal);
 
                 this.Helper.WriteConfig(this.Config);
 
-                string output = Helpers.Commands.DescribeFarmAnimalCategory(new KeyValuePair<string, Framework.Config.FarmAnimal>(category, this.Config.FarmAnimals[category]));
+                string output = this.DescribeFarmAnimalCategory(animal);
 
                 this.Monitor.Log(output, LogLevel.Info);
             }
@@ -83,7 +88,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 
         private void AssertUniqueFarmAnimalCategory(string category)
         {
-            if (this.Config.FarmAnimals.ContainsKey(category))
+            if (this.Config.FarmAnimals.Exists(o => o.Category.Equals(category)))
             {
                 throw new Exception($"{category} already exists in config.json");
             }

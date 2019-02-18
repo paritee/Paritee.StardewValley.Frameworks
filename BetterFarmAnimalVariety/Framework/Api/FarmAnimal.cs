@@ -4,7 +4,6 @@ using StardewValley;
 using StardewValley.Buildings;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using BetterFarmAnimalVariety.Framework.Constants;
 
@@ -153,11 +152,6 @@ namespace BetterFarmAnimalVariety.Framework.Api
             animal.toolUsedForHarvest.Value = values[(int)Constants.FarmAnimal.DataValueIndex.ToolUsedForHarvest].Equals(Constants.Content.None) ? null : values[(int)Constants.FarmAnimal.DataValueIndex.ToolUsedForHarvest];
             animal.meatIndex.Value = Convert.ToInt32(values[(int)Constants.FarmAnimal.DataValueIndex.MeatIndex]);
             animal.price.Value = Convert.ToInt32(values[(int)Constants.FarmAnimal.DataValueIndex.Price]);
-
-            Debug.WriteLine($"END OF UpdateFromData");
-            Debug.WriteLine($"animal.Name {animal.Name} (#{animal.myID})");
-            Debug.WriteLine($"animal.Position == null {animal.Position == null}");
-            Debug.WriteLine($"animal.Sprite == null {animal.Sprite == null}");
         }
 
         public static List<string> GetTypesFromProduce(int produceId, Dictionary<string, List<string>> restrictions, bool includeNonProducing)

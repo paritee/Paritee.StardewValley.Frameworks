@@ -14,9 +14,9 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
         {
             string output = "Listing BFAV farm animals\n";
 
-            foreach (KeyValuePair<string, Framework.Config.FarmAnimal> entry in this.Config.FarmAnimals)
+            foreach (Framework.Config.FarmAnimal animal in this.Config.FarmAnimals)
             {
-                output += Helpers.Commands.DescribeFarmAnimalCategory(entry);
+                output += this.DescribeFarmAnimalCategory(animal);
             }
 
             this.Monitor.Log(output, LogLevel.Info);

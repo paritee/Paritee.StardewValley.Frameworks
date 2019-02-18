@@ -2,16 +2,9 @@
 using BetterFarmAnimalVariety.Framework.Events;
 using BetterFarmAnimalVariety.Framework.SaveData;
 using Harmony;
-using Microsoft.Xna.Framework.Graphics;
-using Paritee.StardewValleyAPI.Buildings.AnimalShop;
-using Paritee.StardewValleyAPI.FarmAnimals.Variations;
-using Paritee.StardewValleyAPI.Menus;
-using Paritee.StardewValleyAPI.Players;
-using Paritee.StardewValleyAPI.Players.Actions;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,13 +15,6 @@ namespace BetterFarmAnimalVariety
     public class ModEntry : Mod
     {
         public ModConfig Config;
-
-        public Player Player;
-        public BlueVariation BlueFarmAnimals;
-        public VoidVariation VoidFarmAnimals;
-        public AnimalShop AnimalShop;
-
-        private bool ChangedPurchaseAnimalsMenuClickableComponents = false;
 
         /*********
         ** Public methods
@@ -67,10 +53,7 @@ namespace BetterFarmAnimalVariety
             this.Helper.Events.GameLoop.Saving += this.OnSaving;
             this.Helper.Events.GameLoop.Saved += this.OnSaved;
             this.Helper.Events.Input.ButtonPressed += this.OnButtonPressed;
-            // this.Helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
             // this.Helper.Events.Display.RenderingActiveMenu += this.OnRenderingActiveMenu;
-            // this.Helper.Events.Display.RenderedActiveMenu += this.OnRenderedActiveMenu;
-            // this.Helper.Events.Display.MenuChanged += this.OnMenuChanged;
         }
 
         private void SetupHarmonyPatches()
@@ -123,7 +106,7 @@ namespace BetterFarmAnimalVariety
         private ModConfig LoadConfig()
         {
             // Load the config
-            ModConfig config = this.Helper.ReadConfig<ModConfig>();
+            ModConfig config = Framework.Helpers.Config.Load<ModConfig>();
 
             string targetFormat = this.ModManifest.Version.MajorVersion.ToString();
 
@@ -137,7 +120,12 @@ namespace BetterFarmAnimalVariety
                 throw new FormatException();
             }
 
-            config.InitializeFarmAnimals();
+            // Only seed the config with vanilla if it's the first initializaiton 
+            // of it or there are no farm animals in the list
+            if (!config.FarmAnimals.Any())
+            {
+                config.SeedVanillaFarmAnimals();
+            }
 
             // Write back the config
             this.Helper.WriteConfig<ModConfig>(config);
@@ -204,18 +192,6 @@ namespace BetterFarmAnimalVariety
             {
                 this.Monitor.Log(exception.Message, LogLevel.Error);
             }
-
-            // TODO: enable everything in bfav again
-            //Framework.Events.PurchaseFarmAnimal.OnButtonPressed(this.Player, this.AnimalShop, e);
-        }
-
-        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
-        {
-            this.Player = new Player(Game1.player, this.Helper);
-
-            // Set up everything else
-            BlueConfig blueConfig = new BlueConfig(this.Player.HasSeenEvent(BlueVariation.EVENT_ID));
-            this.BlueFarmAnimals = new BlueVariation(blueConfig);
         }
 
         private void OnRenderingActiveMenu(object sender, RenderingActiveMenuEventArgs e)
@@ -235,74 +211,14 @@ namespace BetterFarmAnimalVariety
 
             if (namingMenu.GetType() == typeof(StardewValley.Menus.NamingMenu))
             {
-                Dictionary<string, List<string>> farmAnimals = this.Config.GroupTypesByCategory();
-                BreedFarmAnimalConfig breedFarmAnimalConfig = new BreedFarmAnimalConfig(farmAnimals, this.BlueFarmAnimals, this.Config.RandomizeNewbornFromCategory, this.Config.RandomizeHatchlingFromCategory, this.Config.IgnoreParentProduceCheck);
-                BreedFarmAnimal breedFarmAnimal = new BreedFarmAnimal(this.Player, breedFarmAnimalConfig);
+                //Dictionary<string, List<string>> farmAnimals = this.Config.GroupTypesByCategory();
+                //BreedFarmAnimalConfig breedFarmAnimalConfig = new BreedFarmAnimalConfig(farmAnimals, this.BlueFarmAnimals, this.Config.RandomizeNewbornFromCategory, this.Config.RandomizeHatchlingFromCategory, this.Config.IgnoreParentProduceCheck);
+                //BreedFarmAnimal breedFarmAnimal = new BreedFarmAnimal(this.Player, breedFarmAnimalConfig);
 
-                NameFarmAnimalMenu nameFarmAnimalMenu = new NameFarmAnimalMenu(namingMenu, breedFarmAnimal);
+                //NameFarmAnimalMenu nameFarmAnimalMenu = new NameFarmAnimalMenu(namingMenu, breedFarmAnimal);
 
-                nameFarmAnimalMenu.HandleChange();
+                //nameFarmAnimalMenu.HandleChange();
             }
-        }
-
-        private void OnRenderedActiveMenu(object sender, RenderedActiveMenuEventArgs e)
-        {
-            // Ignore if player hasn't loaded a save yet
-            if (!Context.IsWorldReady || Game1.activeClickableMenu == null)
-            {
-                return;
-            }
-
-            // Stop triggering the heavy redraws
-            if (this.ChangedPurchaseAnimalsMenuClickableComponents)
-            {
-                return;
-            }
-
-            if (Game1.activeClickableMenu.GetType() == typeof(StardewValley.Menus.PurchaseAnimalsMenu))
-            {
-                if (!(Game1.activeClickableMenu is StardewValley.Menus.PurchaseAnimalsMenu))
-                {
-                    return;
-                }
-
-                StardewValley.Menus.PurchaseAnimalsMenu purchaseAnimalsMenu = Game1.activeClickableMenu as StardewValley.Menus.PurchaseAnimalsMenu;
-
-                // We need to completely redo the animalsToPurchase to account for the custom sprites
-                Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
-                int iconHeight = 0;
-
-                foreach (KeyValuePair<string, Framework.Config.FarmAnimal> entry in this.Config.FarmAnimals)
-                {
-                    if (entry.Value.CanBePurchased())
-                    {
-                        Texture2D texture = this.Helper.Content.Load<Texture2D>(entry.Value.AnimalShop.Icon, ContentSource.ModFolder);
-
-                        iconHeight = texture.Height;
-
-                        textures.Add(entry.Value.Category, texture);
-                    }
-                }
-
-                purchaseAnimalsMenu.animalsToPurchase = this.AnimalShop.FarmAnimalStock.DetermineClickableComponents(purchaseAnimalsMenu, textures);
-
-                int rows = (int)Math.Ceiling((float)purchaseAnimalsMenu.animalsToPurchase.Count / 3); // Always at least one row
-
-                // Adjust the size of the menud if there are more or less rows than it normally handles
-                if (iconHeight > 0)
-                {
-                    purchaseAnimalsMenu.height = (int)(iconHeight * 2f) + IClickableMenu.spaceToClearTopBorder + IClickableMenu.borderWidth / 2 + rows * 85;
-                }
-
-                this.ChangedPurchaseAnimalsMenuClickableComponents = true;
-
-                return;
-            }
-        }
-
-        private void OnMenuChanged(object sender, MenuChangedEventArgs e)
-        {
-            this.ChangedPurchaseAnimalsMenuClickableComponents = false;
         }
     }
 }

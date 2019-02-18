@@ -35,6 +35,30 @@ namespace BetterFarmAnimalVariety.Framework.Commands
 
         public abstract void Callback(string command, string[] args);
 
+        protected string DescribeFarmAnimalCategory(Framework.Config.FarmAnimal animal)
+        {
+            string output = "";
+
+            output += $"{animal.Category}\n";
+            output += $"- Types: {String.Join(",", animal.Types)}\n";
+            output += $"- Buildings: {String.Join(",", animal.Buildings)}\n";
+            
+            if (animal.CanBePurchased())
+            {
+                output += $"- AnimalShop:\n";
+                output += $"-- Name: {animal.AnimalShop.Name}\n";
+                output += $"-- Description: {animal.AnimalShop.Description}\n";
+                output += $"-- Price: {animal.AnimalShop.Price}\n";
+                output += $"-- Icon: {animal.AnimalShop.Icon}\n";
+            }
+            else
+            {
+                output += $"- AnimalShop: null\n";
+            }
+
+            return output;
+        }
+
         protected void AssertGameNotLoaded()
         {
             if (Game1.hasLoadedGame)
@@ -97,7 +121,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands
 
         protected void AssertFarmAnimalCategoryExists(string category)
         {
-            if (!this.Config.FarmAnimals.ContainsKey(category))
+            if (!this.Config.FarmAnimals.Exists(o => o.Category.Equals(category)))
             {
                 throw new Exception($"{category} is not a category in config.json");
             }
@@ -125,7 +149,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands
 
         protected void AssertFarmAnimalCanBePurchased(string category)
         {
-            if (!this.Config.FarmAnimals[category].CanBePurchased())
+            if (!this.Config.FarmAnimals.Exists(o => o.Category.Equals(category) && o.CanBePurchased()))
             {
                 throw new Exception($"{category} is not available in the animal shop");
             }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
 
@@ -6,8 +7,6 @@ namespace BetterFarmAnimalVariety.Framework.Config
 {
     public class FarmAnimalStock
     {
-        public string Category;
-
         [JsonProperty(Order = 1)]
         public string Name;
 
@@ -31,27 +30,47 @@ namespace BetterFarmAnimalVariety.Framework.Config
 
         public FarmAnimalStock(Constants.FarmAnimalCategory farmAnimalStock)
         {
-            this.Category = farmAnimalStock.ToString();
             this.Name = farmAnimalStock.DisplayName;
             this.Description = farmAnimalStock.Description;
-            this.Icon = this.GetDefaultIconPath();
+            this.Icon = this.GetDefaultIconPath(farmAnimalStock.ToString());
             this.Price = farmAnimalStock.Price;
             this.Exclude = farmAnimalStock.ExcludeFromShop.Select(o => o.ToString()).ToArray();
         }
 
-        public bool ShouldSerializeCategory()
+        public Texture2D GetIconTexture()
         {
-            return false;
+            return Api.Asset.LoadTexture(Path.Combine(Constants.Mod.ModPath, this.Icon));
         }
 
-        public string GetDefaultIconPath()
+        public string GetDefaultIconPath(string category)
         {
-            return this.FormatIconPath($"{this.Category.Replace(" ", "")}.png");
+            return this.FormatIconPath($"{category.Replace(" ", "")}.png");
         }
 
         private string FormatIconPath(string fileName)
         {
             return Path.Combine(Constants.Mod.AssetsDirectory, "AnimalShop", fileName);
+        }
+
+        public static FarmAnimalStock CreateWithPlaceholders(string category)
+        {
+            FarmAnimalStock placeholder = new FarmAnimalStock
+            {
+                Name = category,
+                Description = Constants.Config.AnimalShopDescriptionPlaceholder,
+                Price = Constants.Config.AnimalShopPricePlaceholder
+            };
+
+            placeholder.Icon = placeholder.GetDefaultIconPath(category);
+
+            string fullPathToIcon = Path.Combine(Constants.Mod.ModPath, placeholder.Icon);
+
+            if (!File.Exists(fullPathToIcon))
+            {
+                throw new FileNotFoundException($"{fullPathToIcon} does not exist");
+            }
+
+            return placeholder;
         }
     }
 }

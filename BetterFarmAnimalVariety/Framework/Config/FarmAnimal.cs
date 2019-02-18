@@ -6,15 +6,16 @@ namespace BetterFarmAnimalVariety.Framework.Config
 {
     public class FarmAnimal
     {
+        [JsonProperty(Order = 1)]
         public string Category;
 
-        [JsonProperty(Order = 1)]
+        [JsonProperty(Order = 2)]
         public string[] Types;
 
-        [JsonProperty(Order = 2)]
+        [JsonProperty(Order = 3)]
         public string[] Buildings;
 
-        [JsonProperty(Order = 3)]
+        [JsonProperty(Order = 4)]
         public FarmAnimalStock AnimalShop;
 
         [JsonConstructor]
@@ -32,11 +33,6 @@ namespace BetterFarmAnimalVariety.Framework.Config
             this.AnimalShop = farmAnimalStock.CanBePurchased()
                 ? new FarmAnimalStock(farmAnimalStock)
                 : null;
-        }
-
-        public bool ShouldSerializeCategory()
-        {
-            return false;
         }
 
         public bool CanBePurchased()

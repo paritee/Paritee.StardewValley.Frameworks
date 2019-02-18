@@ -5,12 +5,12 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
 {
     class Config
     {
-        public static ModConfig Load()
+        public static T Load<T>()
         {
             string path = Path.Combine(Constants.Mod.ModPath, Constants.Config.FileName);
             string json = File.ReadAllText(path);
 
-            return JsonConvert.DeserializeObject<ModConfig>(json);
+            return JsonConvert.DeserializeObject<T>(json);
         }
     }
 }

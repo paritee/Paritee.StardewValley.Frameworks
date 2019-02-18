@@ -39,7 +39,7 @@ namespace BetterFarmAnimalVariety
                 throw new NotSupportedException();
             }
 
-            return this.Config.FarmAnimals.ToDictionary(entry => entry.Key, entry => entry.Value.Types);
+            return this.Config.FarmAnimals.ToDictionary(o => o.Category, o => o.Types);
         }
 
         /// <param name="version">string</param>

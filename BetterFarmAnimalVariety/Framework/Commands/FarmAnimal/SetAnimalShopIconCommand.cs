@@ -1,6 +1,7 @@
 ﻿using StardewModdingAPI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 {
@@ -25,11 +26,13 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
                 this.AssertRequiredArgumentOrder(args.Length, 2, "icon");
                 this.AssertValidIcon(args[1]);
 
-                this.Config.FarmAnimals[category].AnimalShop.Icon = args[1].Trim();
+                Framework.Config.FarmAnimal animal = this.Config.FarmAnimals.First(o => o.Category.Equals(category));
+
+                animal.AnimalShop.Icon = args[1].Trim();
 
                 this.Helper.WriteConfig(this.Config);
 
-                string output = Helpers.Commands.DescribeFarmAnimalCategory(new KeyValuePair<string, Framework.Config.FarmAnimal>(category, this.Config.FarmAnimals[category]));
+                string output = this.DescribeFarmAnimalCategory(animal);
 
                 this.Monitor.Log(output, LogLevel.Info);
             }

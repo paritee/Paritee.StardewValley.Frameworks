@@ -29,11 +29,13 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 
                 this.AssertBuildingsExist(buildings);
 
-                this.Config.FarmAnimals[category].Buildings = buildings.ToArray();
+                Framework.Config.FarmAnimal animal = this.Config.FarmAnimals.First(o => o.Category.Equals(category));
+
+                animal.Buildings = buildings.ToArray();
 
                 this.Helper.WriteConfig(this.Config);
 
-                string output = Helpers.Commands.DescribeFarmAnimalCategory(new KeyValuePair<string, Framework.Config.FarmAnimal>(category, this.Config.FarmAnimals[category]));
+                string output = this.DescribeFarmAnimalCategory(animal);
 
                 this.Monitor.Log(output, LogLevel.Info);
             }
