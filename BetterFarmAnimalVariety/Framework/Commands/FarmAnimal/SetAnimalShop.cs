@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 {
-    class SetAnimalShopDescriptionCommand : Command
+    class SetAnimalShop : Command
     {
-        public SetAnimalShopDescriptionCommand(IModHelper helper, IMonitor monitor, ModConfig config)
-            : base("bfav_fa_setshopdesc", $"Set the category's animal shop description.\nUsage: bfav_fa_setshopdescription <category> <description>\n- category: the unique animal category.\n- description: the description.", helper, monitor, config) { }
+        public SetAnimalShop(IModHelper helper, IMonitor monitor, ModConfig config)
+            : base("bfav_fa_setshop", $"Set the availability of this category in the animal shop.\nUsage: bfav_fa_setshop <category> <animalshop>\n- category: the unique animal category.\n- animalshop: {Command.True} or {Command.False}.", helper, monitor, config) { }
 
         /// <param name="command">The name of the command invoked.</param>
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
@@ -22,12 +22,21 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
                 string category = args[0].Trim();
 
                 this.AssertFarmAnimalCategoryExists(category);
-                this.AssertFarmAnimalCanBePurchased(category);
-                this.AssertRequiredArgumentOrder(args.Length, 2, "description");
+                this.AssertRequiredArgumentOrder(args.Length, 2, "animalshop");
+
+                string animalShop = args[1].Trim().ToLower();
+
+                this.AssertValidBoolean(animalShop, "animalshop", out bool result);
 
                 Framework.Config.FarmAnimal animal = this.Config.GetCategory(category);
 
-                animal.AnimalShop.Description = args[1].Trim();
+                this.AssertAnimalShopChange(animalShop, animal.CanBePurchased());
+
+                Framework.Config.FarmAnimalStock configFarmAnimalAnimalShop = result
+                    ? Framework.Config.FarmAnimalStock.CreateWithPlaceholders(category)
+                    : null;
+
+                animal.AnimalShop = configFarmAnimalAnimalShop;
 
                 this.Helper.WriteConfig(this.Config);
 

@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 {
-    class SetAnimalShopNameCommand : Command
+    class SetBuildings : Command
     {
-        public SetAnimalShopNameCommand(IModHelper helper, IMonitor monitor, ModConfig config)
-            : base("bfav_fa_setshopname", $"Set the category's animal shop name.\nUsage: bfav_fa_setshopname <category> <name>\n- category: the unique animal category.\n- name: the displayed name.", helper, monitor, config) { }
+        public SetBuildings(IModHelper helper, IMonitor monitor, ModConfig config)
+            : base("bfav_fa_setbuildings", "Set the category's buildings.\nUsage: bfav_fa_setbuildings <category> <buildings>\n- category: the unique animal category.\n- buildings: a comma separated string in quotes (ex \"Barn,Deluxe Coop\").", helper, monitor, config) { }
 
         /// <param name="command">The name of the command invoked.</param>
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
@@ -17,17 +17,21 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
             try
             {
                 this.AssertGameNotLoaded();
+                this.AssertNoSpaces(args.Length, 2);
                 this.AssertRequiredArgumentOrder(args.Length, 1, "category");
 
                 string category = args[0].Trim();
 
                 this.AssertFarmAnimalCategoryExists(category);
-                this.AssertFarmAnimalCanBePurchased(category);
-                this.AssertRequiredArgumentOrder(args.Length, 2, "name");
+                this.AssertRequiredArgumentOrder(args.Length, 2, "buildings");
+
+                List<string> buildings = args[1].Split(',').Select(i => i.Trim()).ToList();
+
+                this.AssertBuildingsExist(buildings);
 
                 Framework.Config.FarmAnimal animal = this.Config.GetCategory(category);
 
-                animal.AnimalShop.Name = args[1].Trim();
+                animal.Buildings = buildings.ToArray();
 
                 this.Helper.WriteConfig(this.Config);
 

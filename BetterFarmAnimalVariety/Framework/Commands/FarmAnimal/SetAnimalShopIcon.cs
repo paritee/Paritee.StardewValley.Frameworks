@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 {
-    class SetAnimalShopIconCommand : Command
+    class SetAnimalShopIcon : Command
     {
-        public SetAnimalShopIconCommand(IModHelper helper, IMonitor monitor, ModConfig config)
+        public SetAnimalShopIcon(IModHelper helper, IMonitor monitor, ModConfig config)
             : base("bfav_fa_setshopicon", $"Set the category's animal shop icon.\nUsage: bfav_fa_setshopicon <category> <filename>\n- category: the unique animal category.\n- filename: the name of the file (ex. filename.png).", helper, monitor, config) { }
 
         /// <param name="command">The name of the command invoked.</param>

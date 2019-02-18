@@ -3,9 +3,9 @@ using System;
 
 namespace BetterFarmAnimalVariety.Framework.Commands.Config
 {
-    class RandomizeFromCategoryCommand : Command
+    class RandomizeFromCategory : Command
     {
-        public RandomizeFromCategoryCommand(IModHelper helper, IMonitor monitor, ModConfig config)
+        public RandomizeFromCategory(IModHelper helper, IMonitor monitor, ModConfig config)
             : base("bfav_conf_randfromcategory", $"Set newbown and hatchling randomization settings.\nUsage: bfav_conf_randfromcategory <newborn> <hatchling> <ignoreparentproduce>\n- newborn: true or false\n- hatchling: true or false\n- ignoreparentproduce: true or false", helper, monitor, config) { }
 
         /// <param name="command">The name of the command invoked.</param>

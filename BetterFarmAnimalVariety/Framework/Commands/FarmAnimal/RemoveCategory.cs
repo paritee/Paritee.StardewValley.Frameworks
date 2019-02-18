@@ -4,9 +4,9 @@ using System;
 
 namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 {
-    class RemoveCategoryCommand : Command
+    class RemoveCategory : Command
     {
-        public RemoveCategoryCommand(IModHelper helper, IMonitor monitor, ModConfig config)
+        public RemoveCategory(IModHelper helper, IMonitor monitor, ModConfig config)
             : base("bfav_fa_removecategory", "Remove an existing category.\nUsage: bfav_fa_removecategory <category>\n- category: the unique animal category.", helper, monitor, config) { }
 
         /// <param name="command">The name of the command invoked.</param>

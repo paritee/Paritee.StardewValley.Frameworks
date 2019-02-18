@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 {
-    class AddTypesCommand : Command
+    class SetAnimalShopDescription : Command
     {
-        public AddTypesCommand(IModHelper helper, IMonitor monitor, ModConfig config)
-            : base("bfav_fa_addtypes", "Add at least one animal type to a category.\nUsage: bfav_fa_addtypes <category> <types>\n- category: the unique animal category.\n- types: a comma separated string in quotes (ex \"White Cow,Brown Cow\").", helper, monitor, config) { }
+        public SetAnimalShopDescription(IModHelper helper, IMonitor monitor, ModConfig config)
+            : base("bfav_fa_setshopdesc", $"Set the category's animal shop description.\nUsage: bfav_fa_setshopdescription <category> <description>\n- category: the unique animal category.\n- description: the description.", helper, monitor, config) { }
 
         /// <param name="command">The name of the command invoked.</param>
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>
@@ -17,22 +17,17 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
             try
             {
                 this.AssertGameNotLoaded();
-                this.AssertNoSpaces(args.Length, 2);
                 this.AssertRequiredArgumentOrder(args.Length, 1, "category");
 
                 string category = args[0].Trim();
 
                 this.AssertFarmAnimalCategoryExists(category);
-                this.AssertRequiredArgumentOrder(args.Length, 2, "type");
+                this.AssertFarmAnimalCanBePurchased(category);
+                this.AssertRequiredArgumentOrder(args.Length, 2, "description");
 
                 Framework.Config.FarmAnimal animal = this.Config.GetCategory(category);
 
-                List<string> types = new List<string>(animal.Types);
-                List<string> newTypes = args[1].Split(',').Select(i => i.Trim()).ToList();
-
-                this.AssertFarmAnimalTypesExist(newTypes);
-
-                animal.Types = types.Concat(newTypes).Distinct().ToArray();
+                animal.AnimalShop.Description = args[1].Trim();
 
                 this.Helper.WriteConfig(this.Config);
 

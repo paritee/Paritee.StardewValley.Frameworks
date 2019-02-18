@@ -6,9 +6,9 @@ using PariteeAnimalHouse = Paritee.StardewValleyAPI.Buildings.AnimalHouses.Anima
 
 namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 {
-    class AddCategoryCommand : Command
+    class AddCategory : Command
     {
-        public AddCategoryCommand(IModHelper helper, IMonitor monitor, ModConfig config)
+        public AddCategory(IModHelper helper, IMonitor monitor, ModConfig config)
             : base("bfav_fa_addcategory", $"Add a unique category.\nUsage: bfav_fa_addcategory <category> <types> <buildings> <animalshop>\n- category: the unique animal category.\n- types: a comma separated string in quotes (ex \"White Cow,Brown Cow\").\n- buildings: a comma separated string in quotes (ex \"Barn,Deluxe Coop\").\n- animalshop: { Command.True} or { Command.False }.", helper, monitor, config) { }
 
         /// <param name="command">The name of the command invoked.</param>

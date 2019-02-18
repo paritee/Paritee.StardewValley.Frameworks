@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 {
-    class ListCommand : Command
+    class List : Command
     {
-        public ListCommand(IModHelper helper, IMonitor monitor, ModConfig config) 
+        public List(IModHelper helper, IMonitor monitor, ModConfig config) 
             : base("bfav_fa_list", "List the farm animal categories and types.\nUsage: bfav_fa_list", helper, monitor, config) { }
 
         /// <param name="command">The name of the command invoked.</param>

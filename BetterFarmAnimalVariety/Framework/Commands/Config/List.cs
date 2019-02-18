@@ -3,9 +3,9 @@ using StardewModdingAPI;
 
 namespace BetterFarmAnimalVariety.Framework.Commands.Config
 {
-    class ListCommand : Command
+    class List : Command
     {
-        public ListCommand(IModHelper helper, IMonitor monitor, ModConfig config) 
+        public List(IModHelper helper, IMonitor monitor, ModConfig config) 
             : base("bfav_conf_list", "List the config.json settings.\nUsage: bfav_conf_list", helper, monitor, config) { }
 
         /// <param name="command">The name of the command invoked.</param>

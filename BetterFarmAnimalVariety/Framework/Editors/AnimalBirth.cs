@@ -3,11 +3,11 @@ using StardewModdingAPI;
 
 namespace BetterFarmAnimalVariety.Framework.Editors
 {
-    class AnimalBirthEditor : IAssetEditor
+    class AnimalBirth : IAssetEditor
     {
         private readonly ModEntry Mod;
 
-        public AnimalBirthEditor(ModEntry mod)
+        public AnimalBirth(ModEntry mod)
         {
             this.Mod = mod;
         }

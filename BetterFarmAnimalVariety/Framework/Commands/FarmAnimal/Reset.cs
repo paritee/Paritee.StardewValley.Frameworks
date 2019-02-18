@@ -4,9 +4,9 @@ using System;
 
 namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 {
-    class ResetCommand : Command
+    class Reset : Command
     {
-        public ResetCommand(IModHelper helper, IMonitor monitor, ModConfig config)
+        public Reset(IModHelper helper, IMonitor monitor, ModConfig config)
             : base("bfav_fa_reset", "Reset the farm animals in config.json to vanilla default.\nUsage: bfav_fa_reset", helper, monitor, config) { }
 
         /// <param name="command">The name of the command invoked.</param>
