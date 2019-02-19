@@ -1,13 +1,17 @@
-﻿using StardewValley;
+﻿using BetterFarmAnimalVariety.Framework.Models;
+using StardewValley;
 using System.Collections.Generic;
 using System.Linq;
-using BetterFarmAnimalVariety.Framework.SaveData;
-using System.Diagnostics;
 
 namespace BetterFarmAnimalVariety.Framework.Helpers
 {
     internal class GameSave
     {
+        public static string SmapiSaveDataKey(string uniqueModId, string key)
+        {
+            return $"smapi/mod-data/{uniqueModId}/{key}";
+        }
+
         public static void OverwriteFarmAnimal(ref FarmAnimal animal, string requestedType)
         {
             // ==========
@@ -30,9 +34,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
 
             // Check the save entry for reloaded animals that may have their 
             // vanilla replacements saved which can't be used
-            TypeLog typeHistory = (new FarmAnimalsSaveData()).Read().GetTypeHistory(animal.myID.Value);
-
-            Debug.WriteLine($"typeHistory == null {typeHistory == null}");
+            TypeLog typeHistory = (new FarmAnimalsSaveData(Constants.Mod.Key)).Read().GetTypeHistory(animal.myID.Value);
 
             // If there's a save data entry, use that; otherwise this might be 
             // an animal created before being saved (ie. created in current day)

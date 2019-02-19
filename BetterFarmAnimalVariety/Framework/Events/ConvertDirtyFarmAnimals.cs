@@ -1,8 +1,8 @@
-﻿using StardewModdingAPI.Events;
+﻿using BetterFarmAnimalVariety.Framework.Models;
+using StardewModdingAPI.Events;
 using StardewValley;
 using System.Collections.Generic;
 using System.Linq;
-using BetterFarmAnimalVariety.Framework.SaveData;
 
 namespace BetterFarmAnimalVariety.Framework.Events
 {
@@ -10,7 +10,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
     {
         public static void OnSaving(SavingEventArgs e)
         {
-            FarmAnimalsSaveData saveData = (new FarmAnimalsSaveData()).Read();
+            FarmAnimalsSaveData saveData = (new FarmAnimalsSaveData(Constants.Mod.Key)).Read();
 
             // Track the animal ID because we're going to remove 
             // animals that no longer exist from the save data 
@@ -96,7 +96,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
         public static void OnSaved(SavedEventArgs e)
         {
-            FarmAnimalsSaveData saveData = (new FarmAnimalsSaveData()).Read();
+            FarmAnimalsSaveData saveData = (new FarmAnimalsSaveData(Constants.Mod.Key)).Read();
 
             // Need to reload each animal after save because the game and 
             // SMAPI does a strange thing where the reload happens prior to 

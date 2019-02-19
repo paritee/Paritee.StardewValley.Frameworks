@@ -2,32 +2,27 @@
 using System.Linq;
 using StardewValley;
 
-namespace BetterFarmAnimalVariety.Framework.SaveData
+namespace BetterFarmAnimalVariety.Framework.Models
 {
-    class FarmAnimalsSaveData : SaveData
+    public class FarmAnimalsSaveData : SaveData
     {
         public Dictionary<long, TypeLog> TypeHistory = new Dictionary<long, TypeLog>();
+
+        public FarmAnimalsSaveData(string uniqueModId) : base (uniqueModId, Constants.Mod.FarmAnimalsSaveDataKey) { }
 
         public Dictionary<long, TypeLog> GetTypeHistory()
         {
             return this.TypeHistory;
         }
 
-        public static string GetKey()
-        {
-            return SaveData.GetKey(Constants.Mod.FarmAnimalsSaveDataKey);
-        }
-
         public FarmAnimalsSaveData Read()
         {
-            FarmAnimalsSaveData data = base.Read<FarmAnimalsSaveData>(FarmAnimalsSaveData.GetKey());
-
-            return data ?? new FarmAnimalsSaveData();
+            return base.Read<FarmAnimalsSaveData>() ?? this;
         }
 
         private void Write()
         {
-            base.Write(this, FarmAnimalsSaveData.GetKey());
+            base.Write(this);
         }
 
         public void AddTypeHistory(Dictionary<long, TypeLog> history)

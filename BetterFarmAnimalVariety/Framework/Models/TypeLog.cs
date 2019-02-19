@@ -1,6 +1,6 @@
-﻿namespace BetterFarmAnimalVariety.Framework.SaveData
+﻿namespace BetterFarmAnimalVariety.Framework.Models
 {
-    class TypeLog
+    public class TypeLog
     {
         public string CurrentType;
         public string SavedType;
