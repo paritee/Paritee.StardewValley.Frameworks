@@ -1,12 +1,8 @@
-﻿using StardewModdingAPI;
-using StardewModdingAPI.Events;
+﻿using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.Menus;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using BetterFarmAnimalVariety.Framework.SaveData;
-using static StardewValley.Menus.LoadGameMenu;
 
 namespace BetterFarmAnimalVariety.Framework.Events
 {
@@ -14,7 +10,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
     {
         public static void OnSaving(SavingEventArgs e)
         {
-            FarmAnimalsSaveData saveData = FarmAnimalsSaveData.Deserialize();
+            FarmAnimalsSaveData saveData = (new FarmAnimalsSaveData()).Read();
 
             // Track the animal ID because we're going to remove 
             // animals that no longer exist from the save data 
@@ -100,7 +96,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
         public static void OnSaved(SavedEventArgs e)
         {
-            FarmAnimalsSaveData saveData = FarmAnimalsSaveData.Deserialize();
+            FarmAnimalsSaveData saveData = (new FarmAnimalsSaveData()).Read();
 
             // Need to reload each animal after save because the game and 
             // SMAPI does a strange thing where the reload happens prior to 
@@ -130,72 +126,6 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
                 break;
             }
-        }
-
-        public static bool OnButtonPressed(ButtonPressedEventArgs e, out string slotName, out Dictionary<long, TypeLog> typesToBeMigrated)
-        {
-            slotName = default(string);
-            typesToBeMigrated = new Dictionary<long, TypeLog>();
-
-            // Ignore if player has loaded a save
-            if (Context.IsWorldReady)
-            {
-                return false;
-            }
-
-            // We only care about left mouse clicks right now
-            if (e.Button != SButton.MouseLeft)
-            {
-                return false;
-            }
-
-            // Always attempt to clean up the animal types to prevent on save load crashes
-            // if the patch mod had been removed without the animals being sold/deleted.
-            // This will now also migrate users from bfav 2.x where types were saved directly 
-            // to 3.x where they are not.
-            if (!(Api.Game.GetActiveMenu() is TitleMenu titleMenu))
-            {
-                return false;
-            }
-
-            if (!(TitleMenu.subMenu is LoadGameMenu loadGameMenu))
-            {
-                return false;
-            }
-
-            int currentItemIndex = Framework.Helpers.Reflection.GetFieldValue<int>(loadGameMenu, "currentItemIndex");
-            List<MenuSlot> menuSlots = Framework.Helpers.Reflection.GetFieldValue<List<MenuSlot>>(loadGameMenu, "menuSlots");
-
-            for (int index = 0; index < loadGameMenu.slotButtons.Count; index++)
-            {
-                if (currentItemIndex + index >= menuSlots.Count)
-                {
-                    break;
-                }
-
-                if (!loadGameMenu.slotButtons[index].containsPoint((int)e.Cursor.ScreenPixels.X, (int)e.Cursor.ScreenPixels.Y))
-                {
-                    continue;
-                }
-
-                SaveFileSlot saveFileSlot = menuSlots[currentItemIndex + index] as SaveFileSlot;
-
-                // Need to manually parse the XML since casting to a FarmAnimal 
-                // triggers the data search crash that this command aims to avoid
-                if (!Directory.Exists(StardewModdingAPI.Constants.SavesPath))
-                {
-                    throw new DirectoryNotFoundException($"cannot find saves path directory");
-                }
-
-                slotName = saveFileSlot.Farmer.slotName;
-
-                // Scan only the most recent save if it can be found
-                Framework.Helpers.GameSave.CleanFarmAnimals(Path.Combine(StardewModdingAPI.Constants.SavesPath, saveFileSlot.Farmer.slotName), out typesToBeMigrated);
-
-                return true;
-            }
-
-            return false;
         }
     }
 }

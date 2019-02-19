@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using StardewValley;
 
@@ -14,23 +13,21 @@ namespace BetterFarmAnimalVariety.Framework.SaveData
             return this.TypeHistory;
         }
 
-        public static string GetPath()
+        public static string GetKey()
         {
-            string saveDataDir = Path.Combine(StardewModdingAPI.Constants.DataPath, Constants.Mod.Key);
-
-            return Path.Combine(saveDataDir, Constants.Mod.FarmAnimalsSaveDataFileName);
+            return SaveData.GetKey(Constants.Mod.FarmAnimalsSaveDataKey);
         }
 
-        public static FarmAnimalsSaveData Deserialize()
+        public FarmAnimalsSaveData Read()
         {
-            FarmAnimalsSaveData data = SaveData.Deserialize<FarmAnimalsSaveData>(FarmAnimalsSaveData.GetPath());
+            FarmAnimalsSaveData data = base.Read<FarmAnimalsSaveData>(FarmAnimalsSaveData.GetKey());
 
             return data ?? new FarmAnimalsSaveData();
         }
 
-        private void WriteChanges()
+        private void Write()
         {
-            base.WriteChanges(this, FarmAnimalsSaveData.GetPath());
+            base.Write(this, FarmAnimalsSaveData.GetKey());
         }
 
         public void AddTypeHistory(Dictionary<long, TypeLog> history)
@@ -47,7 +44,7 @@ namespace BetterFarmAnimalVariety.Framework.SaveData
                 this.TypeHistory[typeHistory.Key] = typeHistory.Value;
             }
 
-            this.WriteChanges();
+            this.Write();
         }
 
         public void AddTypeHistory(long animalId, string currentType, string originalType)
@@ -57,7 +54,7 @@ namespace BetterFarmAnimalVariety.Framework.SaveData
             // Update the existing entry or create it if it doesn't exist
             this.TypeHistory[animalId] = typeHistory;
 
-            this.WriteChanges();
+            this.Write();
         }
 
         public void RemoveTypeHistory(List<long> keys)
@@ -70,7 +67,7 @@ namespace BetterFarmAnimalVariety.Framework.SaveData
             // Clean up the data file
             this.TypeHistory = this.TypeHistory.Where(o => !keys.Contains(o.Key)).ToDictionary(o => o.Key, o => o.Value);
 
-            this.WriteChanges();
+            this.Write();
         }
 
         public void RemoveTypeHistory(long key)
@@ -78,7 +75,7 @@ namespace BetterFarmAnimalVariety.Framework.SaveData
             // Clean up the data file
             this.TypeHistory.Remove(key);
 
-            this.WriteChanges();
+            this.Write();
         }
 
         public bool Exists(long myId)

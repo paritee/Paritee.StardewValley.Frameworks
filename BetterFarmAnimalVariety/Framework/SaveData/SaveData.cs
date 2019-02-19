@@ -1,40 +1,20 @@
-﻿using System.IO;
-using Newtonsoft.Json;
-
-namespace BetterFarmAnimalVariety.Framework.SaveData
+﻿namespace BetterFarmAnimalVariety.Framework.SaveData
 {
     class SaveData
     {
-        public static bool Exists(string path)
+        protected static string GetKey(string key)
         {
-            return File.Exists(path);
+            return $"smapi/mod-data/{Constants.Mod.Key}/{key}";
         }
 
-        public static T Deserialize<T>(string path)
+        protected T Read<T>(string key)
         {
-            if (SaveData.Exists(path))
-            {
-                string json = File.ReadAllText(path);
-
-                return JsonConvert.DeserializeObject<T>(json);
-            }
-
-            return default(T);
+            return Api.Game.ReadSaveData<T>(key);
         }
 
-        protected void WriteChanges(object obj, string filePath)
+        protected void Write(object obj, string key)
         {
-            // Serialize back to json
-            string json = JsonConvert.SerializeObject(obj);
-
-            // Will need to attempt to create the directory if it doesn't exist
-            FileInfo file = new System.IO.FileInfo(filePath);
-
-            // If the directory already exists, this method does nothing.
-            file.Directory.Create();
-
-            // Write back to the data file
-            File.WriteAllText(file.FullName, json);
+            Api.Game.WriteSaveData(key, obj);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using BetterFarmAnimalVariety.Framework.Editors;
 using BetterFarmAnimalVariety.Framework.Events;
-using BetterFarmAnimalVariety.Framework.SaveData;
 using Harmony;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -51,7 +50,13 @@ namespace BetterFarmAnimalVariety
             // Events
             this.Helper.Events.GameLoop.Saving += this.OnSaving;
             this.Helper.Events.GameLoop.Saved += this.OnSaved;
-            this.Helper.Events.Input.ButtonPressed += this.OnButtonPressed;
+
+            // NOTE:
+            // Don't need to clean up saves prior to loading. Dirty saves will 
+            // automatically be fixde on the next save. Only impact would be to 
+            // players who upgraded from 1.x or 2.x who removed patches without 
+            // selling /deleting the animals and without going through the cleaning 
+            // script. Minor impact.
         }
 
         private void SetupHarmonyPatches()
@@ -166,29 +171,6 @@ namespace BetterFarmAnimalVariety
 
                 // ... this is a show stopper
                 throw exception;
-            }
-        }
-
-        /// <summary>Raised after the player pressed/released a keyboard, mouse, or controller button. This includes mouse clicks.</summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event arguments.</param>
-        private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
-        {
-            try
-            {
-                if (ConvertDirtyFarmAnimals.OnButtonPressed(e, out string slotName, out Dictionary<long, TypeLog> typesToBeMigrated))
-                {
-                    // Report if any animals were migrated and save the migrations
-                    string message = typesToBeMigrated.Any()
-                        ? $"Migrated {typesToBeMigrated.Count} dirty farm animals:\n-- {String.Join("\n-- ", typesToBeMigrated.Select(kvp => $"{kvp.Key}: {kvp.Value.CurrentType} saved as {kvp.Value.SavedType}"))}"
-                        : $"No dirty farm animals found";
-
-                    this.Monitor.Log($"ConvertDirtyFarmAnimals in {slotName}: " + message, LogLevel.Trace);
-                }
-            }
-            catch (Exception exception)
-            {
-                this.Monitor.Log(exception.Message, LogLevel.Error);
             }
         }
     }

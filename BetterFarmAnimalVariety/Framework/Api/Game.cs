@@ -1,4 +1,5 @@
-﻿using StardewValley;
+﻿using Newtonsoft.Json;
+using StardewValley;
 using StardewValley.Menus;
 using xTile.Dimensions;
 
@@ -66,6 +67,25 @@ namespace BetterFarmAnimalVariety.Framework.Api
         public static Rectangle GetViewport()
         {
             return Game1.viewport;
+        }
+
+        public static T ReadSaveData<T>(string key)
+        {
+            return Game1.CustomData.TryGetValue(key, out string value)
+                ? JsonConvert.DeserializeObject<T>(value)
+                : default(T);
+        }
+
+        public static void WriteSaveData<T>(string key, T data)
+        {
+            if (data != null)
+            {
+                Game1.CustomData[key] = JsonConvert.SerializeObject(data, Formatting.None);
+            }
+            else
+            {
+                Game1.CustomData.Remove(key);
+            }
         }
     }
 }
