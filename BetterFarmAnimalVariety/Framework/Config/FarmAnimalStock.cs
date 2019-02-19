@@ -39,7 +39,7 @@ namespace BetterFarmAnimalVariety.Framework.Config
 
         public Texture2D GetIconTexture()
         {
-            return Api.Asset.LoadTexture(Path.Combine(Constants.Mod.Path, this.Icon));
+            return Api.Mod.LoadTexture(Path.Combine(Constants.Mod.Path, this.Icon));
         }
 
         public string GetDefaultIconPath(string category)
@@ -57,8 +57,8 @@ namespace BetterFarmAnimalVariety.Framework.Config
             FarmAnimalStock placeholder = new FarmAnimalStock
             {
                 Name = category,
-                Description = Constants.Config.AnimalShopDescriptionPlaceholder,
-                Price = Constants.Config.AnimalShopPricePlaceholder
+                Description = Constants.Mod.AnimalShopDescriptionPlaceholder,
+                Price = Constants.Mod.AnimalShopPricePlaceholder
             };
 
             placeholder.Icon = placeholder.GetDefaultIconPath(category);

@@ -5,7 +5,6 @@ using StardewValley.Buildings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BetterFarmAnimalVariety.Framework.Constants;
 
 namespace BetterFarmAnimalVariety.Framework.Api
 {
@@ -53,7 +52,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
         public static StardewValley.FarmAnimal CreateFarmAnimal(string type, long ownerId, string name = null, Building home = null, long myId = default(long))
         {
-            myId = myId.Equals(default(long)) ? Helpers.Multiplayer.GetNewId() : myId;
+            myId = myId.Equals(default(long)) ? Api.Game.GetNewId() : myId;
 
             StardewValley.FarmAnimal animal = new StardewValley.FarmAnimal(type, myId, ownerId)
             {
@@ -67,7 +66,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
         public static bool IsVanilla(string type)
         {
-            return VanillaFarmAnimalType.Exists(type);
+            return Constants.VanillaFarmAnimalType.Exists(type);
         }
 
         public static bool IsCoopDweller(StardewValley.FarmAnimal animal)
@@ -98,12 +97,12 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
         public static string GetDefaultCoopDwellerType()
         {
-            return VanillaFarmAnimalType.WhiteChicken.ToString();
+            return Constants.VanillaFarmAnimalType.WhiteChicken.ToString();
         }
 
         public static string GetDefaultBarnDwellerType()
         {
-            return VanillaFarmAnimalType.WhiteCow.ToString();
+            return Constants.VanillaFarmAnimalType.WhiteCow.ToString();
         }
 
         public static void UpdateFromData(ref StardewValley.FarmAnimal animal, KeyValuePair<string, string> contentDataEntry)
@@ -355,7 +354,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
             string blueChicken = Constants.VanillaFarmAnimalType.BlueChicken.ToString();
 
             // Check for blue chicken chance
-            if (types.Contains(blueChicken) && !Api.AnimalShop.BlueChickenIsAvailableForPurchase(farmer))
+            if (types.Contains(blueChicken) && !Api.AnimalShop.IsBlueChickenAvailableForPurchase(farmer))
             {
                 types.Remove(blueChicken);
             }

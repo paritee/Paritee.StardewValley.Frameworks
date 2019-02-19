@@ -1,22 +1,21 @@
-﻿using Newtonsoft.Json;
-using System.IO;
-using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BetterFarmAnimalVariety.Framework.Helpers
 {
     class Mod
     {
-        public static string GetPath()
+        public static string SmapiSaveDataKey(string key)
         {
-            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            return Api.Mod.SmapiSaveDataKey(Constants.Mod.Key, key);
         }
 
-        public static T LoadConfig<T>()
+        public static T ReadConfig<T>()
         {
-            string path = Path.Combine(Constants.Mod.Path, Constants.Config.FileName);
-            string json = File.ReadAllText(path);
-
-            return JsonConvert.DeserializeObject<T>(json);
+            return Api.Mod.ReadConfig<T>(Constants.Mod.Path, Constants.Mod.ConfigFileName);
         }
     }
 }

@@ -53,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\Api\AnimalShop.cs" />
-    <Compile Include="Framework\Api\Asset.cs" />
     <Compile Include="Framework\Api\Farmer.cs" />
     <Compile Include="Framework\Api\BellsAndWhistles.cs" />
     <Compile Include="Framework\Api\Game.cs" />
@@ -79,24 +78,22 @@
     <Compile Include="Framework\Constants\AnimalHouse.cs" />
     <Compile Include="Framework\Constants\AnimalShop.cs" />
     <Compile Include="Framework\Constants\Blueprint.cs" />
-    <Compile Include="Framework\Constants\Config.cs" />
     <Compile Include="Framework\Constants\Content.cs" />
     <Compile Include="Framework\Constants\Event.cs" />
     <Compile Include="Framework\Constants\FarmAnimal.cs" />
     <Compile Include="Framework\Constants\Mod.cs" />
     <Compile Include="Framework\Constants\VanillaFarmAnimalCategory.cs" />
+    <Compile Include="Framework\Helpers\Mod.cs" />
     <Compile Include="Framework\Helpers\Random.cs" />
     <Compile Include="Framework\Models\FarmAnimalType.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\Constructor.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\ReceiveLeftClick.cs" />
-    <Compile Include="Framework\SaveData\FarmAnimalsSaveData.cs" />
-    <Compile Include="Framework\SaveData\TypeLog.cs" />
-    <Compile Include="Framework\SaveData\SaveData.cs" />
+    <Compile Include="Framework\Models\FarmAnimalsSaveData.cs" />
+    <Compile Include="Framework\Models\TypeLog.cs" />
+    <Compile Include="Framework\Models\SaveData.cs" />
     <Compile Include="Framework\Events\ConvertDirtyFarmAnimals.cs" />
-    <Compile Include="Framework\Helpers\Mod.cs" />
-    <Compile Include="Framework\Helpers\Multiplayer.cs" />
+    <Compile Include="Framework\Api\Mod.cs" />
     <Compile Include="Framework\Helpers\Reflection.cs" />
-    <Compile Include="Framework\Helpers\GameSave.cs" />
     <Compile Include="Framework\Models\PropertyConstant.cs" />
     <Compile Include="Framework\Models\FarmAnimalCategory.cs" />
     <Compile Include="Framework\Constants\VanillaFarmAnimalType.cs" />
@@ -162,6 +159,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Pathoschild.Stardew.ModBuildConfig.2.2.0\build\Pathoschild.Stardew.ModBuildConfig.targets" Condition="Exists('..\packages\Pathoschild.Stardew.ModBuildConfig.2.2.0\build\Pathoschild.Stardew.ModBuildConfig.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

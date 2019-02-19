@@ -11,7 +11,7 @@
 
         private string FormatFullKey(string uniqueModId, string key)
         {
-            return Helpers.GameSave.SmapiSaveDataKey(uniqueModId, key);
+            return Helpers.Mod.SmapiSaveDataKey(key);
         }
 
         protected T Read<T>()

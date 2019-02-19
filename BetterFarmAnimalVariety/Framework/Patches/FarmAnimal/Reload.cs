@@ -1,4 +1,5 @@
-﻿using Harmony;
+﻿using BetterFarmAnimalVariety.Framework.Models;
+using Harmony;
 using StardewValley;
 using StardewValley.Buildings;
 
@@ -19,7 +20,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches
 
             // Can't get the FarmAnimal empty constructor in a patch so need to 
             // use the reload function to handle it
-            Helpers.GameSave.OverwriteFarmAnimal(ref __instance, null);
+            (new FarmAnimalsSaveData(Constants.Mod.Key)).Read().OverwriteFarmAnimal(ref __instance, null);
 
             return false;
         }

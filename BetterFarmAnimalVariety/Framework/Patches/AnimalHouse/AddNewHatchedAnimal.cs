@@ -45,7 +45,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
             Farmer player = Api.Game.GetPlayer();
 
             // Grab the types with their associated categories in string form
-            Dictionary<string, List<string>> restrictions = Helpers.Mod.LoadConfig<ModConfig>().GroupTypesByCategory()
+            Dictionary<string, List<string>> restrictions = Helpers.Mod.ReadConfig<ModConfig>().GroupTypesByCategory()
                 .ToDictionary(kvp => kvp.Key, kvp => Api.FarmAnimal.SanitizeBlueChickens(kvp.Value, player));
 
             // Return a matched type or user default coop dweller
@@ -64,10 +64,10 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
             Farmer player = Api.Game.GetPlayer();
 
             // Check the config
-            ModConfig config = Helpers.Mod.LoadConfig<ModConfig>();
+            ModConfig config = Helpers.Mod.ReadConfig<ModConfig>();
 
             // Grab the types with their associated categories in string form
-            Dictionary<string, List<string>> restrictions = Helpers.Mod.LoadConfig<ModConfig>().GroupTypesByCategory()
+            Dictionary<string, List<string>> restrictions = Helpers.Mod.ReadConfig<ModConfig>().GroupTypesByCategory()
                 .ToDictionary(kvp => kvp.Key, kvp => Api.FarmAnimal.SanitizeBlueChickens(kvp.Value, player));
 
             // Return a matched type or user default barn dweller

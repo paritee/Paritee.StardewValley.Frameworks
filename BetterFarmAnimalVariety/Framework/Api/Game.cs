@@ -1,12 +1,23 @@
 ﻿using Newtonsoft.Json;
 using StardewValley;
 using StardewValley.Menus;
+using System.Reflection;
 using xTile.Dimensions;
 
 namespace BetterFarmAnimalVariety.Framework.Api
 {
     class Game
     {
+        public static StardewValley.Multiplayer GetMultiplayer()
+        {
+            return Helpers.Reflection.GetFieldValue<StardewValley.Multiplayer>(typeof(Game1), "multiplayer", BindingFlags.Static | BindingFlags.NonPublic);
+        }
+
+        public static long GetNewId()
+        {
+            return Api.Game.GetMultiplayer().getNewID();
+        }
+
         public static StardewValley.Farmer GetPlayer()
         {
             return Game1.player;
