@@ -8,18 +8,12 @@ namespace BetterFarmAnimalVariety
     {
         public string Format;
         public bool IsEnabled;
-        public bool RandomizeNewbornFromCategory;
-        public bool RandomizeHatchlingFromCategory;
-        public bool IgnoreParentProduceCheck;
         public List<Framework.Config.FarmAnimal> FarmAnimals;
 
         public ModConfig()
         {
             this.Format = null;
             this.IsEnabled = true;
-            this.RandomizeNewbornFromCategory = false;
-            this.RandomizeHatchlingFromCategory = false;
-            this.IgnoreParentProduceCheck = false;
             this.FarmAnimals = new List<Framework.Config.FarmAnimal>();
         }
 

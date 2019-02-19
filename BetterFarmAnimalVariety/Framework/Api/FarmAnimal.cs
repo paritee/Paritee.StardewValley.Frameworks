@@ -55,12 +55,14 @@ namespace BetterFarmAnimalVariety.Framework.Api
         {
             myId = myId.Equals(default(long)) ? Helpers.Multiplayer.GetNewId() : myId;
 
-            return new StardewValley.FarmAnimal(type, myId, ownerId)
+            StardewValley.FarmAnimal animal = new StardewValley.FarmAnimal(type, myId, ownerId)
             {
                 Name = name,
                 displayName = name,
                 home = home
             };
+
+            return animal;
         }
 
         public static bool IsVanilla(string type)
@@ -74,7 +76,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
                 ? animal.home.buildingType.Value
                 : animal.buildingTypeILiveIn.Value;
 
-            return buildingType.Equals(Constants.AnimalHouse.Coop);
+            return buildingType.Contains(Constants.AnimalHouse.Coop);
         }
 
         public static string GetDefaultType(string buildingType)
@@ -149,21 +151,20 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
             animal.fullnessDrain.Value = Convert.ToByte(values[(int)Constants.FarmAnimal.DataValueIndex.FullnessDrain]);
             animal.happinessDrain.Value = Convert.ToByte(values[(int)Constants.FarmAnimal.DataValueIndex.HappinessDrain]);
-            animal.toolUsedForHarvest.Value = Api.FarmAnimal.IsDataValueNull(values[(int)Constants.FarmAnimal.DataValueIndex.ToolUsedForHarvest]) ? null : values[(int)Constants.FarmAnimal.DataValueIndex.ToolUsedForHarvest];
+            animal.toolUsedForHarvest.Value = Api.FarmAnimal.IsDataValueNull(values[(int)Constants.FarmAnimal.DataValueIndex.ToolUsedForHarvest]) ? "" : values[(int)Constants.FarmAnimal.DataValueIndex.ToolUsedForHarvest];
             animal.meatIndex.Value = Convert.ToInt32(values[(int)Constants.FarmAnimal.DataValueIndex.MeatIndex]);
             animal.price.Value = Convert.ToInt32(values[(int)Constants.FarmAnimal.DataValueIndex.Price]);
         }
 
         private static bool IsDataValueNull(string value)
         {
-            return value.Equals(null) || value.Equals("null") || value.Equals(default(string)) || value.Equals(Constants.Content.None);
+            return value.Equals(null) || value.Equals("null") || value.Equals(default(string)) || value.Equals("") || value.Equals(Constants.Content.None);
         }
 
-        public static List<string> GetTypesFromProduce(int produceId, Dictionary<string, List<string>> restrictions, bool includeNonProducing)
+        public static List<string> GetTypesFromProduce(int[] produceIndexes, Dictionary<string, List<string>> restrictions)
         {
             List<string> potentialCategories = new List<string>();
             List<string> potentialTypes = new List<string>();
-            Dictionary<string, List<string>> nonProducingTypes = new Dictionary<string, List<string>>();
 
             // Someone could have the data set up, but not add it to BFAV so that
             // it's hidden from the game so we must use BFAV's restrictions
@@ -178,42 +179,30 @@ namespace BetterFarmAnimalVariety.Framework.Api
                     int defaultProduceId = Int32.Parse(values[(int)Constants.FarmAnimal.DataValueIndex.DefaultProduce]);
                     int deluxeProduceId = Int32.Parse(values[(int)Constants.FarmAnimal.DataValueIndex.DeluxeProduce]);
 
-                    if (Api.FarmAnimal.ProducesAtLeastOne(defaultProduceId, deluxeProduceId, new int[] { produceId }))
+                    if (Api.FarmAnimal.ProducesAtLeastOne(defaultProduceId, deluxeProduceId, produceIndexes))
                     {
                         potentialTypes.Add(type);
                         potentialCategories.Add(entry.Key);
                     }
-                    else if (includeNonProducing && Api.FarmAnimal.ProducesNothing(defaultProduceId, deluxeProduceId))
-                    {
-                        // Animals that don't produce anything (ex. bulls)
-                        // should be considered if the flag is on
-                        if (!nonProducingTypes.ContainsKey(entry.Key))
-                        {
-                            nonProducingTypes.Add(entry.Key, new List<string>());
-                        }
-
-                        nonProducingTypes[entry.Key].Add(type);
-                    }
-                }
-            }
-
-            // includeNonProducing must be true to have a chance at entering
-            if (nonProducingTypes.Any())
-            {
-                if (!potentialCategories.Any())
-                {
-                    // There were no producing types found (unlikely...) so let's
-                    // return the unproducing types only
-                    potentialTypes = nonProducingTypes.SelectMany(kvp => kvp.Value).ToList();
-                }
-                else
-                {
-                    // Include the non-producing types into consideration
-                    potentialTypes = potentialTypes.Concat(nonProducingTypes.Where(kvp => potentialCategories.Contains(kvp.Key)).SelectMany(kvp => kvp.Value)).ToList();
                 }
             }
 
             return potentialTypes;
+        }
+
+        public static bool ProducesAll(StardewValley.FarmAnimal animal, int[] targets)
+        {
+            // Intersection length should match target length
+            return Api.FarmAnimal.ProducesAll(animal.defaultProduceIndex.Value, animal.deluxeProduceIndex.Value, targets);
+        }
+
+        public static bool ProducesAll(int defaultProduceId, int deluxeProduceId, int[] targets)
+        {
+            int[] produceIndexes = new int[] { defaultProduceId, deluxeProduceId };
+
+            // Intersection length should not change
+            return produceIndexes.Intersect(targets)
+                .Count().Equals(produceIndexes.Length);
         }
 
         public static bool ProducesAtLeastOne(StardewValley.FarmAnimal animal, int[] targets)
@@ -231,79 +220,96 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
         public static bool ProducesNothing(StardewValley.FarmAnimal animal)
         {
-            return Api.FarmAnimal.ProducesNothing(animal.defaultProduceIndex.Value, animal.deluxeProduceIndex.Value);
+            // This is to support "male" animals being hatched/born from their 
+            // "produce". Since they have a harvest type that requires a tool, 
+            // but none specified, they cannot produce those items.
+            return Api.FarmAnimal.RequiresToolForHarvest(animal) 
+                && Api.FarmAnimal.GetToolUsedForHarvest(animal).Equals(default(string));
         }
 
-        public static bool ProducesNothing(int defaultProduceId, int deluxeProduceId)
+        public static bool ProducesNothing(int harvestType, string harvestTool)
         {
-            return defaultProduceId.Equals(Constants.FarmAnimal.NoProduce) && deluxeProduceId.Equals(Constants.FarmAnimal.NoProduce);
+            // This is to support "male" animals being hatched/born from their 
+            // "produce". Since they have a harvest type that requires a tool, 
+            // but none specified, they cannot produce those items.
+            return Api.FarmAnimal.RequiresToolForHarvest(harvestType)
+                && (Api.FarmAnimal.IsDataValueNull(harvestTool));
         }
 
-        public static string GetRandomTypeFromProduce(int produceIndex, Dictionary<string, List<string>> restrictions, bool includeNonProducing)
+        // TODO:
+        // - This is not used or tested
+        // - Potentially add sex consideration in a future update
+        // - Should be moved to a FarmAnimal.isMale() patch
+        public static bool IsMale(StardewValley.FarmAnimal animal)
         {
-            List<string> potentialTypes = Api.FarmAnimal.GetTypesFromProduce(produceIndex, restrictions, includeNonProducing);
+            // Any animal that follows the produces nothing BFAV rules should be 
+            // assumed as male since this pattern is not commonly used
+            if (Api.FarmAnimal.ProducesNothing(animal))
+            {
+                return true;
+            }
+
+            // Produce of the animal we're going to match against
+            int[] targetProduce = new int[] {
+                animal.defaultProduceIndex.Value,
+                animal.deluxeProduceIndex.Value
+            };
+
+            // Check if any other animals exist that do produce nothing, but have the same produce indexes
+            Dictionary<string, string> data = Api.Content.LoadData<string, string>(Constants.Content.DataFarmAnimalsContentPath);
+
+            foreach (KeyValuePair<string, string> entry in data)
+            {
+                string[] values = Api.Content.ParseDataValue(entry.Value);
+
+                int defaultProduce = Convert.ToInt32(values[(int)Constants.FarmAnimal.DataValueIndex.DefaultProduce]);
+                int deluxeProduce = Convert.ToInt32(values[(int)Constants.FarmAnimal.DataValueIndex.DeluxeProduce]);
+
+                // Only check against animals that completely match the produce
+                // TODO: check if partial matches make sense; no current use cases
+                if (!Api.FarmAnimal.ProducesAll(defaultProduce, deluxeProduce, targetProduce))
+                {
+                    continue;
+                }
+
+                int harvestType = Convert.ToInt32(values[(int)Constants.FarmAnimal.DataValueIndex.HarvestType]);
+                string harvestTool = values[(int)Constants.FarmAnimal.DataValueIndex.ToolUsedForHarvest];
+
+                // Assume that since the source animal produces something and there's 
+                // another animal that does not produce anything, it's a female
+                if (Api.FarmAnimal.ProducesNothing(harvestType, harvestTool))
+                {
+                    return false;
+                }
+            }
+
+            // If no other animal exists that produces nothing, then use their 
+            // ID to assign them a sex. This is the same rule used for rabbits 
+            // and pigs.
+            return animal.myID.Value % 2L == 0L;
+        }
+
+        public static string GetRandomTypeFromProduce(int[] produceIndexes, Dictionary<string, List<string>> restrictions)
+        {
+            List<string> potentialTypes = Api.FarmAnimal.GetTypesFromProduce(produceIndexes, restrictions);
+
+            int index = Helpers.Random.Next(potentialTypes.Count);
 
             // Check to make sure types came back
             return potentialTypes.Any()
-                ? potentialTypes.ElementAt(Helpers.Random.Next(potentialTypes.Count))
+                ? potentialTypes[index]
                 : null;
         }
 
-        public static string GetRandomTypeFromParent(StardewValley.FarmAnimal parent, Dictionary<string, List<string>> restrictions, bool includeNonProducing, bool ignoreParentProduceCheck)
+        public static string GetRandomTypeFromProduce(int produceIndex, Dictionary<string, List<string>> restrictions)
         {
-            string randomType = parent.type.Value;
+            return Api.FarmAnimal.GetRandomTypeFromProduce(new int[] { produceIndex }, restrictions);
+        }
 
-            if (includeNonProducing)
-            {
-                // Find the category this parent is a part of
-                List<string> potentialTypes = new List<string>();
-
-                // Someone could have the data set up, but not add it to BFAV so that
-                // it's hidden from the game so we must use BFAV's restrictions
-                Dictionary<string, string> contentData = Api.Content.LoadData<string, string>(Constants.Content.DataFarmAnimalsContentPath);
-
-                foreach (KeyValuePair<string, List<string>> entry in restrictions)
-                {
-                    // Only consider types in the category if the parent belongs to it
-                    if (!entry.Value.Contains(parent.type.Value))
-                    {
-                        continue;
-                    }
-
-                    foreach (string type in entry.Value)
-                    {
-                        // If this is the parent's type, add it always
-                        if (type.Equals(parent.type.Value))
-                        {
-                            potentialTypes.Add(type);
-
-                            continue;
-                        }
-
-                        string[] values = Api.Content.ParseDataValue(contentData[type]);
-
-                        int defaultProduceId = Int32.Parse(values[(int)Constants.FarmAnimal.DataValueIndex.DefaultProduce]);
-                        int deluxeProduceId = Int32.Parse(values[(int)Constants.FarmAnimal.DataValueIndex.DeluxeProduce]);
-
-                        if (includeNonProducing && Api.FarmAnimal.ProducesNothing(defaultProduceId, deluxeProduceId))
-                        {
-                            potentialTypes.Add(type);
-                        }
-
-                        if (ignoreParentProduceCheck || Api.FarmAnimal.ProducesAtLeastOne(parent, new int[] { defaultProduceId, deluxeProduceId }))
-                        {
-                            potentialTypes.Add(type);
-                        }
-                    }
-
-                    // Use the first category the parent belongs to
-                    break;
-                }
-
-                randomType = potentialTypes[Helpers.Random.Next(potentialTypes.Count)];
-            }
-
-            return randomType;
+        public static string GetRandomTypeFromParent(StardewValley.FarmAnimal parent, Dictionary<string, List<string>> restrictions)
+        {
+            // Use the parent's produce to find other potentials
+            return GetRandomTypeFromProduce(new int[] { parent.defaultProduceIndex.Value, parent.defaultProduceIndex.Value }, restrictions);
         }
 
         public static bool CanLiveIn(StardewValley.FarmAnimal animal, Building building)
@@ -343,9 +349,28 @@ namespace BetterFarmAnimalVariety.Framework.Api
             return Helpers.Random.NextDouble() >= Constants.FarmAnimal.BlueChickenChance;
         }
 
+        public static List<string> SanitizeBlueChickens(List<string> types, StardewValley.Farmer farmer)
+        {
+            // Sanitize for blue chickens
+            string blueChicken = Constants.VanillaFarmAnimalType.BlueChicken.ToString();
+
+            // Check for blue chicken chance
+            if (types.Contains(blueChicken) && !Api.AnimalShop.BlueChickenIsAvailableForPurchase(farmer))
+            {
+                types.Remove(blueChicken);
+            }
+
+            return types;
+        }
+
         public static bool HasHarvestType(StardewValley.FarmAnimal animal, int harvestType)
         {
             return animal.harvestType.Value.Equals(harvestType);
+        }
+
+        public static bool HasHarvestType(int harvestType, int target)
+        {
+            return harvestType.Equals(target);
         }
 
         public static bool CanBeNamed(StardewValley.FarmAnimal animal)
@@ -355,9 +380,28 @@ namespace BetterFarmAnimalVariety.Framework.Api
             return Api.FarmAnimal.HasHarvestType(animal, Constants.FarmAnimal.ItHarvestType);
         }
 
+        public static bool RequiresToolForHarvest(StardewValley.FarmAnimal animal)
+        {
+            // "It" harvest type doesn't allow you to name the animal. This is 
+            // mostly unused and is only seen on the Hog
+            return Api.FarmAnimal.HasHarvestType(animal, Constants.FarmAnimal.RequiresToolHarvestType);
+        }
+
+        public static bool RequiresToolForHarvest(int harvestType)
+        {
+            // "It" harvest type doesn't allow you to name the animal. This is 
+            // mostly unused and is only seen on the Hog
+            return Api.FarmAnimal.HasHarvestType(harvestType, Constants.FarmAnimal.RequiresToolHarvestType);
+        }
+
         public static bool MakesSound(StardewValley.FarmAnimal animal)
         {
             return animal.sound.Value != null;
+        }
+
+        public static string GetToolUsedForHarvest(StardewValley.FarmAnimal animal)
+        {
+            return animal.toolUsedForHarvest.Value.Length > 0 ? animal.toolUsedForHarvest.Value : default(string);
         }
     }
 }

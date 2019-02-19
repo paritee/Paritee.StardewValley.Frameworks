@@ -52,7 +52,6 @@ namespace BetterFarmAnimalVariety
             this.Helper.Events.GameLoop.Saving += this.OnSaving;
             this.Helper.Events.GameLoop.Saved += this.OnSaved;
             this.Helper.Events.Input.ButtonPressed += this.OnButtonPressed;
-            // this.Helper.Events.Display.RenderingActiveMenu += this.OnRenderingActiveMenu;
         }
 
         private void SetupHarmonyPatches()
@@ -63,6 +62,7 @@ namespace BetterFarmAnimalVariety
             // TODO: might want to adjust these after some testing
             // - FarmInfoPage
             // - Forest
+            // - AnimalHouse.resetSharedState
 
             harmony.PatchAll();
         }
@@ -74,7 +74,6 @@ namespace BetterFarmAnimalVariety
             {
                 // Config
                 new Framework.Commands.Config.List(this.Helper, this.Monitor, this.Config),
-                new Framework.Commands.Config.RandomizeFromCategory(this.Helper, this.Monitor, this.Config),
 
                 // FarmAnimal
                 new Framework.Commands.FarmAnimal.List(this.Helper, this.Monitor, this.Config),
@@ -181,38 +180,16 @@ namespace BetterFarmAnimalVariety
                 {
                     // Report if any animals were migrated and save the migrations
                     string message = typesToBeMigrated.Any()
-                        ? $"ConvertDirtyFarmAnimals in {slotName}: Migrated {typesToBeMigrated.Count} dirty farm animals:\n-- {String.Join("\n-- ", typesToBeMigrated.Select(kvp => $"{kvp.Key}: {kvp.Value.CurrentType} saved as {kvp.Value.SavedType}"))}"
-                        : $"ConvertDirtyFarmAnimals in {slotName}: No dirty farm animals found";
+                        ? $"Migrated {typesToBeMigrated.Count} dirty farm animals:\n-- {String.Join("\n-- ", typesToBeMigrated.Select(kvp => $"{kvp.Key}: {kvp.Value.CurrentType} saved as {kvp.Value.SavedType}"))}"
+                        : $"No dirty farm animals found";
 
-                    this.Monitor.Log(message, LogLevel.Trace);
+                    this.Monitor.Log($"ConvertDirtyFarmAnimals in {slotName}: " + message, LogLevel.Trace);
                 }
             }
             catch (Exception exception)
             {
                 this.Monitor.Log(exception.Message, LogLevel.Error);
             }
-        }
-
-        private void OnRenderingActiveMenu(object sender, RenderingActiveMenuEventArgs e)
-        {
-            // Ignore if player hasn't loaded a save yet
-            if (!Context.IsWorldReady || Framework.Api.Game.ActiveMenuExists())
-            {
-                return;
-            }
-
-            if (!(Framework.Api.Game.GetActiveMenu() is StardewValley.Menus.NamingMenu namingMenu))
-            {
-                return;
-            }
-
-            //Dictionary<string, List<string>> farmAnimals = this.Config.GroupTypesByCategory();
-            //BreedFarmAnimalConfig breedFarmAnimalConfig = new BreedFarmAnimalConfig(farmAnimals, this.BlueFarmAnimals, this.Config.RandomizeNewbornFromCategory, this.Config.RandomizeHatchlingFromCategory, this.Config.IgnoreParentProduceCheck);
-            //BreedFarmAnimal breedFarmAnimal = new BreedFarmAnimal(this.Player, breedFarmAnimalConfig);
-
-            //NameFarmAnimalMenu nameFarmAnimalMenu = new NameFarmAnimalMenu(namingMenu, breedFarmAnimal);
-
-            //nameFarmAnimalMenu.HandleChange();
         }
     }
 }

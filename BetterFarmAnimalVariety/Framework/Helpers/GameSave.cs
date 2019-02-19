@@ -25,12 +25,10 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
                 return;
             }
 
-            if (Api.FarmAnimal.IsVanilla(requestedType))
-            {
-                // We don't need to do anything for vanilla animals
-                // Saving to save data happens on saves
-                return;
-            }
+            // NOTE:
+            // Even for vanilla animals we want to overwrite because the vanilla 
+            // constructor could turn a "White Chicken" into a "Brown Chicken" 
+            // based on chance
 
             // Check the save entry for reloaded animals that may have their 
             // vanilla replacements saved which can't be used

@@ -62,7 +62,6 @@
     <Compile Include="Framework\Api\Content.cs" />
     <Compile Include="Framework\Api\FarmAnimal.cs" />
     <Compile Include="Framework\Commands\Config\List.cs" />
-    <Compile Include="Framework\Commands\Config\RandomizeFromCategory.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\AddCategory.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\AddTypes.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\List.cs" />

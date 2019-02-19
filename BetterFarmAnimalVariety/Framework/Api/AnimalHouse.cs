@@ -30,17 +30,12 @@ namespace BetterFarmAnimalVariety.Framework.Api
             return null;
         }
 
-        public static string GetRandomTypeFromIncubator(StardewValley.Object incubator, Dictionary<string, List<string>> restrictions, bool includeNonProducing)
+        public static string GetRandomTypeFromIncubator(StardewValley.Object incubator, Dictionary<string, List<string>> restrictions)
         {
-            string type = null;
-
             // Search for a type by the produce
-            if (incubator.heldObject.Value != null)
-            {
-                type = Api.FarmAnimal.GetRandomTypeFromProduce(incubator.heldObject.Value.ParentSheetIndex, restrictions, includeNonProducing);
-            }
-
-            return type ?? Api.FarmAnimal.GetDefaultCoopDwellerType();
+            return incubator.heldObject.Value == null
+                ? null
+                : Api.FarmAnimal.GetRandomTypeFromProduce(incubator.heldObject.Value.ParentSheetIndex, restrictions);
         }
 
         public static void ResetIncubator(StardewValley.AnimalHouse animalHouse)

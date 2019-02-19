@@ -3,10 +3,11 @@ using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Events;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
 {
-    //[HarmonyPatch(typeof(AnimalHouse), "addNewHatchedAnimal")]
+    [HarmonyPatch(typeof(StardewValley.AnimalHouse), "addNewHatchedAnimal")]
     class AddNewHatchedAnimal
     {
         public static bool Prefix(ref StardewValley.AnimalHouse __instance, ref string name)
@@ -41,16 +42,18 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
                 return;
             }
 
-            // Check the config
-            ModConfig config = Helpers.Mod.LoadConfig<ModConfig>();
+            Farmer player = Api.Game.GetPlayer();
 
             // Grab the types with their associated categories in string form
-            Dictionary<string, List<string>> restrictions = config.GroupTypesByCategory();
+            Dictionary<string, List<string>> restrictions = Helpers.Mod.LoadConfig<ModConfig>().GroupTypesByCategory()
+                .ToDictionary(kvp => kvp.Key, kvp => Api.FarmAnimal.SanitizeBlueChickens(kvp.Value, player));
 
-            string type = Api.AnimalHouse.GetRandomTypeFromIncubator(incubator, restrictions, config.RandomizeHatchlingFromCategory);
+            // Return a matched type or user default coop dweller
+            string type = Api.AnimalHouse.GetRandomTypeFromIncubator(incubator, restrictions)
+                ?? Api.FarmAnimal.GetDefaultCoopDwellerType();
 
             Building building = animalHouse.getBuilding();
-            FarmAnimal animal = Api.FarmAnimal.CreateFarmAnimal(type, Api.Farmer.GetUniqueId(Api.Game.GetPlayer()), name, building);
+            FarmAnimal animal = Api.FarmAnimal.CreateFarmAnimal(type, Api.Farmer.GetUniqueId(player), name, building);
 
             Api.FarmAnimal.AddToBuilding(ref animal, ref building);
             Api.AnimalHouse.ResetIncubator(animalHouse, incubator);
@@ -58,16 +61,21 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
 
         private static void HandleNewborn(ref StardewValley.AnimalHouse animalHouse, string name, ref QuestionEvent questionEvent)
         {
+            Farmer player = Api.Game.GetPlayer();
+
             // Check the config
             ModConfig config = Helpers.Mod.LoadConfig<ModConfig>();
 
             // Grab the types with their associated categories in string form
-            Dictionary<string, List<string>> restrictions = config.GroupTypesByCategory();
+            Dictionary<string, List<string>> restrictions = Helpers.Mod.LoadConfig<ModConfig>().GroupTypesByCategory()
+                .ToDictionary(kvp => kvp.Key, kvp => Api.FarmAnimal.SanitizeBlueChickens(kvp.Value, player));
 
-            string type = Api.FarmAnimal.GetRandomTypeFromParent(questionEvent.animal, restrictions, config.RandomizeNewbornFromCategory, config.IgnoreParentProduceCheck);
+            // Return a matched type or user default barn dweller
+            string type = Api.FarmAnimal.GetRandomTypeFromParent(questionEvent.animal, restrictions)
+                ?? Api.FarmAnimal.GetDefaultBarnDwellerType();
 
             Building building = animalHouse.getBuilding();
-            FarmAnimal animal = Api.FarmAnimal.CreateFarmAnimal(type, Api.Farmer.GetUniqueId(Api.Game.GetPlayer()), name, building);
+            FarmAnimal animal = Api.FarmAnimal.CreateFarmAnimal(type, Api.Farmer.GetUniqueId(player), name, building);
 
             Api.FarmAnimal.AssociateParent(ref animal, questionEvent.animal.myID.Value);
             Api.FarmAnimal.AddToBuilding(ref animal, ref building);

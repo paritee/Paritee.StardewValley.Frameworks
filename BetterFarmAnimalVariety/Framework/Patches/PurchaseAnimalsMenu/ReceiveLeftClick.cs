@@ -83,14 +83,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
         {
             List<string> types = Helpers.Mod.LoadConfig<ModConfig>().GroupPurchaseableTypesByCategory()[category];
 
-            // Sanitize for blue chickens
-            string blueChicken = Constants.VanillaFarmAnimalType.BlueChicken.ToString();
-
-            // Check for blue chicken chance
-            if (types.Contains(blueChicken) && !Api.AnimalShop.BlueChickenIsAvailableForPurchase(Api.Game.GetPlayer()))
-            {
-                types.Remove(blueChicken);
-            }
+            types = Api.FarmAnimal.SanitizeBlueChickens(types, Api.Game.GetPlayer());
 
             return types[Helpers.Random.Next(types.Count)];
         }
