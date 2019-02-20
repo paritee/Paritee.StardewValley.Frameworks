@@ -40,6 +40,9 @@
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Paritee.StardewValley.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Paritee.StardewValley.Core.1.0.0\lib\net452\Paritee.StardewValley.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -52,16 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Framework\Api\AnimalShop.cs" />
-    <Compile Include="Framework\Api\Event.cs" />
-    <Compile Include="Framework\Api\Farmer.cs" />
-    <Compile Include="Framework\Api\BellsAndWhistles.cs" />
-    <Compile Include="Framework\Api\Game.cs" />
-    <Compile Include="Framework\Api\Location.cs" />
     <Compile Include="Framework\Commands\Command.cs" />
-    <Compile Include="Framework\Api\AnimalHouse.cs" />
-    <Compile Include="Framework\Api\Content.cs" />
-    <Compile Include="Framework\Api\FarmAnimal.cs" />
     <Compile Include="Framework\Commands\Config\List.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\AddCategory.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\AddTypes.cs" />
@@ -77,28 +71,13 @@
     <Compile Include="Framework\Commands\FarmAnimal\SetBuildings.cs" />
     <Compile Include="Framework\Config\FarmAnimalStock.cs" />
     <Compile Include="Framework\Config\FarmAnimal.cs" />
-    <Compile Include="Framework\Constants\AnimalHouse.cs" />
-    <Compile Include="Framework\Constants\AnimalShop.cs" />
-    <Compile Include="Framework\Constants\Blueprint.cs" />
-    <Compile Include="Framework\Constants\Content.cs" />
-    <Compile Include="Framework\Constants\Event.cs" />
-    <Compile Include="Framework\Constants\FarmAnimal.cs" />
     <Compile Include="Framework\Constants\Mod.cs" />
-    <Compile Include="Framework\Constants\VanillaFarmAnimalCategory.cs" />
     <Compile Include="Framework\Helpers\Mod.cs" />
-    <Compile Include="Framework\Helpers\Random.cs" />
-    <Compile Include="Framework\Models\FarmAnimalType.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\Constructor.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\ReceiveLeftClick.cs" />
     <Compile Include="Framework\Models\FarmAnimalsSaveData.cs" />
     <Compile Include="Framework\Models\TypeLog.cs" />
-    <Compile Include="Framework\Models\SaveData.cs" />
     <Compile Include="Framework\Events\ConvertDirtyFarmAnimals.cs" />
-    <Compile Include="Framework\Api\Mod.cs" />
-    <Compile Include="Framework\Helpers\Reflection.cs" />
-    <Compile Include="Framework\Models\PropertyConstant.cs" />
-    <Compile Include="Framework\Models\FarmAnimalCategory.cs" />
-    <Compile Include="Framework\Constants\VanillaFarmAnimalType.cs" />
     <Compile Include="Framework\Patches\FarmAnimal\Reload.cs" />
     <Compile Include="Framework\Patches\Patch.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\GetAnimalDescription.cs" />

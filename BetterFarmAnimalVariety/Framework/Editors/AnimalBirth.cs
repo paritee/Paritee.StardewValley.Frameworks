@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using StardewModdingAPI;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Editors
 {
@@ -34,7 +35,7 @@ namespace BetterFarmAnimalVariety.Framework.Editors
 
                 // Remove the short parent type to allow for potential to expand outside the parent's type
                 Events["AnimalBirth"] = this.Mod.Helper.Translation.Get("Strings.Events.AnimalBirth");
-                Events["AnimalNamingTitle"] = Api.Content.LoadString("Strings\\StringsFromCSFiles:PurchaseAnimalsMenu.cs.11357");
+                Events["AnimalNamingTitle"] = PariteeCore.Api.Content.LoadString("Strings\\StringsFromCSFiles:PurchaseAnimalsMenu.cs.11357");
             }
         }
     }

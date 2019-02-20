@@ -3,6 +3,7 @@ using StardewModdingAPI.Events;
 using StardewValley;
 using System.Collections.Generic;
 using System.Linq;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Events
 {
@@ -43,7 +44,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         animalIds.Add(id);
 
                         // Only non-vanilla animals need to be migrated, but...
-                        if (Framework.Api.FarmAnimal.IsVanilla(animal.type.Value))
+                        if (PariteeCore.Api.FarmAnimal.IsVanilla(animal.type.Value))
                         {
                             // ... always log the animal's type in the history 
                             // for convenience
@@ -60,7 +61,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         string savedType = saveData.GetSavedTypeOrDefault(animal);
 
                         // Convert it to the proper vanilla animal
-                        KeyValuePair<string, string> contentDataEntry = Api.Content.LoadDataEntry<string, string>(Constants.Content.DataFarmAnimalsContentPath, savedType);
+                        KeyValuePair<string, string> contentDataEntry = PariteeCore.Api.Content.LoadDataEntry<string, string>(PariteeCore.Constants.Content.DataFarmAnimalsContentPath, savedType);
 
                         // Kill everything if for some reason the user removed 
                         // the default dweller information from the game
@@ -76,7 +77,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
                         // Overwrite the animal
                         // animal.reload() will be called in the "Saved" event
-                        Framework.Api.FarmAnimal.UpdateFromData(ref animal, contentDataEntry);
+                        PariteeCore.Api.FarmAnimal.UpdateFromData(ref animal, contentDataEntry);
                     }
                 }
 
@@ -99,7 +100,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
             // Need to reload each animal after save/save load because the game 
             // and SMAPI does a strange thing where the reload happens prior to 
             // the "Saving" event
-            Api.FarmAnimal.ReloadAll();
+            PariteeCore.Api.FarmAnimal.ReloadAll();
         }
 
         public static void OnSaveLoaded(SaveLoadedEventArgs e)
@@ -107,7 +108,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
             // Need to reload each animal after save/save load because the game 
             // and SMAPI does a strange thing where the reload happens prior to 
             // the "Saving" event
-            Api.FarmAnimal.ReloadAll();
+            PariteeCore.Api.FarmAnimal.ReloadAll();
         }
     }
 }

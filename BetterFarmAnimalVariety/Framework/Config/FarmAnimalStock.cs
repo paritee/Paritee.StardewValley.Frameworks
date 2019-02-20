@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Config
 {
@@ -28,7 +29,7 @@ namespace BetterFarmAnimalVariety.Framework.Config
             // Do nothing; this is for loading an existing config
         }
 
-        public FarmAnimalStock(Models.FarmAnimalCategory farmAnimalStock)
+        public FarmAnimalStock(PariteeCore.Models.FarmAnimalCategory farmAnimalStock)
         {
             this.Name = farmAnimalStock.DisplayName;
             this.Description = farmAnimalStock.Description;
@@ -39,7 +40,7 @@ namespace BetterFarmAnimalVariety.Framework.Config
 
         public Texture2D GetIconTexture()
         {
-            return Api.Mod.LoadTexture(Path.Combine(Constants.Mod.Path, this.Icon));
+            return PariteeCore.Api.Mod.LoadTexture(Path.Combine(PariteeCore.Constants.Mod.Path, this.Icon));
         }
 
         public string GetDefaultIconPath(string category)
@@ -63,7 +64,7 @@ namespace BetterFarmAnimalVariety.Framework.Config
 
             placeholder.Icon = placeholder.GetDefaultIconPath(category);
 
-            string fullPathToIcon = Path.Combine(Constants.Mod.Path, placeholder.Icon);
+            string fullPathToIcon = Path.Combine(PariteeCore.Constants.Mod.Path, placeholder.Icon);
 
             if (!File.Exists(fullPathToIcon))
             {

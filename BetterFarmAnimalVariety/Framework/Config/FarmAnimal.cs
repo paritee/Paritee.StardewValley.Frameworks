@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Linq;
 using StardewValley;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Config
 {
@@ -24,7 +25,7 @@ namespace BetterFarmAnimalVariety.Framework.Config
             // Do nothing; this is for loading an existing config
         }
 
-        public FarmAnimal(Models.FarmAnimalCategory farmAnimalStock)
+        public FarmAnimal(Paritee.StardewValley.Core.Models.FarmAnimalCategory farmAnimalStock)
         {
             this.Category = farmAnimalStock.ToString();
             this.Types = farmAnimalStock.Types.Select(o => o.ToString()).ToArray();
@@ -57,7 +58,7 @@ namespace BetterFarmAnimalVariety.Framework.Config
                 return null;
             }
 
-            return Api.AnimalShop.FormatAsAnimalAvailableForPurchase(farm, this.Category, this.AnimalShop.Name, this.AnimalShop.Price, this.Buildings);
+            return PariteeCore.Api.AnimalShop.FormatAsAnimalAvailableForPurchase(farm, this.Category, this.AnimalShop.Name, this.AnimalShop.Price, this.Buildings);
         }
     }
 }

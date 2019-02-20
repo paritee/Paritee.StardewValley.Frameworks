@@ -5,6 +5,7 @@ using StardewValley.Buildings;
 using StardewValley.Menus;
 using System.Collections.Generic;
 using System.Linq;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
 {
@@ -23,14 +24,14 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
                 return true;
             }
 
-            return Helpers.Reflection.GetFieldValue<bool>(__instance, "onFarm")
+            return PariteeCore.Helpers.Reflection.GetFieldValue<bool>(__instance, "onFarm")
                 ? ReceiveLeftClick.HandleOnFarm(ref __instance, x, y)
                 : ReceiveLeftClick.HandleStockSelection(ref __instance, x, y);
         }
 
         private static bool IsActionable(StardewValley.Menus.PurchaseAnimalsMenu __instance)
         {
-            return !Api.BellsAndWhistles.IsFaded() && !Helpers.Reflection.GetFieldValue<bool>(__instance, "freeze");
+            return !PariteeCore.Api.BellsAndWhistles.IsFaded() && !PariteeCore.Helpers.Reflection.GetFieldValue<bool>(__instance, "freeze");
         }
 
         private static bool IsClosingMenu(StardewValley.Menus.PurchaseAnimalsMenu __instance, int x, int y)
@@ -51,10 +52,10 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
                 return true;
             }
 
-            Farmer player = Api.Game.GetPlayer();
+            Farmer player = PariteeCore.Api.Game.GetPlayer();
             int priceOfAnimal = textureComponent.item.salePrice();
 
-            if (!Api.Farmer.CanAfford(player, priceOfAnimal))
+            if (!PariteeCore.Api.Farmer.CanAfford(player, priceOfAnimal))
             {
                 return true;
             }
@@ -62,30 +63,30 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
             // Randomly choose a type from the category selected
             string type = ReceiveLeftClick.GetRandomType(textureComponent.hoverText);
 
-            FarmAnimal animalBeingPurchased = Api.FarmAnimal.CreateFarmAnimal(type, Api.Farmer.GetUniqueId(player));
+            FarmAnimal animalBeingPurchased = PariteeCore.Api.FarmAnimal.CreateFarmAnimal(type, PariteeCore.Api.Farmer.GetUniqueId(player));
 
             ReceiveLeftClick.SelectedStockBellsAndWhistles(ref __instance);
 
-            Helpers.Reflection.GetField(__instance, "onFarm").SetValue(__instance, true);
-            Helpers.Reflection.GetField(__instance, "animalBeingPurchased").SetValue(__instance, animalBeingPurchased);
-            Helpers.Reflection.GetField(__instance, "priceOfAnimal").SetValue(__instance, priceOfAnimal);
+            PariteeCore.Helpers.Reflection.GetField(__instance, "onFarm").SetValue(__instance, true);
+            PariteeCore.Helpers.Reflection.GetField(__instance, "animalBeingPurchased").SetValue(__instance, animalBeingPurchased);
+            PariteeCore.Helpers.Reflection.GetField(__instance, "priceOfAnimal").SetValue(__instance, priceOfAnimal);
 
             return false;
         }
 
         private static void SelectedStockBellsAndWhistles(ref StardewValley.Menus.PurchaseAnimalsMenu __instance)
         {
-            Api.BellsAndWhistles.FadeToBlack(true, __instance.setUpForAnimalPlacement, 0.02f);
-            Api.BellsAndWhistles.PlaySound("smallSelect");
+            PariteeCore.Api.BellsAndWhistles.FadeToBlack(true, __instance.setUpForAnimalPlacement, 0.02f);
+            PariteeCore.Api.BellsAndWhistles.PlaySound("smallSelect");
         }
 
         private static string GetRandomType(string category)
         {
             List<string> types = Helpers.Mod.ReadConfig<ModConfig>().GroupPurchaseableTypesByCategory()[category];
 
-            types = Api.FarmAnimal.SanitizeBlueChickens(types, Api.Game.GetPlayer());
+            types = PariteeCore.Api.FarmAnimal.SanitizeBlueChickens(types, PariteeCore.Api.Game.GetPlayer());
 
-            return types[Helpers.Random.Next(types.Count)];
+            return types[PariteeCore.Helpers.Random.Next(types.Count)];
         }
 
         private static bool HandleOnFarm(ref StardewValley.Menus.PurchaseAnimalsMenu __instance, int x, int y)
@@ -93,33 +94,34 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
             // Copy all of the logic checkpoints and try to return to the base 
             // code as much as possible
 
-            if (Helpers.Reflection.GetFieldValue<bool>(__instance, "namingAnimal"))
+            if (PariteeCore.Helpers.Reflection.GetFieldValue<bool>(__instance, "namingAnimal"))
             {
                 return true;
             }
 
-            Building buildingAt = Api.Game.GetFarm().getBuildingAt(new Vector2((x + Api.Game.GetViewport().X) / 64, (y + Api.Game.GetViewport().Y) / 64));
+            xTile.Dimensions.Rectangle viewport = PariteeCore.Api.Game.GetViewport();
+            Building buildingAt = PariteeCore.Api.Game.GetFarm().getBuildingAt(new Vector2((x + viewport.X) / 64, (y + viewport.Y) / 64));
 
             if (buildingAt == null)
             {
                 return true;
             }
 
-            FarmAnimal animalBeingPurchased = Helpers.Reflection.GetFieldValue<FarmAnimal>(__instance, "animalBeingPurchased");
+            FarmAnimal animalBeingPurchased = PariteeCore.Helpers.Reflection.GetFieldValue<FarmAnimal>(__instance, "animalBeingPurchased");
 
-            if (!Api.FarmAnimal.CanLiveIn(animalBeingPurchased, buildingAt))
+            if (!PariteeCore.Api.FarmAnimal.CanLiveIn(animalBeingPurchased, buildingAt))
             {
                 return true;
             }
 
-            if (Api.AnimalHouse.IsFull(buildingAt))
+            if (PariteeCore.Api.AnimalHouse.IsFull(buildingAt))
             {
                 return true;
             }
 
             // "It" harvest type doesn't allow you to name the animal. This is 
             // mostly unused and is only seen on the Hog
-            if (!Api.FarmAnimal.CanBeNamed(animalBeingPurchased))
+            if (!PariteeCore.Api.FarmAnimal.CanBeNamed(animalBeingPurchased))
             {
                 return true;
             }
@@ -127,20 +129,20 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
             // Rarely going to ever make it down here, but add the support any 
             // way for the "It" harvest type
 
-            int priceOfAnimal = Helpers.Reflection.GetFieldValue<int>(__instance, "priceOfAnimal");
+            int priceOfAnimal = PariteeCore.Helpers.Reflection.GetFieldValue<int>(__instance, "priceOfAnimal");
 
-            if (!Api.Farmer.CanAfford(Api.Game.GetPlayer(), priceOfAnimal))
+            if (!PariteeCore.Api.Farmer.CanAfford(PariteeCore.Api.Game.GetPlayer(), priceOfAnimal))
             {
                 return true;
             }
 
-            Api.FarmAnimal.AddToBuilding(ref animalBeingPurchased, ref buildingAt);
+            PariteeCore.Api.FarmAnimal.AddToBuilding(ref animalBeingPurchased, ref buildingAt);
 
-            Helpers.Reflection.GetField(__instance, "animalBeingPurchased").SetValue(__instance, animalBeingPurchased);
-            Helpers.Reflection.GetField(__instance, "newAnimalHome").SetValue(__instance, null as Building);
-            Helpers.Reflection.GetField(__instance, "namingAnimal").SetValue(__instance, false);
+            PariteeCore.Helpers.Reflection.GetField(__instance, "animalBeingPurchased").SetValue(__instance, animalBeingPurchased);
+            PariteeCore.Helpers.Reflection.GetField(__instance, "newAnimalHome").SetValue(__instance, null as Building);
+            PariteeCore.Helpers.Reflection.GetField(__instance, "namingAnimal").SetValue(__instance, false);
 
-            Api.Farmer.SpendMoney(Api.Game.GetPlayer(), priceOfAnimal);
+            PariteeCore.Api.Farmer.SpendMoney(PariteeCore.Api.Game.GetPlayer(), priceOfAnimal);
 
             ReceiveLeftClick.PurchasedAnimalBellsAndWhistles(animalBeingPurchased);
 
@@ -149,12 +151,14 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
 
         private static void PurchasedAnimalBellsAndWhistles(FarmAnimal animalBeingPurchased)
         {
-            if (Api.FarmAnimal.MakesSound(animalBeingPurchased))
+            if (PariteeCore.Api.FarmAnimal.MakesSound(animalBeingPurchased))
             {
-                Api.BellsAndWhistles.CueSound(animalBeingPurchased.sound.Value, "Pitch", 1200 + Helpers.Random.Next(-200, 201));
+                PariteeCore.Api.BellsAndWhistles.CueSound(animalBeingPurchased.sound.Value, "Pitch", 1200 + PariteeCore.Helpers.Random.Next(-200, 201));
             }
 
-            Api.BellsAndWhistles.AddHudMessage(Api.Content.LoadString("Strings\\StringsFromCSFiles:PurchaseAnimalsMenu.cs.11324", animalBeingPurchased.displayType), Color.LimeGreen, 3500f);
+            string message = PariteeCore.Api.Content.LoadString("Strings\\StringsFromCSFiles:PurchaseAnimalsMenu.cs.11324", animalBeingPurchased.displayType);
+
+            PariteeCore.Api.BellsAndWhistles.AddHudMessage(message, Color.LimeGreen, 3500f);
         }
     }
 }

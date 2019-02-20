@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Paritee.StardewValley.Core.Models;
 using StardewValley;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Models
 {
@@ -82,7 +84,7 @@ namespace BetterFarmAnimalVariety.Framework.Models
         {
             return this.Exists(animal.myID.Value)
                 ? this.TypeHistory[animal.myID.Value].SavedType
-                : Api.FarmAnimal.GetDefaultType(animal);
+                : PariteeCore.Api.FarmAnimal.GetDefaultType(animal);
         }
 
         public TypeLog GetTypeHistory(long myId)
@@ -118,14 +120,14 @@ namespace BetterFarmAnimalVariety.Framework.Models
             string currentType = typeHistory == null ? (requestedType ?? animal.type.Value) : typeHistory.CurrentType;
 
             // Grab the new type's data to override if it exists
-            Dictionary<string, string> contentData = Api.Content.LoadData<string, string>(Constants.Content.DataFarmAnimalsContentPath);
-            KeyValuePair<string, string> contentDataEntry = Api.Content.GetDataEntry<string, string>(contentData, currentType);
+            Dictionary<string, string> contentData = PariteeCore.Api.Content.LoadData<string, string>(PariteeCore.Constants.Content.DataFarmAnimalsContentPath);
+            KeyValuePair<string, string> contentDataEntry = PariteeCore.Api.Content.GetDataEntry<string, string>(contentData, currentType);
 
             // Always validate if the type we're trying to use exists
             if (contentDataEntry.Key == null)
             {
                 // Get a default type to use
-                string defaultType = Api.FarmAnimal.GetDefaultType(animal);
+                string defaultType = PariteeCore.Api.FarmAnimal.GetDefaultType(animal);
 
                 // Set it to the default before we continue
                 contentDataEntry = contentData.FirstOrDefault(kvp => kvp.Key.Equals(defaultType));
@@ -140,7 +142,7 @@ namespace BetterFarmAnimalVariety.Framework.Models
             }
 
             // Set the animal with the new type's data values
-            Api.FarmAnimal.UpdateFromData(ref animal, contentDataEntry);
+            PariteeCore.Api.FarmAnimal.UpdateFromData(ref animal, contentDataEntry);
         }
     }
 }

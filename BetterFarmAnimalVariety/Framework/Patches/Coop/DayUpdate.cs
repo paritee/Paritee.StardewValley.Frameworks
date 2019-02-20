@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.Coop
 {
@@ -7,9 +8,9 @@ namespace BetterFarmAnimalVariety.Framework.Patches.Coop
     {
         public static bool Prefix(ref StardewValley.Buildings.Coop __instance, ref int dayOfMonth)
         {
-            StardewValley.AnimalHouse animalHouse = Api.AnimalHouse.GetIndoors(__instance);
+            StardewValley.AnimalHouse animalHouse = PariteeCore.Api.AnimalHouse.GetIndoors(__instance);
 
-            if (!Api.AnimalHouse.IsEggReadyToHatch(animalHouse))
+            if (!PariteeCore.Api.AnimalHouse.IsEggReadyToHatch(animalHouse))
             {
                 // Will fail same checks which is what we want
                 return true;
@@ -20,7 +21,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.Coop
             // the animals to be prematurely added to the saves when they should 
             // only be added after a successful naming event. This diverges significantly
             // from the vanilla code.
-            Api.AnimalHouse.ResetIncubator(animalHouse);
+            PariteeCore.Api.AnimalHouse.ResetIncubator(animalHouse);
 
             // Always want to continue because setting the X and Y values will 
             // guarantee that it won't trigger the hatch again

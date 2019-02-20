@@ -2,6 +2,7 @@
 using Harmony;
 using StardewValley;
 using StardewValley.Buildings;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Patches
 {
@@ -15,7 +16,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches
                 return true;
             }
 
-            Api.FarmAnimal.SetHome(ref __instance, home);
+            PariteeCore.Api.FarmAnimal.SetHome(ref __instance, home);
 
             // Can't get the FarmAnimal empty constructor in a patch so need to 
             // use the reload function to handle it

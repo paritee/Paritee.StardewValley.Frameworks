@@ -1,4 +1,4 @@
-﻿using BetterFarmAnimalVariety.Framework.Models;
+﻿using Paritee.StardewValley.Core.Models;
 using StardewModdingAPI;
 using System;
 using System.Collections.Generic;

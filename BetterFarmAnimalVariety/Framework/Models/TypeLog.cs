@@ -1,4 +1,6 @@
-﻿namespace BetterFarmAnimalVariety.Framework.Models
+﻿using PariteeCore = Paritee.StardewValley.Core;
+
+namespace BetterFarmAnimalVariety.Framework.Models
 {
     public class TypeLog
     {
@@ -13,12 +15,12 @@
 
         public bool IsDirty()
         {
-            return !Api.FarmAnimal.IsVanilla(this.SavedType);
+            return !PariteeCore.Api.FarmAnimal.IsVanilla(this.SavedType);
         }
 
         public bool IsVanilla()
         {
-            return Api.FarmAnimal.IsVanilla(this.CurrentType);
+            return PariteeCore.Api.FarmAnimal.IsVanilla(this.CurrentType);
         }
     }
 }

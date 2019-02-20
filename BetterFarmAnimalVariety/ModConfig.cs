@@ -1,6 +1,7 @@
 ﻿using StardewValley;
 using System.Collections.Generic;
 using System.Linq;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety
 {
@@ -63,7 +64,7 @@ namespace BetterFarmAnimalVariety
 
         public void SeedVanillaFarmAnimals()
         {
-            this.FarmAnimals = Framework.Constants.VanillaFarmAnimalCategory.All()
+            this.FarmAnimals = PariteeCore.Constants.VanillaFarmAnimalCategory.All()
                 .Select(o => new Framework.Config.FarmAnimal(o))
                 .ToList();
         }

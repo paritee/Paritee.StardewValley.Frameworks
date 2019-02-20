@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Commands
 {
@@ -55,7 +56,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands
 
         protected void AssertGameNotLoaded()
         {
-            if (Api.Game.IsSaveLoaded())
+            if (PariteeCore.Api.Game.IsSaveLoaded())
             {
                 throw new Exception($"this cannot be done after loading a save");
             }
@@ -79,7 +80,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands
 
         protected void AssertFarmAnimalTypesExist(List<string> types)
         {
-            Dictionary<string, string> contentData = Api.Content.LoadData<string, string>(Constants.Content.DataFarmAnimalsContentPath);
+            Dictionary<string, string> contentData = PariteeCore.Api.Content.LoadData<string, string>(PariteeCore.Constants.Content.DataFarmAnimalsContentPath);
 
             // Check if these new types are valid
             foreach (string key in types)
@@ -93,7 +94,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands
 
         protected void AssertBuildingsExist(List<string> buildings)
         {
-            Dictionary<string, string> blueprintsData = Api.Content.Load<Dictionary<string, string>>(Constants.Content.DataBlueprintsContentPath);
+            Dictionary<string, string> blueprintsData = PariteeCore.Api.Content.Load<Dictionary<string, string>>(PariteeCore.Constants.Content.DataBlueprintsContentPath);
 
             // Check if these new types are valid
             foreach (string key in buildings)

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 {
@@ -29,21 +30,21 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
                 
                 this.AssertFarmAnimalTypesExist(types);
 
-                string building = args.Length < 3 ? Constants.AnimalHouse.Barn : args[2].Trim();
+                string building = args.Length < 3 ? PariteeCore.Constants.AnimalHouse.Barn : args[2].Trim();
                 List<string> buildings = new List<string>();
 
-                if (building.ToLower().Equals(Constants.AnimalHouse.Coop.ToLower()))
+                if (building.ToLower().Equals(PariteeCore.Constants.AnimalHouse.Coop.ToLower()))
                 {
-                    foreach (Constants.AnimalHouse.Size size in Enum.GetValues(typeof(Constants.AnimalHouse.Size)))
+                    foreach (PariteeCore.Constants.AnimalHouse.Size size in Enum.GetValues(typeof(PariteeCore.Constants.AnimalHouse.Size)))
                     {
-                        buildings.Add(Api.AnimalHouse.FormatSize(Constants.AnimalHouse.Coop, size));
+                        buildings.Add(PariteeCore.Api.AnimalHouse.FormatSize(PariteeCore.Constants.AnimalHouse.Coop, size));
                     }
                 }
-                else if (building.ToLower().Equals(Constants.AnimalHouse.Barn.ToLower()))
+                else if (building.ToLower().Equals(PariteeCore.Constants.AnimalHouse.Barn.ToLower()))
                 {
-                    foreach (Constants.AnimalHouse.Size size in Enum.GetValues(typeof(Constants.AnimalHouse.Size)))
+                    foreach (PariteeCore.Constants.AnimalHouse.Size size in Enum.GetValues(typeof(PariteeCore.Constants.AnimalHouse.Size)))
                     {
-                        buildings.Add(Api.AnimalHouse.FormatSize(Constants.AnimalHouse.Barn, size));
+                        buildings.Add(PariteeCore.Api.AnimalHouse.FormatSize(PariteeCore.Constants.AnimalHouse.Barn, size));
                     }
                 }
                 else

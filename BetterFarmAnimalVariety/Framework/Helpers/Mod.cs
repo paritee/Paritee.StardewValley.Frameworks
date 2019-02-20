@@ -1,15 +1,17 @@
-﻿namespace BetterFarmAnimalVariety.Framework.Helpers
+﻿using PariteeCore = Paritee.StardewValley.Core;
+
+namespace BetterFarmAnimalVariety.Framework.Helpers
 {
     class Mod
     {
         public static string SmapiSaveDataKey(string key)
         {
-            return Api.Mod.SmapiSaveDataKey(Constants.Mod.Key, key);
+            return PariteeCore.Api.Mod.SmapiSaveDataKey(Constants.Mod.Key, key);
         }
 
         public static T ReadConfig<T>()
         {
-            return Api.Mod.ReadConfig<T>(Constants.Mod.Path, Constants.Mod.ConfigFileName);
+            return PariteeCore.Api.Mod.ReadConfig<T>(PariteeCore.Constants.Mod.Path, Constants.Mod.ConfigFileName);
         }
     }
 }
