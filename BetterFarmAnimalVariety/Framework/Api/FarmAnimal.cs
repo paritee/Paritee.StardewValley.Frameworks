@@ -10,6 +10,40 @@ namespace BetterFarmAnimalVariety.Framework.Api
 {
     class FarmAnimal
     {
+        public static void Reload(ref StardewValley.FarmAnimal animal, Building home)
+        {
+            animal.reload(home);
+        }
+
+        public static void ReloadAll()
+        {
+            for (int index = 0; index < Game1.locations.Count; ++index)
+            {
+                if (!(Game1.locations[index] is Farm farm))
+                {
+                    continue;
+                }
+
+                for (int j = 0; j < farm.buildings.Count; ++j)
+                {
+                    if (!(farm.buildings[j].indoors.Value is StardewValley.AnimalHouse animalHouse))
+                    {
+                        continue;
+                    }
+
+                    for (int k = 0; k < animalHouse.animalsThatLiveHere.Count(); ++k)
+                    {
+                        long id = animalHouse.animalsThatLiveHere.ElementAt(k);
+                        StardewValley.FarmAnimal animal = animalHouse.animals[id];
+
+                        Api.FarmAnimal.Reload(ref animal, animal.home);
+                    }
+                }
+
+                break;
+            }
+        }
+
         public static bool IsBaby(StardewValley.FarmAnimal animal)
         {
             return animal.isBaby();
