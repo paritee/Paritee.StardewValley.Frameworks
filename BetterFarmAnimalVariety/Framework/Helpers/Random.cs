@@ -4,24 +4,29 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
 {
     class Random
     {
+        public static System.Random GetNumberGenerator()
+        {
+            return Game1.random;
+        }
+
         public static double NextDouble()
         {
-            return Game1.random.NextDouble();
+            return Helpers.Random.GetNumberGenerator().NextDouble();
         }
 
         public static int Next()
         {
-            return Game1.random.Next();
+            return Helpers.Random.GetNumberGenerator().Next();
         }
 
         public static int Next(int maxValue)
         {
-            return Game1.random.Next(maxValue);
+            return Helpers.Random.GetNumberGenerator().Next(maxValue);
         }
 
         public static int Next(int minValue, int maxValue)
         {
-            return Game1.random.Next(minValue, maxValue);
+            return Helpers.Random.GetNumberGenerator().Next(minValue, maxValue);
         }
     }
 }

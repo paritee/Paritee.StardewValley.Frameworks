@@ -239,6 +239,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
         // - This is not used or tested
         // - Potentially add sex consideration in a future update
         // - Should be moved to a FarmAnimal.isMale() patch
+        // - Check if partial produce matches make sense; no current use cases
         public static bool IsMale(StardewValley.FarmAnimal animal)
         {
             // Any animal that follows the produces nothing BFAV rules should be 
@@ -265,7 +266,6 @@ namespace BetterFarmAnimalVariety.Framework.Api
                 int deluxeProduce = Convert.ToInt32(values[(int)Constants.FarmAnimal.DataValueIndex.DeluxeProduce]);
 
                 // Only check against animals that completely match the produce
-                // TODO: check if partial matches make sense; no current use cases
                 if (!Api.FarmAnimal.ProducesAll(defaultProduce, deluxeProduce, targetProduce))
                 {
                     continue;
@@ -316,16 +316,29 @@ namespace BetterFarmAnimalVariety.Framework.Api
             return building.buildingType.Value.Contains(animal.buildingTypeILiveIn.Value);
         }
 
-        public static void AddToBuilding(ref StardewValley.FarmAnimal animal, ref Building building)
+        public static void SetHome(ref StardewValley.FarmAnimal animal, Building home)
         {
-            animal.home = building;
-            animal.homeLocation.Value = new Vector2(building.tileX.Value, building.tileY.Value);
+            animal.home = home;
+            animal.homeLocation.Value = home == null ? default(Vector2) : new Vector2(home.tileX.Value, home.tileY.Value);
+        }
+
+        public static bool SetRandomPositionInHome(ref StardewValley.FarmAnimal animal)
+        {
+            if (animal.home == null)
+            {
+                return false;
+            }
+
             animal.setRandomPosition(animal.home.indoors.Value);
 
-            StardewValley.AnimalHouse animalHouse = building.indoors.Value as StardewValley.AnimalHouse;
+            return true;
+        }
 
-            animalHouse.animals.Add(animal.myID.Value, animal);
-            animalHouse.animalsThatLiveHere.Add(animal.myID.Value);
+        public static void AddToBuilding(ref StardewValley.FarmAnimal animal, ref Building building)
+        {
+            Api.FarmAnimal.SetHome(ref animal, building);
+            Api.FarmAnimal.SetRandomPositionInHome(ref animal);
+            Api.AnimalHouse.AddAnimal(ref building, animal);
         }
 
         public static void AssociateParent(ref StardewValley.FarmAnimal animal, long parentId)

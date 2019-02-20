@@ -72,5 +72,19 @@ namespace BetterFarmAnimalVariety.Framework.Api
         {
             return animalHouse.incubatingEgg.Y > 0 || (animalHouse.incubatingEgg.X - 1) <= 0;
         }
+
+        public static void AddAnimal(ref Building building, StardewValley.FarmAnimal animal)
+        {
+            StardewValley.AnimalHouse animalHouse = Api.AnimalHouse.GetIndoors(building);
+
+            Api.AnimalHouse.AddAnimal(ref animalHouse, animal);
+
+        }
+
+        public static void AddAnimal(ref StardewValley.AnimalHouse animalHouse, StardewValley.FarmAnimal animal)
+        {
+            animalHouse.animals.Add(animal.myID.Value, animal);
+            animalHouse.animalsThatLiveHere.Add(animal.myID.Value);
+        }
     }
 }

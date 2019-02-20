@@ -28,6 +28,11 @@ namespace BetterFarmAnimalVariety.Framework.Api
             return Game1.getFarm();
         }
 
+        public static GameLocation GetCurrentLocation()
+        {
+            return Game1.currentLocation;
+        }
+
         public static bool IsSaveLoaded()
         {
             return Game1.hasLoadedGame;
@@ -46,33 +51,6 @@ namespace BetterFarmAnimalVariety.Framework.Api
         public static void ExitActiveMenu()
         {
             Game1.exitActiveMenu();
-        }
-
-        public static void NextEventCommand()
-        {
-            if (Game1.currentLocation.currentEvent != null)
-            {
-                ++Game1.currentLocation.currentEvent.CurrentCommand;
-            }
-        }
-
-        public static bool IsFarmEvent<T>(out T farmEvent)
-        {
-            farmEvent = default(T);
-
-            if (Game1.farmEvent == null)
-            {
-                return false;
-            }
-
-            if (!(Game1.farmEvent is T))
-            {
-                return false;
-            }
-
-            farmEvent = (T)Game1.farmEvent;
-
-            return true;
         }
 
         public static Rectangle GetViewport()

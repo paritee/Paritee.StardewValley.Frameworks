@@ -48,6 +48,7 @@ namespace BetterFarmAnimalVariety
             this.Helper.Content.AssetEditors.Add(new AnimalBirth(this));
 
             // Events
+            this.Helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
             this.Helper.Events.GameLoop.Saving += this.OnSaving;
             this.Helper.Events.GameLoop.Saved += this.OnSaved;
 
@@ -136,6 +137,21 @@ namespace BetterFarmAnimalVariety
             return config;
         }
 
+        /// <summary>Raised before/after the game reads data from a save file and initialises the world. This event isn't raised after saving; if you want to do something at the start of each day, see DayStarted instead.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+        {
+            try
+            {
+                ConvertDirtyFarmAnimals.OnSaveLoaded(e);
+            }
+            catch (KeyNotFoundException exception)
+            {
+                this.HandleKeyNotFoundException(exception);
+            }
+        }
+
         /// <summary>Raised before the game writes data to save file (except the initial save creation). The save won't be written until all mods have finished handling this event.</summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event arguments.</param>
@@ -147,11 +163,7 @@ namespace BetterFarmAnimalVariety
             }
             catch (KeyNotFoundException exception)
             {
-                // Somehow they removed the default animals... 
-                this.Monitor.Log(exception.Message, LogLevel.Error);
-            
-                // ... this is a show stopper
-                throw exception;
+                this.HandleKeyNotFoundException(exception);
             }
         }
 
@@ -166,12 +178,17 @@ namespace BetterFarmAnimalVariety
             }
             catch (KeyNotFoundException exception)
             {
-                // Somehow they removed the default animals... 
-                this.Monitor.Log(exception.Message, LogLevel.Error);
-
-                // ... this is a show stopper
-                throw exception;
+                this.HandleKeyNotFoundException(exception);
             }
+        }
+
+        private void HandleKeyNotFoundException(KeyNotFoundException exception)
+        {
+            // Somehow they removed the default animals... 
+            this.Monitor.Log(exception.Message, LogLevel.Error);
+
+            // ... this is a show stopper
+            throw exception;
         }
     }
 }

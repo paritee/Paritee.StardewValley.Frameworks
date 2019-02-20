@@ -12,11 +12,10 @@ namespace BetterFarmAnimalVariety.Framework.Patches
         {
             if (__instance.Name == null)
             {
-                // TODO: Debug why this happens on reload on save load/new day (coop/hatch related?)
                 return true;
             }
 
-            __instance.home = home;
+            Api.FarmAnimal.SetHome(ref __instance, home);
 
             // Can't get the FarmAnimal empty constructor in a patch so need to 
             // use the reload function to handle it

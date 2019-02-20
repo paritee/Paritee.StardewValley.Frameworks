@@ -21,7 +21,6 @@ namespace BetterFarmAnimalVariety.Framework.Patches.Coop
             // only be added after a successful naming event. This diverges significantly
             // from the vanilla code.
             Api.AnimalHouse.ResetIncubator(animalHouse);
-            //animalHouse.map.GetLayer("Front").Tiles[1, 2].TileIndex = 45; // TODO: check what this does - egg in incubator graphic?
 
             // Always want to continue because setting the X and Y values will 
             // guarantee that it won't trigger the hatch again

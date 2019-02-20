@@ -101,7 +101,6 @@ namespace BetterFarmAnimalVariety.Framework.Models
 
             if (animal.Name == null)
             {
-                // TODO: Debug why this happens on reload on game save
                 return;
             }
 

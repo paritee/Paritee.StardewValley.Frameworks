@@ -29,7 +29,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
 
         public static bool RequiredBuildingIsBuilt(Farm farm, string[] buildings, out string type)
         {
-            if (buildings.Where(name => farm.isBuildingConstructed(name)).Any())
+            if (buildings.Where(name => Api.Location.IsBuildingConstructed(farm, name)).Any())
             {
                 type = (string)null;
 

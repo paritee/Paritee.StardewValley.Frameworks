@@ -96,10 +96,20 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
         public static void OnSaved(SavedEventArgs e)
         {
+            ConvertDirtyFarmAnimals.ReloadAllAnimals();
+        }
+
+        public static void OnSaveLoaded(SaveLoadedEventArgs e)
+        {
+            ConvertDirtyFarmAnimals.ReloadAllAnimals();
+        }
+
+        private static void ReloadAllAnimals()
+        {
             FarmAnimalsSaveData saveData = (new FarmAnimalsSaveData(Constants.Mod.Key)).Read();
 
-            // Need to reload each animal after save because the game and 
-            // SMAPI does a strange thing where the reload happens prior to 
+            // Need to reload each animal after save/save load because the game 
+            // and SMAPI does a strange thing where the reload happens prior to 
             // the "Saving" event
             for (int index = 0; index < Game1.locations.Count; ++index)
             {

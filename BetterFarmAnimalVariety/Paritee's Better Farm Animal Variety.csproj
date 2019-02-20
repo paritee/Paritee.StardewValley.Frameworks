@@ -53,9 +53,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\Api\AnimalShop.cs" />
+    <Compile Include="Framework\Api\Event.cs" />
     <Compile Include="Framework\Api\Farmer.cs" />
     <Compile Include="Framework\Api\BellsAndWhistles.cs" />
     <Compile Include="Framework\Api\Game.cs" />
+    <Compile Include="Framework\Api\Location.cs" />
     <Compile Include="Framework\Commands\Command.cs" />
     <Compile Include="Framework\Api\AnimalHouse.cs" />
     <Compile Include="Framework\Api\Content.cs" />

@@ -16,16 +16,14 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
             {
                 AddNewHatchedAnimal.HandleHatchling(ref __instance, name);
             }
-            else if (Api.Game.IsFarmEvent<QuestionEvent>(out QuestionEvent questionEvent))
+            else if (Api.Event.IsFarmEventOccurring<QuestionEvent>(out QuestionEvent questionEvent))
             {
                 AddNewHatchedAnimal.HandleNewborn(ref __instance, name, ref questionEvent);
             }
 
-            ////
-            // Everything below is a rewrite of the original as it exists
-            ////
+            GameLocation currentLocation = Api.Game.GetCurrentLocation();
 
-            Api.Game.NextEventCommand();
+            Api.Event.GoToNextEventCommandInLocation(ref currentLocation);
             Api.Game.ExitActiveMenu();
 
             // Everything in this function was handled here
@@ -80,7 +78,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
             Api.FarmAnimal.AssociateParent(ref animal, questionEvent.animal.myID.Value);
             Api.FarmAnimal.AddToBuilding(ref animal, ref building);
 
-            questionEvent.forceProceed = true;
+            Api.Event.ForceQuestionEventToProceed(ref questionEvent);
         }
     }
 }
