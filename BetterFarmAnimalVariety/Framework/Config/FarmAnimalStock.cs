@@ -35,7 +35,9 @@ namespace BetterFarmAnimalVariety.Framework.Config
             this.Description = farmAnimalStock.Description;
             this.Icon = this.GetDefaultIconPath(farmAnimalStock.ToString());
             this.Price = farmAnimalStock.Price;
-            this.Exclude = farmAnimalStock.ExcludeFromShop.Select(o => o.ToString()).ToArray();
+            this.Exclude = farmAnimalStock.ExcludeFromShop.Any() 
+                ? farmAnimalStock.ExcludeFromShop.Select(o => o.ToString()).ToArray() 
+                : farmAnimalStock.ExcludeFromShop;
         }
 
         public Texture2D GetIconTexture()

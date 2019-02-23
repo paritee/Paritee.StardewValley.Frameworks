@@ -1,15 +1,14 @@
 ﻿using BetterFarmAnimalVariety.Framework.Models;
 using Harmony;
-using StardewValley;
 
-namespace BetterFarmAnimalVariety.Framework.Patches
+namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 {
-    [HarmonyPatch(typeof(FarmAnimal), MethodType.Constructor, new[] { typeof(string), typeof(long), typeof(long) })]
+    [HarmonyPatch(typeof(StardewValley.FarmAnimal), MethodType.Constructor, new[] { typeof(string), typeof(long), typeof(long) })]
     class Constructor : Patch
     {
-        public static void Postfix(ref FarmAnimal __instance, ref string type, ref long id, ref long ownerID) 
+        public static void Postfix(ref StardewValley.FarmAnimal __instance, ref string type, ref long id, ref long ownerID)
         {
-            (new FarmAnimalsSaveData(Constants.Mod.Key)).Read().OverwriteFarmAnimal(ref __instance, type);
+            (new FarmAnimalsSaveData(Constants.Mod.Key)).Read().OverwriteFarmAnimal(__instance, type);
         }
     }
 }

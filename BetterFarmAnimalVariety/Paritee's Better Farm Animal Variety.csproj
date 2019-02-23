@@ -40,8 +40,9 @@
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Paritee.StardewValley.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Paritee.StardewValley.Core.1.0.0\lib\net452\Paritee.StardewValley.Core.dll</HintPath>
+    <Reference Include="Paritee.StardewValley.Core, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Paritee.StardewValley.Core\Paritee.StardewValley.Core\bin\Debug\Paritee.StardewValley.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -65,14 +66,20 @@
     <Compile Include="Framework\Commands\FarmAnimal\Reset.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\SetAnimalShop.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\SetAnimalShopDescription.cs" />
+    <Compile Include="Framework\Commands\FarmAnimal\SetAnimalShopExclude.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\SetAnimalShopIcon.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\SetAnimalShopName.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\SetAnimalShopPrice.cs" />
     <Compile Include="Framework\Commands\FarmAnimal\SetBuildings.cs" />
     <Compile Include="Framework\Config\FarmAnimalStock.cs" />
     <Compile Include="Framework\Config\FarmAnimal.cs" />
+    <Compile Include="Framework\Config\V2\ConfigFarmAnimal.cs" />
+    <Compile Include="Framework\Config\V2\ConfigFarmAnimalAnimalShop.cs" />
+    <Compile Include="Framework\Config\V2\ModConfig.cs" />
     <Compile Include="Framework\Constants\Mod.cs" />
     <Compile Include="Framework\Helpers\Mod.cs" />
+    <Compile Include="Framework\Patches\FarmAnimal\Behaviors.cs" />
+    <Compile Include="Framework\Patches\FarmAnimal\FindTruffle.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\Constructor.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\ReceiveLeftClick.cs" />
     <Compile Include="Framework\Models\FarmAnimalsSaveData.cs" />

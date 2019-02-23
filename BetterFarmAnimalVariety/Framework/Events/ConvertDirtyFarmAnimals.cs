@@ -44,13 +44,13 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         animalIds.Add(id);
 
                         // Only non-vanilla animals need to be migrated, but...
-                        if (PariteeCore.Api.FarmAnimal.IsVanilla(animal.type.Value))
+                        if (PariteeCore.Api.FarmAnimal.IsVanilla(animal))
                         {
                             // ... always log the animal's type in the history 
                             // for convenience
-                            if (!saveData.Exists(animal.myID.Value))
+                            if (!saveData.Exists(PariteeCore.Api.FarmAnimal.GetId(animal)))
                             {
-                                saveData.AddTypeHistory(animal.myID.Value, animal.type.Value, animal.type.Value);
+                                saveData.AddTypeHistory(animal);
                             }
 
                             continue;
@@ -73,11 +73,11 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         // Make sure this animal exists in the save data and 
                         // has the most updated information. Could have been 
                         // created /purchased today and not saved yet.
-                        saveData.AddTypeHistory(animal.myID.Value, animal.type.Value, savedType);
+                        saveData.AddTypeHistory(animal, savedType);
 
                         // Overwrite the animal
                         // animal.reload() will be called in the "Saved" event
-                        PariteeCore.Api.FarmAnimal.UpdateFromData(ref animal, contentDataEntry);
+                        PariteeCore.Api.FarmAnimal.UpdateFromData(animal, contentDataEntry);
                     }
                 }
 
