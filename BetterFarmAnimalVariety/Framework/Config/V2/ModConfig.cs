@@ -15,12 +15,12 @@ namespace BetterFarmAnimalVariety.Framework.Config.V2
 
         public bool IsChickenCategory(string category)
         {
-            return category.Equals(ModConfig.ChickenCategory);
+            return category == ModConfig.ChickenCategory;
         }
 
         public bool AreVoidFarmAnimalsInShopAlways()
         {
-            return this.VoidFarmAnimalsInShop.Equals(ModConfig.VoidFarmAnimalsInShopAlways);
+            return this.VoidFarmAnimalsInShop == ModConfig.VoidFarmAnimalsInShopAlways;
         }
     }
 }

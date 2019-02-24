@@ -12,7 +12,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         /// <exception cref="NotSupportedException"></exception>
         public static void VersionIsSupported(string version, string target)
         {
-            if (version == null || !version.Equals(target))
+            if (!(version == target))
             {
                 throw new NotSupportedException($"Version {version} is not supported.");
             }
