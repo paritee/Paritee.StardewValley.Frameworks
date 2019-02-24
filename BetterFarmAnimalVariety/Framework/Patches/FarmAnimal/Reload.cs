@@ -22,7 +22,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             // use the reload function to handle it
             FarmAnimalsSaveData saveData = Helpers.Mod.ReadSaveData<FarmAnimalsSaveData>(Constants.Mod.FarmAnimalsSaveDataKey);
 
-            saveData.OverwriteFarmAnimal(moddedAnimal, null);
+            saveData.OverwriteFarmAnimal(ref moddedAnimal, null);
 
             return false;
         }

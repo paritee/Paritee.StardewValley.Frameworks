@@ -62,24 +62,14 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         // automatically default the coop/barn dwellers
                         string savedType = saveData.GetSavedTypeOrDefault(moddedAnimal);
 
-                        // Convert it to the proper vanilla animal
-                        KeyValuePair<string, string> contentDataEntry = PariteeCore.Api.Content.LoadDataEntry<string, string>(PariteeCore.Constants.Content.DataFarmAnimalsContentPath, savedType);
-
-                        // Kill everything if for some reason the user removed 
-                        // the default dweller information from the game
-                        if (contentDataEntry.Key == null)
-                        {
-                            throw new KeyNotFoundException($"Could not find {savedType} to overwrite custom farm animal for saving. This is a fatal error. Please make sure you have {savedType} in the game.");
-                        }
+                        // Overwrite the animal
+                        // animal.reload() will be called in the "Saved" event
+                        moddedAnimal.UpdateFromData(savedType);
 
                         // Make sure this animal exists in the save data and 
                         // has the most updated information. Could have been 
                         // created /purchased today and not saved yet.
                         saveData.AddTypeHistory(moddedAnimal, savedType);
-
-                        // Overwrite the animal
-                        // animal.reload() will be called in the "Saved" event
-                        moddedAnimal.UpdateFromData(contentDataEntry);
                     }
                 }
 

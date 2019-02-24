@@ -110,9 +110,11 @@ namespace BetterFarmAnimalVariety
             HarmonyInstance harmony = HarmonyInstance.Create(Framework.Constants.Mod.Key);
 
             // TODO: might want to adjust these after some testing
-            // - FarmInfoPage
-            // - Forest
             // - AnimalHouse.resetSharedState
+            // Forest.Forest: Marnie's cows
+            // Farm.placeAnimal: only affects the "debug bluebook" command (CataloguePage is not used)
+            // Game1.parseDebugInput: only affects "debug animal" and "debug spawnCoopsAndBarns"
+            // FarmInfoPage: not used, but lists out animals by vanilla type
 
             harmony.PatchAll();
         }

@@ -121,14 +121,12 @@ namespace BetterFarmAnimalVariety.Framework.Models
             return this.TypeHistory.FirstOrDefault(kvp => kvp.Key.Equals(myId)).Value;
         }
 
-        public void OverwriteFarmAnimal(Decorators.FarmAnimal moddedAnimal, string requestedType)
+        public void OverwriteFarmAnimal(ref Decorators.FarmAnimal moddedAnimal, string requestedType)
         {
-            // ==========
-            // WARNING:
+            // WARNING!
             // Don't sanitize a farm animal's type by blue/void/brown cow chance
             // etc. or BFAV config existence here. These checks should be done 
             // in the menus, etc.
-            // ==========
 
             if (!moddedAnimal.HasName())
             {
@@ -148,30 +146,8 @@ namespace BetterFarmAnimalVariety.Framework.Models
             // an animal created before being saved (ie. created in current day)
             string currentType = typeHistory == null ? (requestedType ?? moddedAnimal.GetTypeString()) : typeHistory.CurrentType;
 
-            // Grab the new type's data to override if it exists
-            Dictionary<string, string> contentData = PariteeCore.Api.Content.LoadData<string, string>(PariteeCore.Constants.Content.DataFarmAnimalsContentPath);
-            KeyValuePair<string, string> contentDataEntry = PariteeCore.Api.Content.GetDataEntry<string, string>(contentData, currentType);
-
-            // Always validate if the type we're trying to use exists
-            if (contentDataEntry.Key == null)
-            {
-                // Get a default type to use
-                string defaultType = moddedAnimal.GetDefaultType();
-
-                // Set it to the default before we continue
-                contentDataEntry = contentData.FirstOrDefault(kvp => kvp.Key.Equals(defaultType));
-
-                // Do a final check to make sure the default exists; otherwise 
-                // we need to kill everything. This should never happen unless 
-                // agressive mods are being used to REMOVE vanilla animals.
-                if (contentDataEntry.Key == null)
-                {
-                    throw new KeyNotFoundException($"Could not find {defaultType} to overwrite custom farm animal for saving. This is a fatal error. Please make sure you have {defaultType} in the game.");
-                }
-            }
-
             // Set the animal with the new type's data values
-            moddedAnimal.UpdateFromData(contentDataEntry);
+            moddedAnimal.UpdateFromData(currentType);
         }
     }
 }

@@ -87,6 +87,7 @@
     <Compile Include="Framework\Decorators\Incubator.cs" />
     <Compile Include="Framework\Decorators\Location.cs" />
     <Compile Include="Framework\Decorators\PurchaseAnimalsMenu.cs" />
+    <Compile Include="Framework\Models\SaveData.cs" />
     <Compile Include="Framework\Patches\FarmAnimal\Behaviors.cs" />
     <Compile Include="Framework\Patches\FarmAnimal\FindTruffle.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\Constructor.cs" />
@@ -103,7 +104,6 @@
     <Compile Include="ModEntry.cs" />
     <Compile Include="Framework\Patches\AnimalHouse\AddNewHatchedAnimal.cs" />
     <Compile Include="Framework\Patches\Coop\DayUpdate.cs" />
-    <Compile Include="Framework\Patches\FarmAnimal\Constructor.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\GetAnimalTitle.cs" />
     <Compile Include="Framework\Patches\Utility\GetPurchaseAnimalStock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
