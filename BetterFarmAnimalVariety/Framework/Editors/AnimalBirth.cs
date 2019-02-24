@@ -17,9 +17,16 @@ namespace BetterFarmAnimalVariety.Framework.Editors
         /// <param name="asset">Basic metadata about the asset being loaded.</param>
         public bool CanEdit<T>(IAssetInfo asset)
         {
-            // change string events
             if (asset.AssetNameEquals("Strings/Events"))
+            {
                 return true;
+            }
+
+
+            if (asset.AssetNameEquals("Strings/Locations"))
+            {
+                return true;
+            }
 
             return false;
         }
@@ -28,14 +35,24 @@ namespace BetterFarmAnimalVariety.Framework.Editors
         /// <param name="asset">A helper which encapsulates metadata about an asset and enables changes to it.</param>
         public void Edit<T>(IAssetData asset)
         {
-            // change string events
             if (asset.AssetNameEquals("Strings/Events"))
             {
-                IDictionary<string, string> Events = asset.AsDictionary<string, string>().Data;
+                IDictionary<string, string> strings = asset.AsDictionary<string, string>().Data;
 
                 // Remove the short parent type to allow for potential to expand outside the parent's type
-                Events["AnimalBirth"] = this.Mod.Helper.Translation.Get("Strings.Events.AnimalBirth");
-                Events["AnimalNamingTitle"] = PariteeCore.Api.Content.LoadString("Strings\\StringsFromCSFiles:PurchaseAnimalsMenu.cs.11357");
+                strings["AnimalBirth"] = this.Mod.Helper.Translation.Get("Strings.Events.AnimalBirth");
+                strings["AnimalNamingTitle"] = PariteeCore.Api.Content.LoadString("Strings\\StringsFromCSFiles:PurchaseAnimalsMenu.cs.11357");
+            }
+
+            if (asset.AssetNameEquals("Strings/Locations"))
+            {
+                IDictionary<string, string> strings = asset.AsDictionary<string, string>().Data;
+
+                // Set all of the hatching strings to be the same and type-agnostic
+                strings["AnimalHouse_Incubator_Hatch_RegularEgg"] = this.Mod.Helper.Translation.Get("Strings.Locations.AnimalHouse_Incubator_Hatch");
+                strings["AnimalHouse_Incubator_Hatch_VoidEgg"] = this.Mod.Helper.Translation.Get("Strings.Locations.AnimalHouse_Incubator_Hatch");
+                strings["AnimalHouse_Incubator_Hatch_DuckEgg"] = this.Mod.Helper.Translation.Get("Strings.Locations.AnimalHouse_Incubator_Hatch");
+                strings["AnimalHouse_Incubator_Hatch_DinosaurEgg"] = this.Mod.Helper.Translation.Get("Strings.Locations.AnimalHouse_Incubator_Hatch");
             }
         }
     }
