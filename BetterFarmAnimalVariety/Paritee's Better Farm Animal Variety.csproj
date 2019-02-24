@@ -77,7 +77,16 @@
     <Compile Include="Framework\Config\V2\ConfigFarmAnimalAnimalShop.cs" />
     <Compile Include="Framework\Config\V2\ModConfig.cs" />
     <Compile Include="Framework\Constants\Mod.cs" />
+    <Compile Include="Framework\Decorators\Decorator.cs" />
     <Compile Include="Framework\Helpers\Mod.cs" />
+    <Compile Include="Framework\Decorators\AnimalHouse.cs" />
+    <Compile Include="Framework\Decorators\Building.cs" />
+    <Compile Include="Framework\Decorators\Coop.cs" />
+    <Compile Include="Framework\Decorators\FarmAnimal.cs" />
+    <Compile Include="Framework\Decorators\Farmer.cs" />
+    <Compile Include="Framework\Decorators\Incubator.cs" />
+    <Compile Include="Framework\Decorators\Location.cs" />
+    <Compile Include="Framework\Decorators\PurchaseAnimalsMenu.cs" />
     <Compile Include="Framework\Patches\FarmAnimal\Behaviors.cs" />
     <Compile Include="Framework\Patches\FarmAnimal\FindTruffle.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\Constructor.cs" />

@@ -11,7 +11,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
     {
         public static void OnSaving(SavingEventArgs e)
         {
-            FarmAnimalsSaveData saveData = (new FarmAnimalsSaveData(Constants.Mod.Key)).Read();
+            FarmAnimalsSaveData saveData = Helpers.Mod.ReadSaveData<FarmAnimalsSaveData>(Constants.Mod.FarmAnimalsSaveDataKey);
 
             // Track the animal ID because we're going to remove 
             // animals that no longer exist from the save data 
@@ -39,18 +39,20 @@ namespace BetterFarmAnimalVariety.Framework.Events
                     for (int k = 0; k < animalHouse.animalsThatLiveHere.Count(); ++k)
                     {
                         long id = animalHouse.animalsThatLiveHere.ElementAt(k);
-                        FarmAnimal animal = animalHouse.animals[id];
+
+
+                        Decorators.FarmAnimal moddedAnimal = new Decorators.FarmAnimal(animalHouse.animals[id]);
 
                         animalIds.Add(id);
 
                         // Only non-vanilla animals need to be migrated, but...
-                        if (PariteeCore.Api.FarmAnimal.IsVanilla(animal))
+                        if (moddedAnimal.IsVanilla())
                         {
                             // ... always log the animal's type in the history 
                             // for convenience
-                            if (!saveData.Exists(PariteeCore.Api.FarmAnimal.GetId(animal)))
+                            if (!saveData.Exists(moddedAnimal.GetUniqueId()))
                             {
-                                saveData.AddTypeHistory(animal);
+                                saveData.AddTypeHistory(moddedAnimal);
                             }
 
                             continue;
@@ -58,7 +60,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
                         // Return the type that is logged for saves or 
                         // automatically default the coop/barn dwellers
-                        string savedType = saveData.GetSavedTypeOrDefault(animal);
+                        string savedType = saveData.GetSavedTypeOrDefault(moddedAnimal);
 
                         // Convert it to the proper vanilla animal
                         KeyValuePair<string, string> contentDataEntry = PariteeCore.Api.Content.LoadDataEntry<string, string>(PariteeCore.Constants.Content.DataFarmAnimalsContentPath, savedType);
@@ -73,11 +75,11 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         // Make sure this animal exists in the save data and 
                         // has the most updated information. Could have been 
                         // created /purchased today and not saved yet.
-                        saveData.AddTypeHistory(animal, savedType);
+                        saveData.AddTypeHistory(moddedAnimal, savedType);
 
                         // Overwrite the animal
                         // animal.reload() will be called in the "Saved" event
-                        PariteeCore.Api.FarmAnimal.UpdateFromData(animal, contentDataEntry);
+                        moddedAnimal.UpdateFromData(contentDataEntry);
                     }
                 }
 

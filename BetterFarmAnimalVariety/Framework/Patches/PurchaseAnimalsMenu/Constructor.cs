@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
 {
@@ -11,9 +10,10 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
     {
         public static void Postfix(ref StardewValley.Menus.PurchaseAnimalsMenu __instance, ref List<StardewValley.Object> stock)
         {
+            Decorators.PurchaseAnimalsMenu moddedMenu = new Decorators.PurchaseAnimalsMenu(__instance);
+
             // Load the config
             ModConfig config = Helpers.Mod.ReadConfig<ModConfig>();
-            List<StardewValley.Object> configStock = config.GetPurchaseAnimalStock(PariteeCore.Api.Game.GetFarm());
 
             // Grab the icons from the config by category
             Dictionary<string, Texture2D> icons = config.FarmAnimals
@@ -21,17 +21,17 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
                 .ToDictionary(o => o.Category, o => o.AnimalShop.GetIconTexture());
 
             // We need to completely redo the animalsToPurchase to account for the custom sprites
-            PariteeCore.Api.PurchaseAnimalsMenu.SetUpAnimalsToPurchase(__instance, stock, icons, out int iconHeight);
+            moddedMenu.SetUpAnimalsToPurchase(stock, icons, out int iconHeight);
 
-            Constructor.AdjustMenuHeight(ref __instance, iconHeight);
+            Constructor.AdjustMenuHeight(ref moddedMenu, iconHeight);
         }
 
-        private static void AdjustMenuHeight(ref StardewValley.Menus.PurchaseAnimalsMenu __instance, int iconHeight)
+        private static void AdjustMenuHeight(ref Decorators.PurchaseAnimalsMenu moddedMenu, int iconHeight)
         {
             // Adjust the size of the menu if there are more or less rows than it normally handles
             if (iconHeight > 0)
             {
-                PariteeCore.Api.PurchaseAnimalsMenu.AdjustHeightBasedOnIcons(__instance, iconHeight);
+                moddedMenu.AdjustHeightBasedOnIcons(iconHeight);
             }
         }
     }

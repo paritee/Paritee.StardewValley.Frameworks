@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Paritee.StardewValley.Core.Models;
 using StardewValley;
 using PariteeCore = Paritee.StardewValley.Core;
 
@@ -10,21 +9,16 @@ namespace BetterFarmAnimalVariety.Framework.Models
     {
         public Dictionary<long, TypeLog> TypeHistory = new Dictionary<long, TypeLog>();
 
-        public FarmAnimalsSaveData(string uniqueModId) : base (uniqueModId, Constants.Mod.FarmAnimalsSaveDataKey) { }
+        public FarmAnimalsSaveData() { }
 
         public Dictionary<long, TypeLog> GetTypeHistory()
         {
             return this.TypeHistory;
         }
 
-        public FarmAnimalsSaveData Read()
-        {
-            return base.Read<FarmAnimalsSaveData>() ?? this;
-        }
-
         private void Write()
         {
-            base.Write(this);
+            base.Write<FarmAnimalsSaveData>(Constants.Mod.FarmAnimalsSaveDataKey, this);
         }
 
         public void AddTypeHistory(Dictionary<long, TypeLog> history)
@@ -46,12 +40,26 @@ namespace BetterFarmAnimalVariety.Framework.Models
 
         public void AddTypeHistory(StardewValley.FarmAnimal animal)
         {
-            this.AddTypeHistory(animal, PariteeCore.Api.FarmAnimal.GetType(animal));
+            Decorators.FarmAnimal moddedAnimal = new Decorators.FarmAnimal(animal);
+
+            this.AddTypeHistory(moddedAnimal);
+        }
+
+        public void AddTypeHistory(Decorators.FarmAnimal moddedAnimal)
+        {
+            this.AddTypeHistory(moddedAnimal, moddedAnimal.GetTypeString());
         }
 
         public void AddTypeHistory(StardewValley.FarmAnimal animal, string originalType)
         {
-            this.AddTypeHistory(PariteeCore.Api.FarmAnimal.GetId(animal), PariteeCore.Api.FarmAnimal.GetType(animal), originalType);
+            Decorators.FarmAnimal moddedAnimal = new Decorators.FarmAnimal(animal);
+
+            this.AddTypeHistory(moddedAnimal, originalType);
+        }
+
+        public void AddTypeHistory(Decorators.FarmAnimal moddedAnimal, string originalType)
+        {
+            this.AddTypeHistory(moddedAnimal.GetUniqueId(), moddedAnimal.GetTypeString(), originalType);
         }
 
         public void AddTypeHistory(long animalId, string currentType, string originalType)
@@ -92,11 +100,20 @@ namespace BetterFarmAnimalVariety.Framework.Models
 
         public string GetSavedTypeOrDefault(FarmAnimal animal)
         {
-            long myId = PariteeCore.Api.FarmAnimal.GetId(animal);
+            Decorators.FarmAnimal moddedAnimal = new Decorators.FarmAnimal(animal);
+            return this.GetSavedTypeOrDefault(moddedAnimal);
+        }
 
-            return this.Exists(myId)
-                ? this.TypeHistory[myId].SavedType
-                : PariteeCore.Api.FarmAnimal.GetDefaultType(animal);
+        public string GetSavedTypeOrDefault(Decorators.FarmAnimal moddedAnimal)
+        {
+            return this.GetSavedTypeOrDefault(moddedAnimal.GetUniqueId(), moddedAnimal.IsCoopDweller());
+        }
+
+        public string GetSavedTypeOrDefault(long animalId, bool isCoop)
+        {
+            return this.Exists(animalId)
+                ? this.TypeHistory[animalId].SavedType
+                : PariteeCore.Api.FarmAnimal.GetDefaultType(isCoop);
         }
 
         public TypeLog GetTypeHistory(long myId)
@@ -104,7 +121,7 @@ namespace BetterFarmAnimalVariety.Framework.Models
             return this.TypeHistory.FirstOrDefault(kvp => kvp.Key.Equals(myId)).Value;
         }
 
-        public void OverwriteFarmAnimal(FarmAnimal animal, string requestedType)
+        public void OverwriteFarmAnimal(Decorators.FarmAnimal moddedAnimal, string requestedType)
         {
             // ==========
             // WARNING:
@@ -113,7 +130,7 @@ namespace BetterFarmAnimalVariety.Framework.Models
             // in the menus, etc.
             // ==========
 
-            if (!PariteeCore.Api.FarmAnimal.HasName(animal))
+            if (!moddedAnimal.HasName())
             {
                 return;
             }
@@ -125,11 +142,11 @@ namespace BetterFarmAnimalVariety.Framework.Models
 
             // Check the save entry for reloaded animals that may have their 
             // vanilla replacements saved which can't be used
-            TypeLog typeHistory = this.GetTypeHistory(PariteeCore.Api.FarmAnimal.GetId(animal));
+            TypeLog typeHistory = this.GetTypeHistory(moddedAnimal.GetUniqueId());
 
             // If there's a save data entry, use that; otherwise this might be 
             // an animal created before being saved (ie. created in current day)
-            string currentType = typeHistory == null ? (requestedType ?? PariteeCore.Api.FarmAnimal.GetType(animal)) : typeHistory.CurrentType;
+            string currentType = typeHistory == null ? (requestedType ?? moddedAnimal.GetTypeString()) : typeHistory.CurrentType;
 
             // Grab the new type's data to override if it exists
             Dictionary<string, string> contentData = PariteeCore.Api.Content.LoadData<string, string>(PariteeCore.Constants.Content.DataFarmAnimalsContentPath);
@@ -139,7 +156,7 @@ namespace BetterFarmAnimalVariety.Framework.Models
             if (contentDataEntry.Key == null)
             {
                 // Get a default type to use
-                string defaultType = PariteeCore.Api.FarmAnimal.GetDefaultType(animal);
+                string defaultType = moddedAnimal.GetDefaultType();
 
                 // Set it to the default before we continue
                 contentDataEntry = contentData.FirstOrDefault(kvp => kvp.Key.Equals(defaultType));
@@ -154,7 +171,7 @@ namespace BetterFarmAnimalVariety.Framework.Models
             }
 
             // Set the animal with the new type's data values
-            PariteeCore.Api.FarmAnimal.UpdateFromData(animal, contentDataEntry);
+            moddedAnimal.UpdateFromData(contentDataEntry);
         }
     }
 }

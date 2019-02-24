@@ -13,6 +13,16 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             return PariteeCore.Api.Mod.SmapiSaveDataKey(Constants.Mod.Key, key);
         }
 
+        public static T ReadSaveData<T>(string saveDataKey) where T: new()
+        {
+            return PariteeCore.Api.Mod.ReadSaveData<T>(Constants.Mod.Key, saveDataKey);
+        }
+
+        public static void WriteSaveData<T>(string saveDataKey, T data)
+        {
+            PariteeCore.Api.Mod.WriteSaveData<T>(Constants.Mod.Key, saveDataKey, data);
+        }
+
         public static T ReadConfig<T>()
         {
             return PariteeCore.Api.Mod.ReadConfig<T>(PariteeCore.Constants.Mod.Path, Constants.Mod.ConfigFileName);

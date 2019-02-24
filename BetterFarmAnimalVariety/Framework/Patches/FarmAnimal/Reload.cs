@@ -1,7 +1,6 @@
 ﻿using BetterFarmAnimalVariety.Framework.Models;
 using Harmony;
 using StardewValley.Buildings;
-using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 {
@@ -10,16 +9,20 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
     {
         public static bool Prefix(ref StardewValley.FarmAnimal __instance, ref Building home)
         {
-            if (!PariteeCore.Api.FarmAnimal.HasName(__instance))
+            Decorators.FarmAnimal moddedAnimal = new Decorators.FarmAnimal(__instance);
+
+            if (!moddedAnimal.HasName())
             {
                 return true;
             }
 
-            PariteeCore.Api.FarmAnimal.SetHome(__instance, home);
+            moddedAnimal.SetHome(home);
 
             // Can't get the FarmAnimal empty constructor in a patch so need to 
             // use the reload function to handle it
-            (new FarmAnimalsSaveData(Constants.Mod.Key)).Read().OverwriteFarmAnimal(__instance, null);
+            FarmAnimalsSaveData saveData = Helpers.Mod.ReadSaveData<FarmAnimalsSaveData>(Constants.Mod.FarmAnimalsSaveDataKey);
+
+            saveData.OverwriteFarmAnimal(moddedAnimal, null);
 
             return false;
         }

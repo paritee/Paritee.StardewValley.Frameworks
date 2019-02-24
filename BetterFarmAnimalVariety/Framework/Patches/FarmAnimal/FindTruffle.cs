@@ -10,35 +10,37 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
     {
         public static bool Prefix(ref StardewValley.FarmAnimal __instance, ref Farmer who)
         {
-            FindTruffle.AttemptToSpawnProduce(ref __instance, who);
+            Decorators.FarmAnimal moddedAnimal = new Decorators.FarmAnimal(__instance);
 
-            if (FindTruffle.ShouldStopFindingProduce(ref __instance))
+            FindTruffle.AttemptToSpawnProduce(ref moddedAnimal, who);
+
+            if (FindTruffle.ShouldStopFindingProduce(ref moddedAnimal))
             {
-                PariteeCore.Api.FarmAnimal.SetCurrentProduce(__instance, PariteeCore.Constants.FarmAnimal.NoProduce);
+                moddedAnimal.SetCurrentProduce(PariteeCore.Constants.FarmAnimal.NoProduce);
             }
 
             return false;
         }
 
-        private static bool ShouldStopFindingProduce(ref StardewValley.FarmAnimal __instance)
+        private static bool ShouldStopFindingProduce(ref Decorators.FarmAnimal moddedAnimal)
         {
-            int seed = (int)(PariteeCore.Api.FarmAnimal.GetId(__instance) / 2 + PariteeCore.Api.Game.GetDaysPlayed() + PariteeCore.Api.Game.GetTimeOfDay());
+            int seed = (int)(moddedAnimal.GetUniqueId() / 2 + PariteeCore.Api.Game.GetDaysPlayed() + PariteeCore.Api.Game.GetTimeOfDay());
 
-            return PariteeCore.Helpers.Random.Seed(seed).NextDouble() > PariteeCore.Api.FarmAnimal.GetFriendship(__instance) / 1500.0;
+            return PariteeCore.Helpers.Random.Seed(seed).NextDouble() > moddedAnimal.GetFriendship() / 1500.0;
         }
 
-        private static bool AttemptToSpawnProduce(ref StardewValley.FarmAnimal __instance, Farmer who)
+        private static bool AttemptToSpawnProduce(ref Decorators.FarmAnimal moddedAnimal, Farmer who)
         {
-            Vector2 tileLocation = StardewValley.Utility.getTranslatedVector2(PariteeCore.Api.FarmAnimal.GetTileLocation(__instance), PariteeCore.Api.FarmAnimal.GetFacingDirection(__instance), 1f);
+            Vector2 tileLocation = StardewValley.Utility.getTranslatedVector2(moddedAnimal.GetTileLocation(), moddedAnimal.GetFacingDirection(), 1f);
             int quantity = 1;
-            int produceIndex = PariteeCore.Api.FarmAnimal.RollProduce(__instance, who);
+            int produceIndex = moddedAnimal.RollProduce(who);
 
             if (PariteeCore.Api.FarmAnimal.IsProduceAnItem(produceIndex))
             {
                 return false;
             }
 
-            StardewValley.Object obj = new StardewValley.Object(PariteeCore.Api.FarmAnimal.GetTileLocation(__instance), produceIndex, quantity);
+            StardewValley.Object obj = new StardewValley.Object(moddedAnimal.GetTileLocation(), produceIndex, quantity);
 
             PariteeCore.Api.Location.SpawnObject(PariteeCore.Api.Game.GetFarm(), tileLocation, obj);
 

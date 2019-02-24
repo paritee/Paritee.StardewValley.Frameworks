@@ -1,5 +1,6 @@
 ﻿using BetterFarmAnimalVariety.Framework.Models;
 using Harmony;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 {
@@ -8,7 +9,10 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
     {
         public static void Postfix(ref StardewValley.FarmAnimal __instance, ref string type, ref long id, ref long ownerID)
         {
-            (new FarmAnimalsSaveData(Constants.Mod.Key)).Read().OverwriteFarmAnimal(__instance, type);
+            FarmAnimalsSaveData saveData = Helpers.Mod.ReadSaveData<FarmAnimalsSaveData>(Constants.Mod.FarmAnimalsSaveDataKey);
+            Decorators.FarmAnimal moddedAnimal = new Decorators.FarmAnimal(__instance);
+
+            saveData.OverwriteFarmAnimal(moddedAnimal, type);
         }
     }
 }

@@ -13,15 +13,16 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
     {
         public static bool Prefix(ref StardewValley.AnimalHouse __instance, ref string name)
         {
-            StardewValley.Farmer player = PariteeCore.Api.Game.GetPlayer();
+            Decorators.AnimalHouse moddedAnimalHouse = new Decorators.AnimalHouse(__instance);
+            Decorators.Farmer moddedPlayer = new Decorators.Farmer(PariteeCore.Api.Game.GetPlayer());
 
-            if (PariteeCore.Api.AnimalHouse.GetBuilding(__instance) is StardewValley.Buildings.Coop coop)
+            if (moddedAnimalHouse.GetBuilding() is StardewValley.Buildings.Coop coop)
             {
-                AddNewHatchedAnimal.HandleHatchling(ref __instance, name, player);
+                AddNewHatchedAnimal.HandleHatchling(ref moddedAnimalHouse, name, moddedPlayer);
             }
             else if (PariteeCore.Api.Event.IsFarmEventOccurring<QuestionEvent>(out QuestionEvent questionEvent))
             {
-                AddNewHatchedAnimal.HandleNewborn(ref __instance, name, ref questionEvent, player);
+                AddNewHatchedAnimal.HandleNewborn(ref moddedAnimalHouse, name, ref questionEvent, moddedPlayer);
             }
 
             GameLocation currentLocation = PariteeCore.Api.Game.GetCurrentLocation();
@@ -33,9 +34,9 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
             return false;
         }
 
-        private static void HandleHatchling(ref StardewValley.AnimalHouse __instance, string name, StardewValley.Farmer player)
+        private static void HandleHatchling(ref Decorators.AnimalHouse moddedAnimalHouse, string name, Decorators.Farmer moddedPlayer)
         {
-            StardewValley.Object incubator = PariteeCore.Api.AnimalHouse.GetIncubator(__instance);
+            StardewValley.Object incubator = moddedAnimalHouse.GetIncubator();
 
             if (incubator == null)
             {
@@ -43,36 +44,42 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
                 return;
             }
 
+            Decorators.Incubator moddedIncubator = new Decorators.Incubator(incubator);
+
             // Grab the types with their associated categories in string form
             Dictionary<string, List<string>> restrictions = Helpers.Mod.ReadConfig<ModConfig>().GroupTypesByCategory()
-                .ToDictionary(kvp => kvp.Key, kvp => PariteeCore.Api.FarmAnimal.SanitizeBlueChickens(kvp.Value, player));
+                .ToDictionary(kvp => kvp.Key, kvp => moddedPlayer.SanitizeBlueChickens(kvp.Value));
 
             // Return a matched type or user default coop dweller
-            string type = PariteeCore.Api.AnimalHouse.GetRandomTypeFromIncubator(incubator, restrictions);
+            string type = moddedIncubator.GetRandomType(restrictions);
 
-            Building building = PariteeCore.Api.AnimalHouse.GetBuilding(__instance);
-            StardewValley.FarmAnimal animal = PariteeCore.Api.Farmer.CreateFarmAnimal(player, type, name, building);
+            Building building = moddedAnimalHouse.GetBuilding();
+            StardewValley.FarmAnimal animal = moddedPlayer.CreateFarmAnimal(type, name, building);
+            Decorators.FarmAnimal moddedAnimal = new Decorators.FarmAnimal(animal);
 
-            PariteeCore.Api.FarmAnimal.AddToBuilding(animal, building);
-            PariteeCore.Api.AnimalHouse.ResetIncubator( __instance, incubator);
+            moddedAnimal.AddToBuilding(building);
+            moddedAnimalHouse.ResetIncubator(incubator);
         }
 
-        private static void HandleNewborn(ref StardewValley.AnimalHouse animalHouse, string name, ref QuestionEvent questionEvent, StardewValley.Farmer player)
+        private static void HandleNewborn(ref Decorators.AnimalHouse moddedAnimalHouse, string name, ref QuestionEvent questionEvent, Decorators.Farmer moddedPlayer)
         {
             // Check the config
             ModConfig config = Helpers.Mod.ReadConfig<ModConfig>();
 
             // Grab the types with their associated categories in string form
             Dictionary<string, List<string>> restrictions = Helpers.Mod.ReadConfig<ModConfig>().GroupTypesByCategory()
-                .ToDictionary(kvp => kvp.Key, kvp => PariteeCore.Api.FarmAnimal.SanitizeBlueChickens(kvp.Value, player));
+                .ToDictionary(kvp => kvp.Key, kvp => moddedPlayer.SanitizeBlueChickens(kvp.Value));
+
+            Decorators.FarmAnimal moddedParent = new Decorators.FarmAnimal(questionEvent.animal);
 
             // Return a matched type or user default barn dweller
-            string type = PariteeCore.Api.FarmAnimal.GetRandomTypeFromProduce(questionEvent.animal, restrictions);
-            Building building = animalHouse.getBuilding();
-            StardewValley.FarmAnimal animal = PariteeCore.Api.Farmer.CreateFarmAnimal(player, type, name, building);
+            string type = moddedParent.GetRandomTypeFromProduce(restrictions);
+            Building building = moddedAnimalHouse.GetBuilding();
+            StardewValley.FarmAnimal animal = moddedPlayer.CreateFarmAnimal(type, name, building);
+            Decorators.FarmAnimal moddedAnimal = new Decorators.FarmAnimal(animal);
 
-            PariteeCore.Api.FarmAnimal.AssociateParent(animal, questionEvent.animal);
-            PariteeCore.Api.FarmAnimal.AddToBuilding(animal, building);
+            moddedAnimal.AssociateParent(questionEvent.animal);
+            moddedAnimal.AddToBuilding(building);
 
             PariteeCore.Api.Event.ForceQuestionEventToProceed(questionEvent);
         }
