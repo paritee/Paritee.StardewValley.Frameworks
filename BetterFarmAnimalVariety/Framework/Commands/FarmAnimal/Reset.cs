@@ -15,7 +15,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
         {
             try
             {
-                this.AssertGameNotLoaded();
+                Helpers.Assert.GameNotLoaded();
 
                 ModConfig config = new ModConfig();
 

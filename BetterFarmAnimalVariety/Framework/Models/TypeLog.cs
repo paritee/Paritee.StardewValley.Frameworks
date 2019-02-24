@@ -1,4 +1,5 @@
-﻿using PariteeCore = Paritee.StardewValley.Core;
+﻿using System.Collections.Generic;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Models
 {
@@ -21,6 +22,11 @@ namespace BetterFarmAnimalVariety.Framework.Models
         public bool IsVanilla()
         {
             return PariteeCore.Api.FarmAnimal.IsVanilla(this.CurrentType);
+        }
+
+        public KeyValuePair<string, string> ConvertToKeyValuePair()
+        {
+            return new KeyValuePair<string, string>(this.CurrentType, this.SavedType);
         }
     }
 }

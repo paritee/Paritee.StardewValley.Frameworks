@@ -68,9 +68,9 @@ namespace BetterFarmAnimalVariety
                 {
                     config.Format = targetFormat;
                 }
-                else if (!config.IsValidFormat(targetFormat))
+                else
                 {
-                    throw new FormatException();
+                    config.AssertValidFormat(targetFormat);
                 }
             }
             catch (Exception)

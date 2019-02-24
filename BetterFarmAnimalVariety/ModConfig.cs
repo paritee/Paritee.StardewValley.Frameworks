@@ -57,9 +57,9 @@ namespace BetterFarmAnimalVariety
             this.FarmAnimals.RemoveAll(o => o.Category.Equals(category));
         }
 
-        public bool IsValidFormat(string targetFormat)
+        public void AssertValidFormat(string targetFormat)
         {
-            return this.Format != null && this.Format.Equals(targetFormat);
+            Framework.Helpers.Assert.VersionIsSupported(this.Format, targetFormat);
         }
 
         public void SeedVanillaFarmAnimals()
@@ -74,6 +74,11 @@ namespace BetterFarmAnimalVariety
             return this.FarmAnimals.Where(o => o.CanBePurchased())
                 .Select(o => o.ToAnimalAvailableForPurchase(farm))
                 .ToList();
+        }
+
+        public bool CanBePurchased(string category)
+        {
+            return this.FarmAnimals.Exists(o => o.Category.Equals(category) && o.CanBePurchased());
         }
     }
 }

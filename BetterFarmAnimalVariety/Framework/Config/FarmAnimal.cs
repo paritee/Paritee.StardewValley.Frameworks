@@ -25,7 +25,7 @@ namespace BetterFarmAnimalVariety.Framework.Config
             // Do nothing; this is for loading an existing config
         }
 
-        public FarmAnimal(Paritee.StardewValley.Core.Models.FarmAnimalCategory farmAnimalStock)
+        public FarmAnimal(PariteeCore.Models.FarmAnimalCategory farmAnimalStock)
         {
             this.Category = farmAnimalStock.ToString();
             this.Types = farmAnimalStock.Types.Select(o => o.ToString()).ToArray();

@@ -16,15 +16,15 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
         {
             try
             {
-                this.AssertGameNotLoaded();
-                this.AssertRequiredArgumentOrder(args.Length, 1, "category");
+                Helpers.Assert.GameNotLoaded();
+                Helpers.Assert.RequiredArgumentOrder(args.Length, 1, "category");
 
                 string category = args[0].Trim();
 
-                this.AssertFarmAnimalCategoryExists(category);
-                this.AssertFarmAnimalCanBePurchased(category);
-                this.AssertRequiredArgumentOrder(args.Length, 2, "icon");
-                this.AssertValidIcon(args[1]);
+                Helpers.Assert.FarmAnimalCategoryExists(category);
+                Helpers.Assert.FarmAnimalCanBePurchased(category);
+                Helpers.Assert.RequiredArgumentOrder(args.Length, 2, "icon");
+                Helpers.Assert.ValidAnimalShopIcon(args[1]);
 
                 Framework.Config.FarmAnimal animal = this.Config.GetCategory(category);
 

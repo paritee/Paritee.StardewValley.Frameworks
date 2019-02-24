@@ -17,18 +17,18 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
         {
             try
             {
-                this.AssertGameNotLoaded();
-                this.AssertNoSpaces(args.Length, 1);
-                this.AssertRequiredArgumentOrder(args.Length, 1, "category");
+                Helpers.Assert.GameNotLoaded();
+                Helpers.Assert.ArgumentInRange(args.Length, 1);
+                Helpers.Assert.RequiredArgumentOrder(args.Length, 1, "category");
 
                 string category = args[0].Trim();
 
-                this.AssertUniqueFarmAnimalCategory(category);
-                this.AssertRequiredArgumentOrder(args.Length, 2, "type");
+                Helpers.Assert.UniqueFarmAnimalCategory(category);
+                Helpers.Assert.RequiredArgumentOrder(args.Length, 2, "type");
 
                 List<string> types = args[1].Split(',').Select(i => i.Trim()).ToList();
-                
-                this.AssertFarmAnimalTypesExist(types);
+
+                Helpers.Assert.FarmAnimalTypesExist(types);
 
                 string building = args.Length < 3 ? PariteeCore.Constants.AnimalHouse.Barn : args[2].Trim();
                 List<string> buildings = new List<string>();
@@ -51,12 +51,12 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
                 {
                     buildings = building.Split(',').Select(i => i.Trim()).ToList();
                     
-                    this.AssertBuildingsExist(buildings);
+                    Helpers.Assert.BuildingsExist(buildings);
                 }
 
                 string animalShop = (args.Length < 4 ? Command.False : args[3].Trim()).ToLower();
 
-                this.AssertValidBoolean(animalShop, "animalShop", out bool result);
+                Helpers.Assert.ValidBoolean(animalShop, "animalShop", out bool result);
 
                 Framework.Config.FarmAnimalStock farmAnimalStock = result
                     ? Framework.Config.FarmAnimalStock.CreateWithPlaceholders(category)
@@ -83,14 +83,6 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
                 this.Monitor.Log(e.Message, LogLevel.Error);
 
                 return;
-            }
-        }
-
-        private void AssertUniqueFarmAnimalCategory(string category)
-        {
-            if (this.Config.CategoryExists(category))
-            {
-                throw new Exception($"{category} already exists in config.json");
             }
         }
     }

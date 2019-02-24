@@ -99,35 +99,17 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
         private static void AssertValidLocation(Decorators.Location moddedLocation)
         {
-            if (!moddedLocation.IsOutdoors())
-            {
-                throw new Exception();
-            }
-
-            if (PariteeCore.Api.Weather.IsRaining())
-            {
-                throw new Exception();
-            }
-
-            if (PariteeCore.Api.Season.IsWinter())
-            {
-                throw new Exception();
-            }
+            Helpers.Assert.Outdoors(moddedLocation);
+            Helpers.Assert.NotRaining();
+            Helpers.Assert.NotWinter();
         }
 
         private static void AssertCanFindProduce(Decorators.FarmAnimal moddedAnimal, Decorators.Farmer moddedPlayer)
         {
             int produceIndex = moddedAnimal.RollProduce(moddedPlayer.GetOriginal());
 
-            if (PariteeCore.Api.FarmAnimal.IsProduceAnItem(produceIndex))
-            {
-                throw new Exception();
-            }
-
-            if (!moddedAnimal.CanFindProduce())
-            {
-                throw new Exception();
-            }
+            Helpers.Assert.ProduceIsAnItem(produceIndex);
+            Helpers.Assert.CanFindProduce(moddedAnimal);
         }
 
         private static void AssertRollChance()

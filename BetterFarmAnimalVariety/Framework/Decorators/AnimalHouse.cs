@@ -43,7 +43,7 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
 
         public void SetIncubatorHatchEvent()
         {
-            Paritee.StardewValley.Core.Api.AnimalHouse.SetIncubatorHatchEvent(this.GetOriginal());
+            PariteeCore.Api.AnimalHouse.SetIncubatorHatchEvent(this.GetOriginal());
         }
     }
 }

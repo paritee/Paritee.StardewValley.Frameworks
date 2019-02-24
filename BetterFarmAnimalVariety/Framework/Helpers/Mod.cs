@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,24 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         public static T ReadConfig<T>()
         {
             return PariteeCore.Api.Mod.ReadConfig<T>(PariteeCore.Constants.Mod.Path, Constants.Mod.ConfigFileName);
+        }
+
+        public static Texture2D LoadTexture(string filePath)
+        {
+            return PariteeCore.Api.Mod.LoadTexture(Path.Combine(PariteeCore.Constants.Mod.Path, filePath));
+        }
+
+        public static string GetShortAssetPath(string filePath)
+        {
+            return Path.Combine(Constants.Mod.AssetsDirectory, filePath);
+        }
+
+        public static bool TryGetFullAssetPath(string filePath, out string path)
+        {
+            string assetPathToFile = Helpers.Mod.GetShortAssetPath(filePath);
+            path = Path.Combine(PariteeCore.Constants.Mod.Path, assetPathToFile);
+
+            return !File.Exists(path);
         }
 
         public static bool MigrateDeprecatedConfigToCurrentFormat<T>(T deprecatedConfig, string targetFormat, out ModConfig config)

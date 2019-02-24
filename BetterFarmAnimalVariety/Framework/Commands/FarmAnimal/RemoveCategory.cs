@@ -15,16 +15,13 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
         {
             try
             {
-                this.AssertGameNotLoaded();
-                this.AssertNoSpaces(args.Length, 1);
-                this.AssertRequiredArgumentOrder(args.Length, 1, "category");
+                Helpers.Assert.GameNotLoaded();
+                Helpers.Assert.ArgumentInRange(args.Length, 1);
+                Helpers.Assert.RequiredArgumentOrder(args.Length, 1, "category");
 
                 string category = args[0];
 
-                if (!this.Config.CategoryExists(category))
-                {
-                    throw new Exception($"{category} is not a category in config.json");
-                }
+                Helpers.Assert.FarmAnimalCategoryExists(category);
 
                 this.Config.RemoveCategory(category);
 

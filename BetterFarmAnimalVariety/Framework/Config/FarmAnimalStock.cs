@@ -42,17 +42,17 @@ namespace BetterFarmAnimalVariety.Framework.Config
 
         public Texture2D GetIconTexture()
         {
-            return PariteeCore.Api.Mod.LoadTexture(Path.Combine(PariteeCore.Constants.Mod.Path, this.Icon));
+            return Helpers.Mod.LoadTexture(this.Icon);
         }
 
         public string GetDefaultIconPath(string category)
         {
-            return this.FormatIconPath($"{category.Replace(" ", "")}.png");
+            return this.FormatIconPath($"{category.Replace(" ", "")}{Constants.Mod.AnimalShopIconExtension}");
         }
 
         private string FormatIconPath(string fileName)
         {
-            return Path.Combine(Constants.Mod.AssetsDirectory, "AnimalShop", fileName);
+            return Helpers.Mod.GetShortAssetPath(Path.Combine(Constants.Mod.AnimalShopIconDirectory, fileName));
         }
 
         public static FarmAnimalStock CreateWithPlaceholders(string category)
@@ -66,12 +66,7 @@ namespace BetterFarmAnimalVariety.Framework.Config
 
             placeholder.Icon = placeholder.GetDefaultIconPath(category);
 
-            string fullPathToIcon = Path.Combine(PariteeCore.Constants.Mod.Path, placeholder.Icon);
-
-            if (!File.Exists(fullPathToIcon))
-            {
-                throw new FileNotFoundException($"{fullPathToIcon} does not exist");
-            }
+            Helpers.Assert.ValidAnimalShopIcon(placeholder.Icon);
 
             return placeholder;
         }

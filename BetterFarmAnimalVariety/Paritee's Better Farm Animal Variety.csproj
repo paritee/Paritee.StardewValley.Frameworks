@@ -78,6 +78,7 @@
     <Compile Include="Framework\Config\V2\ModConfig.cs" />
     <Compile Include="Framework\Constants\Mod.cs" />
     <Compile Include="Framework\Decorators\Decorator.cs" />
+    <Compile Include="Framework\Helpers\Assert.cs" />
     <Compile Include="Framework\Helpers\Mod.cs" />
     <Compile Include="Framework\Decorators\AnimalHouse.cs" />
     <Compile Include="Framework\Decorators\Building.cs" />
