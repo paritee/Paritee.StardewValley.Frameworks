@@ -54,9 +54,16 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
                     Helpers.Assert.BuildingsExist(buildings);
                 }
 
-                string animalShop = (args.Length < 4 ? Command.False : args[3].Trim()).ToLower();
+                bool result;
 
-                Helpers.Assert.ValidBoolean(animalShop, "animalShop", out bool result);
+                if (args.Length < 4)
+                {
+                    result = false;
+                }
+                else
+                {
+                    Helpers.Assert.ValidBoolean(args[3].Trim(), "animalShop", out result);
+                }
 
                 Framework.Config.FarmAnimalStock farmAnimalStock = result
                     ? Framework.Config.FarmAnimalStock.CreateWithPlaceholders(category)
