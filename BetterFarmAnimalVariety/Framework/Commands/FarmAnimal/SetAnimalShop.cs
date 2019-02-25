@@ -8,7 +8,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
     class SetAnimalShop : Command
     {
         public SetAnimalShop(IModHelper helper, IMonitor monitor, ModConfig config)
-            : base("bfav_fa_setshop", $"Set the availability of this category in the animal shop.\nUsage: bfav_fa_setshop <category> <animalshop>\n- category: the unique animal category.\n- animalshop: {Command.True} or {Command.False}.", helper, monitor, config) { }
+            : base("bfav_fa_setshop", $"Set the availability of this category in the animal shop.\nUsage: bfav_fa_setshop <category> <animalshop>\n- category: the unique animal category.\n- animalshop: {true.ToString().ToLower()} or {false.ToString().ToLower()}.", helper, monitor, config) { }
 
         /// <param name="command">The name of the command invoked.</param>
         /// <param name="args">The arguments received by the command. Each word after the command name is a separate argument.</param>

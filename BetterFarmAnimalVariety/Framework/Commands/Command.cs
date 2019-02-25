@@ -8,9 +8,6 @@ namespace BetterFarmAnimalVariety.Framework.Commands
 {
     abstract class Command
     {
-        public static string True { get { return true.ToString().ToLower(); } }
-        public static string False { get { return false.ToString().ToLower(); } }
-
         public string Name;
         public string Description;
 

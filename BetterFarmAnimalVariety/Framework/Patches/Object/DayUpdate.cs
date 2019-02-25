@@ -23,8 +23,10 @@ namespace BetterFarmAnimalVariety.Framework.Patches.Object
 
             autoGrabber.AutoGrabFromAnimals(animalHouse);
 
-            // Vanilla function returns after the big craftable switch statement always
-            return false;
+            // Since AutoGrabFromAnimals sets the animals' current produce to 
+            // none, hitting the case statement again won't do anything. Continue back 
+            // through in case something changes in source.
+            return true;
         }
     }
 }
