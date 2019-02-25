@@ -11,12 +11,7 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
         {
             return base.GetOriginal<StardewValley.AnimalHouse>();
         }
-
-        public List<StardewValley.Object> GetIncubators()
-        {
-            return PariteeCore.Api.AnimalHouse.GetIncubators(this.GetOriginal());
-        }
-
+        
         public StardewValley.Object GetIncubatorWithEggReadyToHatch()
         {
             return PariteeCore.Api.AnimalHouse.GetIncubatorWithEggReadyToHatch(this.GetOriginal());

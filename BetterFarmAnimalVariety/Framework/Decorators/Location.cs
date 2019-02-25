@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StardewValley;
+﻿using StardewValley;
 using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Decorators
@@ -31,11 +30,6 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
             }
 
             PariteeCore.Api.Location.RemoveAnimal(this.GetOriginal() as Farm, animal);
-        }
-
-        public void SpawnObject(Vector2 tileLocation, StardewValley.Object obj)
-        {
-            PariteeCore.Api.Location.SpawnObject(this.GetOriginal(), tileLocation, obj);
         }
     }
 }

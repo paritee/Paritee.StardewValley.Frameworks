@@ -1,7 +1,5 @@
 ﻿using StardewModdingAPI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.Commands.FarmAnimal
 {

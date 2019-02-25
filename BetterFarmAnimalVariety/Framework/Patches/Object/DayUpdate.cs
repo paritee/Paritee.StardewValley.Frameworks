@@ -9,7 +9,6 @@ namespace BetterFarmAnimalVariety.Framework.Patches.Object
     {
         public static bool Prefix(ref StardewValley.Object __instance, ref GameLocation location)
         {
-            // Autograbber
             if (PariteeCore.Api.Object.IsAutoGrabber(__instance))
             {
                 return true;

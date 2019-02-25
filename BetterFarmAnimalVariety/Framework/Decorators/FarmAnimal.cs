@@ -23,37 +23,7 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
         {
             return PariteeCore.Api.FarmAnimal.GetUniqueId(this.GetOriginal());
         }
-
-        public void SetUniqueId(long id)
-        {
-            PariteeCore.Api.FarmAnimal.SetUniqueId(this.GetOriginal(), id);
-        }
-
-        public void SetOwner(long id)
-        {
-            PariteeCore.Api.FarmAnimal.SetOwner(this.GetOriginal(), id);
-        }
-
-        public void SetType(string type)
-        {
-            PariteeCore.Api.FarmAnimal.SetType(this.GetOriginal(), type);
-        }
-
-        public void SetHealth(int health)
-        {
-            PariteeCore.Api.FarmAnimal.SetHealth(this.GetOriginal(), health);
-        }
-
-        public void SetHappiness(byte happiness)
-        {
-            PariteeCore.Api.FarmAnimal.SetHappiness(this.GetOriginal(), happiness);
-        }
-
-        public void SetFullness(byte fullness)
-        {
-            PariteeCore.Api.FarmAnimal.SetFullness(this.GetOriginal(), fullness);
-        }
-
+        
         public bool IsVanilla()
         {
             return PariteeCore.Api.FarmAnimal.IsVanilla(this.GetTypeString());
@@ -215,44 +185,9 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
             return PariteeCore.Api.FarmAnimal.GetFacingDirection(this.GetOriginal());
         }
         
-        public string SetRandomName()
-        {
-            return PariteeCore.Api.FarmAnimal.SetRandomName(this.GetOriginal());
-        }
-
         public bool IsAProducer()
         {
             return PariteeCore.Api.FarmAnimal.IsAProducer(this.GetOriginal());
-        }
-
-        public bool RequiresToolForHarvest()
-        {
-            return PariteeCore.Api.FarmAnimal.RequiresToolForHarvest(this.GetOriginal());
-        }
-
-        public bool IsCurrentlyProducing()
-        {
-            return PariteeCore.Api.FarmAnimal.IsCurrentlyProducing(this.GetOriginal());
-        }
-
-        public bool IsSheared()
-        {
-            return PariteeCore.Api.FarmAnimal.IsSheared(this.GetOriginal());
-        }
-
-        public string BuildSpriteAssetName()
-        {
-            return PariteeCore.Api.FarmAnimal.BuildSpriteAssetName(this.GetOriginal());
-        }
-
-        public int GetProduceQuality()
-        {
-            return PariteeCore.Api.FarmAnimal.GetProduceQuality(this.GetOriginal());
-        }
-
-        public void ReloadSpriteTexture()
-        {
-            PariteeCore.Api.FarmAnimal.ReloadSpriteTexture(this.GetOriginal());
         }
     }
 }
