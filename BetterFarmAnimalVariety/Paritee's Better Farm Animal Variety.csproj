@@ -77,6 +77,7 @@
     <Compile Include="Framework\Config\V2\ConfigFarmAnimalAnimalShop.cs" />
     <Compile Include="Framework\Config\V2\ModConfig.cs" />
     <Compile Include="Framework\Constants\Mod.cs" />
+    <Compile Include="Framework\Decorators\AutoGrabber.cs" />
     <Compile Include="Framework\Decorators\Decorator.cs" />
     <Compile Include="Framework\Helpers\Assert.cs" />
     <Compile Include="Framework\Helpers\Mod.cs" />
@@ -91,7 +92,9 @@
     <Compile Include="Framework\Models\SaveData.cs" />
     <Compile Include="Framework\Patches\AnimalHouse\ResetSharedState.cs" />
     <Compile Include="Framework\Patches\FarmAnimal\Behaviors.cs" />
+    <Compile Include="Framework\Patches\FarmAnimal\DayUpdate.cs" />
     <Compile Include="Framework\Patches\FarmAnimal\FindTruffle.cs" />
+    <Compile Include="Framework\Patches\Object\DayUpdate.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\Constructor.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\ReceiveLeftClick.cs" />
     <Compile Include="Framework\Models\FarmAnimalsSaveData.cs" />

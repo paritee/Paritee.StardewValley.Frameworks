@@ -2,6 +2,7 @@
 using StardewModdingAPI.Events;
 using StardewValley;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using PariteeCore = Paritee.StardewValley.Core;
 
@@ -58,6 +59,9 @@ namespace BetterFarmAnimalVariety.Framework.Events
                             continue;
                         }
 
+                        // Save the current type before it gets overwritten from the data
+                        string currentType = moddedAnimal.GetTypeString();
+
                         // Return the type that is logged for saves or 
                         // automatically default the coop/barn dwellers
                         string savedType = saveData.GetSavedTypeOrDefault(moddedAnimal);
@@ -69,7 +73,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         // Make sure this animal exists in the save data and 
                         // has the most updated information. Could have been 
                         // created /purchased today and not saved yet.
-                        saveData.AddTypeHistory(moddedAnimal, savedType);
+                        saveData.AddTypeHistory(moddedAnimal.GetUniqueId(), currentType, savedType);
                     }
                 }
 

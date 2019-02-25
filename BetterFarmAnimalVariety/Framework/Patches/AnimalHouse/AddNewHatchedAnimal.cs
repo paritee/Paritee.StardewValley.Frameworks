@@ -36,7 +36,14 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
 
         private static void HandleHatchling(ref Decorators.AnimalHouse moddedAnimalHouse, string name, Decorators.Farmer moddedPlayer)
         {
-            StardewValley.Object incubator = moddedAnimalHouse.GetIncubator();
+            if (moddedAnimalHouse.IsFull())
+            {
+                // Game does nothing
+                // TODO: handle this more immersively
+                return;
+            }
+
+            StardewValley.Object incubator = moddedAnimalHouse.GetIncubatorWithEggReadyToHatch();
 
             if (incubator == null)
             {

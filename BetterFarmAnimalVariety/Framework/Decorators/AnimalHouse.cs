@@ -1,4 +1,5 @@
-﻿using PariteeCore = Paritee.StardewValley.Core;
+﻿using System.Collections.Generic;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Decorators
 {
@@ -11,9 +12,14 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
             return base.GetOriginal<StardewValley.AnimalHouse>();
         }
 
-        public StardewValley.Object GetIncubator()
+        public List<StardewValley.Object> GetIncubators()
         {
-            return PariteeCore.Api.AnimalHouse.GetIncubator(this.GetOriginal());
+            return PariteeCore.Api.AnimalHouse.GetIncubators(this.GetOriginal());
+        }
+
+        public StardewValley.Object GetIncubatorWithEggReadyToHatch()
+        {
+            return PariteeCore.Api.AnimalHouse.GetIncubatorWithEggReadyToHatch(this.GetOriginal());
         }
 
         public void ResetIncubator()

@@ -219,5 +219,40 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
         {
             return PariteeCore.Api.FarmAnimal.SetRandomName(this.GetOriginal());
         }
+
+        public bool IsAProducer()
+        {
+            return PariteeCore.Api.FarmAnimal.IsAProducer(this.GetOriginal());
+        }
+
+        public bool RequiresToolForHarvest()
+        {
+            return PariteeCore.Api.FarmAnimal.RequiresToolForHarvest(this.GetOriginal());
+        }
+
+        public bool IsCurrentlyProducing()
+        {
+            return PariteeCore.Api.FarmAnimal.IsCurrentlyProducing(this.GetOriginal());
+        }
+
+        public bool IsSheared()
+        {
+            return PariteeCore.Api.FarmAnimal.IsSheared(this.GetOriginal());
+        }
+
+        public string BuildSpriteAssetName()
+        {
+            return PariteeCore.Api.FarmAnimal.BuildSpriteAssetName(this.GetOriginal());
+        }
+
+        public int GetProduceQuality()
+        {
+            return PariteeCore.Api.FarmAnimal.GetProduceQuality(this.GetOriginal());
+        }
+
+        public void ReloadSpriteTexture()
+        {
+            PariteeCore.Api.FarmAnimal.ReloadSpriteTexture(this.GetOriginal());
+        }
     }
 }
