@@ -5,7 +5,7 @@ using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 {
-    //[HarmonyPatch(typeof(StardewValley.FarmAnimal), "findTruffle")]
+    [HarmonyPatch(typeof(StardewValley.FarmAnimal), "findTruffle")]
     class FindTruffle : Patch
     {
         public static bool Prefix(ref StardewValley.FarmAnimal __instance, ref Farmer who)

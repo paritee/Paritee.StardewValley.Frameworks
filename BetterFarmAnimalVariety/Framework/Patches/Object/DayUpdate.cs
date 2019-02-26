@@ -9,7 +9,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.Object
     {
         public static bool Prefix(ref StardewValley.Object __instance, ref GameLocation location)
         {
-            if (PariteeCore.Api.Object.IsAutoGrabber(__instance))
+            if (!PariteeCore.Api.Object.IsAutoGrabber(__instance))
             {
                 return true;
             }
@@ -24,9 +24,9 @@ namespace BetterFarmAnimalVariety.Framework.Patches.Object
             autoGrabber.AutoGrabFromAnimals(animalHouse);
 
             // Since AutoGrabFromAnimals sets the animals' current produce to 
-            // none, hitting the case statement again won't do anything. Continue back 
-            // through in case something changes in source.
-            return true;
+            // none ONLY if they're not a "find" type and the vanilla code only 
+            // accounts for Truffles, must not continue on
+            return false;
         }
     }
 }

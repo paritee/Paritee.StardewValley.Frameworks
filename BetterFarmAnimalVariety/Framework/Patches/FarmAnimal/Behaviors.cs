@@ -6,7 +6,7 @@ using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 {
-    //[HarmonyPatch(typeof(StardewValley.FarmAnimal), "behaviors")]
+    [HarmonyPatch(typeof(StardewValley.FarmAnimal), "behaviors")]
     class Behaviors
     {
         public static bool Prefix(ref StardewValley.FarmAnimal __instance, ref GameTime time, ref GameLocation location, ref bool __result)
