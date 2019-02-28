@@ -76,6 +76,7 @@
     <Compile Include="Framework\Config\V2\ConfigFarmAnimal.cs" />
     <Compile Include="Framework\Config\V2\ConfigFarmAnimalAnimalShop.cs" />
     <Compile Include="Framework\Config\V2\ModConfig.cs" />
+    <Compile Include="Framework\Constants\Integration.cs" />
     <Compile Include="Framework\Constants\Mod.cs" />
     <Compile Include="Framework\Decorators\AutoGrabber.cs" />
     <Compile Include="Framework\Decorators\Decorator.cs" />
@@ -89,6 +90,9 @@
     <Compile Include="Framework\Decorators\Incubator.cs" />
     <Compile Include="Framework\Decorators\Location.cs" />
     <Compile Include="Framework\Decorators\PurchaseAnimalsMenu.cs" />
+    <Compile Include="Framework\Integrations\Integration.cs" />
+    <Compile Include="Framework\Integrations\IMoreAnimalsAPI.cs" />
+    <Compile Include="Framework\Integrations\MoreAnimals.cs" />
     <Compile Include="Framework\Models\SaveData.cs" />
     <Compile Include="Framework\Patches\AnimalHouse\ResetSharedState.cs" />
     <Compile Include="Framework\Patches\FarmAnimal\Behaviors.cs" />

@@ -1,11 +1,14 @@
 ﻿using BetterFarmAnimalVariety.Framework.Editors;
 using BetterFarmAnimalVariety.Framework.Events;
+using BetterFarmAnimalVariety.Framework.Integrations;
 using Harmony;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 
 namespace BetterFarmAnimalVariety
 {
@@ -162,14 +165,69 @@ namespace BetterFarmAnimalVariety
             // selling /deleting the animals and without going through the cleaning 
             // script. Minor impact.
 
+            this.Helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
             this.Helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
             this.Helper.Events.GameLoop.Saving += this.OnSaving;
             this.Helper.Events.GameLoop.Saved += this.OnSaved;
         }
 
+        private void SetUpModIntegrations()
+        {
+            // Supported integrations:
+            // <integrator, integrator arguments>
+            Dictionary<Type, object[]> integrations = new Dictionary<Type, object[]>()
+            {
+                { typeof(MoreAnimals), new object[] { this.Monitor } }
+            };
+
+            // Get the "GetApi" method through reflection
+            var getApi = this.Helper.ModRegistry.GetType().GetMethods()
+                .Where(x => x.Name == "GetApi")
+                .First(x => x.ContainsGenericParameters);
+
+            foreach (KeyValuePair<Type, object[]> integration in integrations)
+            {
+                // Get the API interface
+                Type apiInterface = (Type)integration.Key.GetProperty("ApiInterface", BindingFlags.Public | BindingFlags.Static).GetValue(null, null);
+
+                // Make it generic
+                MethodInfo genericGetApi = getApi.MakeGenericMethod(apiInterface);
+
+                // Get the mod's key
+                string key = (string)integration.Key.GetProperty("Key", BindingFlags.Public | BindingFlags.Static).GetValue(null, null);
+
+                // Get the API via interface
+                var api = genericGetApi.Invoke(this.Helper.ModRegistry, new object[] { key });
+
+                if (api == null)
+                {
+                    this.Monitor.Log($"{key} API not found", LogLevel.Trace);
+                    continue;
+                }
+
+                // Check if the API exists
+                if (!(api == null))
+                {
+                    // Create the integration class
+                    var instance = Activator.CreateInstance(integration.Key, api);
+
+                    // Get the set up method of the integration
+                    MethodInfo method = integration.Key.GetMethod("SetUp");
+
+                    // Set up the integration
+                    method.Invoke(instance, integration.Value);
+                }
+            }
+        }
+
         public override object GetApi()
         {
             return new ModApi(this.Config, this.ModManifest.Version);
+        }
+
+        private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
+        {
+            this.SetUpModIntegrations();
         }
 
         /// <summary>Raised before/after the game reads data from a save file and initialises the world. This event isn't raised after saving; if you want to do something at the start of each day, see DayStarted instead.</summary>
