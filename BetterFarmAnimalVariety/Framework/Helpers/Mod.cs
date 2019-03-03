@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Helpers
@@ -70,77 +67,6 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             path = Helpers.Mod.GetFullAssetPath(filePath);
 
             return !File.Exists(path);
-        }
-
-        public static bool MigrateDeprecatedConfigToCurrentFormat<T>(T deprecatedConfig, string targetFormat, out ModConfig config)
-        {
-            if (deprecatedConfig is Config.V2.ModConfig)
-            {
-                Config.V2.ModConfig sourceConfig = (Config.V2.ModConfig)Convert.ChangeType(deprecatedConfig, typeof(Config.V2.ModConfig));
-
-                config = new BetterFarmAnimalVariety.ModConfig
-                {
-                    Format = targetFormat,
-                    IsEnabled = sourceConfig.IsEnabled
-                };
-
-                string voidChicken = PariteeCore.Constants.VanillaFarmAnimalType.VoidChicken.ToString();
-
-                foreach (KeyValuePair<string, Config.V2.ConfigFarmAnimal> oldFarmAnimals in sourceConfig.FarmAnimals)
-                {
-                    Config.FarmAnimalStock animalShop;
-
-                    if (oldFarmAnimals.Value.CanBePurchased())
-                    {
-                        Int32.TryParse(oldFarmAnimals.Value.AnimalShop.Price, out int price);
-
-                        string[] exclude = sourceConfig.IsChickenCategory(oldFarmAnimals.Key)
-                            && oldFarmAnimals.Value.Types.Contains(voidChicken)
-                            && sourceConfig.AreVoidFarmAnimalsInShopAlways()
-                            ? new string[0]
-                            : new string[] { voidChicken };
-
-                        animalShop = new Config.FarmAnimalStock
-                        {
-                            Name = oldFarmAnimals.Value.AnimalShop.Name,
-                            Description = oldFarmAnimals.Value.AnimalShop.Description,
-                            Icon = oldFarmAnimals.Value.AnimalShop.Icon,
-                            Price = Math.Abs(price),
-                            Exclude = exclude
-                        };
-
-                        // Check to make sure the icon exists...
-                        string pathToIcon = Path.Combine(PariteeCore.Constants.Mod.Path, animalShop.Icon);
-
-                        // ... otherwise default it to the new icon assuming 
-                        // the user copied them over
-                        if (!File.Exists(pathToIcon))
-                        {
-                            animalShop.Icon = animalShop.GetDefaultIconPath(oldFarmAnimals.Key);
-                        }
-                    }
-                    else
-                    {
-                        animalShop = null;
-                    }
-
-                    Config.FarmAnimalCategory animal = new Config.FarmAnimalCategory
-                    {
-                        Category = oldFarmAnimals.Key,
-                        Types = oldFarmAnimals.Value.Types,
-                        Buildings = oldFarmAnimals.Value.Buildings,
-                        AnimalShop = animalShop
-                    };
-
-                    config.AddCategory(animal);
-                }
-
-                return true;
-            }
-
-            config = new ModConfig();
-
-            return false;
         }
     }
 }

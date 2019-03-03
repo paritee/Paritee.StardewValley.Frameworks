@@ -10,14 +10,20 @@ namespace BetterFarmAnimalVariety.Framework.Constants
 
         // Config
         public const string ConfigFileName = "config.json";
-        public const int AnimalShopPricePlaceholder = 1000;
-        public static string AnimalShopDescriptionPlaceholder => PariteeCore.Api.Content.LoadString("Strings\\StringsFromCSFiles:BluePrint.cs.1");
         public static string AnimalShopIconDirectory = "AnimalShop";
         public static string AnimalShopIconExtension = ".png";
 
         // Content packs
-        public const string ContentPackFileName = "content.json";
-
+        public const string ContentPackContentFileName = "content.json";
+        public const string ContentPackManifestFileName = "manifest.json";
+        public const string ConfigMigrationContentPackPrefix = "[BFAV]";
+        public static string ConfigMigrationContentPackName => $"{ConfigMigrationContentPackPrefix} My Content Pack";
+        public const string ConfigMigrationContentPackAuthor = "Anonymous";
+        public const string ConfigMigrationContentPackVersion = "1.0.0";
+        public const string ConfigMigrationContentPackDescription = "Your custom content pack for BFAV";
+        public static string ConfigMigrationContentPackUniqueID => $"{ConfigMigrationContentPackAuthor}.{ConfigMigrationContentPackName.Replace("[", "").Replace("]", "").Replace(" ", "").Trim()}";
+        public static string ConfigMigrationContentPackFullPath => Path.Combine(Directory.GetParent(PariteeCore.Constants.Mod.Path).FullName, ConfigMigrationContentPackName);
+        
         // Save data
         public const string FarmAnimalsSaveDataKey = "farm-animals";
 

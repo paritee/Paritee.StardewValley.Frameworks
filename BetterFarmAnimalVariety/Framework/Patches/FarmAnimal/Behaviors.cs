@@ -6,7 +6,7 @@ using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 {
-    [HarmonyPatch(typeof(StardewValley.FarmAnimal), "behaviors")]
+    //[HarmonyPatch(typeof(StardewValley.FarmAnimal), "behaviors")]
     class Behaviors
     {
         public static bool Prefix(ref StardewValley.FarmAnimal __instance, ref GameTime time, ref GameLocation location, ref bool __result)
@@ -34,12 +34,16 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             {
                 Behaviors.HandleFindGrassToEat(ref moddedAnimal, ref moddedLocation);
 
-                if (!Behaviors.HandleNightTimeRoutine(ref moddedAnimal, ref moddedLocation))
+                if (Behaviors.HandleNightTimeRoutine(ref moddedAnimal, ref moddedLocation))
+                {
+                    __result = true;
+                }
+                else
                 {
                     Behaviors.HandleFindProduce(ref moddedAnimal, ref moddedLocation);
-                }
 
-                __result = true;
+                    __result = false;
+                }
             }
             catch
             {
@@ -116,7 +120,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
         {
             if (PariteeCore.Helpers.Random.NextDouble() < 0.0002)
             {
-                throw new Exception();
+                throw new ApplicationException($"failed roll chance");
             }
         }
 
@@ -131,7 +135,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
                 if (moddedLocation.GetOriginal().terrainFeatures.ContainsKey(key) || moddedLocation.GetOriginal().objects.ContainsKey(key))
                 {
-                    throw new Exception();
+                    throw new ApplicationException($"tile is occupied");
                 }
             }
         }

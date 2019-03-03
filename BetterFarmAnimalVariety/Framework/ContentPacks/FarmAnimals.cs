@@ -48,25 +48,6 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
             // Assert unique category
             Helpers.Assert.UniqueFarmAnimalCategory(category.Category);
 
-            // Set up the animal shop properties
-            Config.FarmAnimalStock animalShop;
-
-            if (category.AnimalShop != null)
-            {
-                animalShop = new Config.FarmAnimalStock
-                {
-                    Name = category.AnimalShop.Name,
-                    Description = category.AnimalShop.Description,
-                    Icon = category.AnimalShop.Icon,
-                    Price = category.AnimalShop.Price,
-                    Exclude = category.AnimalShop.Exclude
-                };
-            }
-            else
-            {
-                animalShop = null;
-            }
-
             Helpers.FarmAnimals.AddOrReplaceCategory(new Cache.FarmAnimalCategory(contentPack.DirectoryPath, category));
         }
 
@@ -80,46 +61,46 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
             // Add the missing types
             if (category.Types != null)
             {
-                cacheCategory.Category.Types = category.ForceOverrideTypes
+                cacheCategory.Types = category.ForceOverrideTypes
                     ? category.Types
-                    : cacheCategory.Category.Types.Union(category.Types).ToArray();
+                    : cacheCategory.Types.Union(category.Types).ToArray();
             }
 
             // Add the missing buildings
             if (category.Buildings != null)
             {
-                cacheCategory.Category.Buildings = category.ForceOverrideBuildings 
+                cacheCategory.Buildings = category.ForceOverrideBuildings 
                     ? category.Buildings
-                    : cacheCategory.Category.Buildings.Union(category.Buildings).ToArray();
+                    : cacheCategory.Buildings.Union(category.Buildings).ToArray();
             }
 
             // Check if the force remove from shop flag was used
             if (category.ForceRemoveFromShop)
             {
-                cacheCategory.Category.AnimalShop = null;
+                cacheCategory.AnimalShop = null;
             }
             // Only update the animal shop properties if it was explicitly stated
             else if (category.AnimalShop != null)
             {
                 // If the category couldn't be purchased before, set it to be purchased
-                if (!cacheCategory.Category.CanBePurchased())
+                if (!cacheCategory.CanBePurchased())
                 {
-                    cacheCategory.Category.AnimalShop = new Config.FarmAnimalStock();
+                    cacheCategory.AnimalShop = new Cache.FarmAnimalStock();
                 }
 
                 if (category.AnimalShop.Name != null)
                 {
-                    cacheCategory.Category.AnimalShop.Name = category.AnimalShop.Name;
+                    cacheCategory.AnimalShop.Name = category.AnimalShop.Name;
                 }
 
                 if (category.AnimalShop.Description != null)
                 {
-                    cacheCategory.Category.AnimalShop.Description = category.AnimalShop.Description;
+                    cacheCategory.AnimalShop.Description = category.AnimalShop.Description;
                 }
 
                 if (category.AnimalShop.Icon != null)
                 {
-                    cacheCategory.Category.AnimalShop.Icon = category.AnimalShop.Icon;
+                    cacheCategory.AnimalShop.Icon = category.AnimalShop.Icon;
 
                     // Also update the asset source
                     cacheCategory.AssetSourceDirectory = contentPack.DirectoryPath;
@@ -127,14 +108,14 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
 
                 if (category.AnimalShop.Price != default(int))
                 {
-                    cacheCategory.Category.AnimalShop.Price = category.AnimalShop.Price;
+                    cacheCategory.AnimalShop.Price = category.AnimalShop.Price;
                 }
 
                 if (category.AnimalShop.Exclude != null)
                 {
-                    cacheCategory.Category.AnimalShop.Exclude = category.ForceOverrideExclude
+                    cacheCategory.AnimalShop.Exclude = category.ForceOverrideExclude
                         ? category.AnimalShop.Exclude
-                        : cacheCategory.Category.Types.Union(category.AnimalShop.Exclude).ToArray();
+                        : cacheCategory.Types.Union(category.AnimalShop.Exclude).ToArray();
                 }
             }
 

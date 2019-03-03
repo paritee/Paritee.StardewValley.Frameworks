@@ -34,7 +34,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             Cache.FarmAnimals cache = Helpers.FarmAnimals.ReadCache();
 
             // Check if the category exists
-            int index = cache.Categories.FindIndex(o => o.Category.Category == category.Category.Category);
+            int index = cache.Categories.FindIndex(o => o.Category == category.Category);
 
             // If it does not exist, add it
             if (index == -1)

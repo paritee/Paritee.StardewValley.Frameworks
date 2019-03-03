@@ -26,17 +26,17 @@ namespace BetterFarmAnimalVariety.Framework.Commands
         {
             string output = "";
 
-            output += $"{animal.Category.Category}\n";
-            output += $"- Types: {String.Join(",", animal.Category.Types)}\n";
-            output += $"- Buildings: {String.Join(",", animal.Category.Buildings)}\n";
+            output += $"{animal.Category}\n";
+            output += $"- Types: {String.Join(",", animal.Types)}\n";
+            output += $"- Buildings: {String.Join(",", animal.Buildings)}\n";
             
-            if (animal.Category.CanBePurchased())
+            if (animal.CanBePurchased())
             {
                 output += $"- AnimalShop:\n";
-                output += $"-- Name: {animal.Category.AnimalShop.Name}\n";
-                output += $"-- Description: {animal.Category.AnimalShop.Description}\n";
-                output += $"-- Price: {animal.Category.AnimalShop.Price}\n";
-                output += $"-- Icon: {animal.Category.AnimalShop.Icon}\n";
+                output += $"-- Name: {animal.AnimalShop.Name}\n";
+                output += $"-- Description: {animal.AnimalShop.Description}\n";
+                output += $"-- Price: {animal.AnimalShop.Price}\n";
+                output += $"-- Icon: {animal.AnimalShop.Icon}\n";
             }
             else
             {

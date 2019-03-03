@@ -4,13 +4,13 @@ namespace BetterFarmAnimalVariety.Framework.Config.V2
 {
     public class ModConfig
     {
-        private const string ChickenCategory = "Chicken";
-        private const string VoidFarmAnimalsInShopAlways = "Always";
-
         public string Format;
         public bool IsEnabled;
         public string VoidFarmAnimalsInShop;
         public Dictionary<string, ConfigFarmAnimal> FarmAnimals;
+
+        private const string ChickenCategory = "Chicken";
+        private const string VoidFarmAnimalsInShopAlways = "Always";
 
         public bool IsChickenCategory(string category)
         {

@@ -57,10 +57,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\Cache\FarmAnimalCategory.cs" />
+    <Compile Include="Framework\Cache\FarmAnimalStock.cs" />
     <Compile Include="Framework\Commands\Command.cs" />
     <Compile Include="Framework\Commands\List.cs" />
-    <Compile Include="Framework\Config\FarmAnimalStock.cs" />
-    <Compile Include="Framework\Config\FarmAnimalCategory.cs" />
     <Compile Include="Framework\Config\V2\ConfigFarmAnimal.cs" />
     <Compile Include="Framework\Config\V2\ConfigFarmAnimalAnimalShop.cs" />
     <Compile Include="Framework\Config\V2\ModConfig.cs" />
@@ -73,6 +72,7 @@
     <Compile Include="Framework\Events\IntegrateMods.cs" />
     <Compile Include="Framework\Events\LoadContentPacks.cs" />
     <Compile Include="Framework\Events\LoadMod.cs" />
+    <Compile Include="Framework\Events\MigrateDeprecatedConfig.cs" />
     <Compile Include="Framework\Helpers\Assert.cs" />
     <Compile Include="Framework\Helpers\FarmAnimals.cs" />
     <Compile Include="Framework\Helpers\Mod.cs" />

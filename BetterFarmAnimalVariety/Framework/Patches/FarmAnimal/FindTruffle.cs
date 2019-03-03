@@ -5,14 +5,14 @@ using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 {
-    [HarmonyPatch(typeof(StardewValley.FarmAnimal), "findTruffle")]
+    //[HarmonyPatch(typeof(StardewValley.FarmAnimal), "findTruffle")]
     class FindTruffle : Patch
     {
         public static bool Prefix(ref StardewValley.FarmAnimal __instance, ref Farmer who)
         {
             Decorators.FarmAnimal moddedAnimal = new Decorators.FarmAnimal(__instance);
 
-            FindTruffle.AttemptToSpawnProduce(ref moddedAnimal, who);
+            FindTruffle.AttemptToSpawnProduce(ref moddedAnimal, PariteeCore.Api.Game.GetMasterPlayer());
 
             if (FindTruffle.ShouldStopFindingProduce(ref moddedAnimal))
             {

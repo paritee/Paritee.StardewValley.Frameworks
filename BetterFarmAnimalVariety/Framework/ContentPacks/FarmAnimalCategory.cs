@@ -1,6 +1,8 @@
-﻿namespace BetterFarmAnimalVariety.Framework.ContentPacks
+﻿using Newtonsoft.Json;
+
+namespace BetterFarmAnimalVariety.Framework.ContentPacks
 {
-    class FarmAnimalCategory : Config.FarmAnimalCategory
+    class FarmAnimalCategory : Cache.FarmAnimalCategory
     {
         public enum Actions
         {
@@ -10,17 +12,26 @@
         }
 
         public Actions Action = Actions.Update;
+
+        [JsonProperty(Order = 999)]
         public bool ForceRemoveFromShop = false;
+        [JsonProperty(Order = 999)]
         public bool ForceOverrideTypes = false;
+        [JsonProperty(Order = 999)]
         public bool ForceOverrideBuildings = false;
+        [JsonProperty(Order = 999)]
         public bool ForceOverrideExclude = false;
 
         public FarmAnimalCategory() : base() { }
 
-        public FarmAnimalCategory(Actions action, bool forceRemoveFromShop) : base()
+        public FarmAnimalCategory(Actions action) : base()
         {
             this.Action = action;
-            this.ForceRemoveFromShop = forceRemoveFromShop;
+        }
+
+        public bool ShouldSerializeAction()
+        {
+            return false;
         }
     }
 }

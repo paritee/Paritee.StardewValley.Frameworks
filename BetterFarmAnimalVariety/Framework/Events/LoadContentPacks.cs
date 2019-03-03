@@ -24,13 +24,13 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 try
                 {
                     // Check if the content JSON is there
-                    if (!File.Exists(Path.Combine(contentPack.DirectoryPath, Constants.Mod.ContentPackFileName)))
+                    if (!File.Exists(Path.Combine(contentPack.DirectoryPath, Constants.Mod.ContentPackContentFileName)))
                     {
-                        throw new FileNotFoundException($"{Constants.Mod.ContentPackFileName} not found.");
+                        throw new FileNotFoundException($"{Constants.Mod.ContentPackContentFileName} not found.");
                     }
 
                     // Read the content
-                    ContentPacks.FarmAnimals content = contentPack.ReadJsonFile<ContentPacks.FarmAnimals>(Constants.Mod.ContentPackFileName);
+                    ContentPacks.FarmAnimals content = contentPack.ReadJsonFile<ContentPacks.FarmAnimals>(Constants.Mod.ContentPackContentFileName);
 
                     content.SetUp(contentPack);
                 }
@@ -49,38 +49,38 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 try
                 {
                     // Validate category
-                    Helpers.Assert.ValidStringLength("category", category.Category.Category, 1);
+                    Helpers.Assert.ValidStringLength("category", category.Category, 1);
 
                     // Validate types
-                    Helpers.Assert.FarmAnimalTypesExist(category.Category.Types.ToList());
+                    Helpers.Assert.FarmAnimalTypesExist(category.Types.ToList());
 
                     // Validate buildings
-                    Helpers.Assert.BuildingsExist(category.Category.Buildings.ToList());
+                    Helpers.Assert.BuildingsExist(category.Buildings.ToList());
 
-                    if (category.Category.CanBePurchased())
+                    if (category.CanBePurchased())
                     {
                         // Validate name and description
-                        Helpers.Assert.ValidStringLength("name", category.Category.AnimalShop.Name, 1);
-                        Helpers.Assert.ValidStringLength("description", category.Category.AnimalShop.Description, 1);
+                        Helpers.Assert.ValidStringLength("name", category.AnimalShop.Name, 1);
+                        Helpers.Assert.ValidStringLength("description", category.AnimalShop.Description, 1);
 
                         // Validate price
-                        Helpers.Assert.ValidMoneyAmount(category.Category.AnimalShop.Price);
+                        Helpers.Assert.ValidMoneyAmount(category.AnimalShop.Price);
 
                         // Validate shop icon
-                        Helpers.Assert.FileExists(category.GetAssetPath(category.Category.AnimalShop.Icon));
-                        Helpers.Assert.ValidFileExtension(category.Category.AnimalShop.Icon, Constants.Mod.AnimalShopIconExtension);
+                        Helpers.Assert.FileExists(category.GetAssetPath(category.AnimalShop.Icon));
+                        Helpers.Assert.ValidFileExtension(category.AnimalShop.Icon, Constants.Mod.AnimalShopIconExtension);
 
                         // Validate excluded types
-                        Helpers.Assert.FarmAnimalTypesExist(category.Category.AnimalShop.Exclude.ToList());
+                        Helpers.Assert.FarmAnimalTypesExist(category.AnimalShop.Exclude.ToList());
                     }
                 }
                 catch (Exception exception)
                 {
-                    monitor.Log($"{category.Category.Category} will not load: {exception.Message}", LogLevel.Warn);
+                    monitor.Log($"{category.Category} will not load: {exception.Message}", LogLevel.Warn);
 
                     // Remove it from the cache for this session
                     // i.e. Cache gets reloaded every time the game is started
-                    Helpers.FarmAnimals.RemoveCategory(category.Category.Category);
+                    Helpers.FarmAnimals.RemoveCategory(category.Category);
                 }
             }
         }

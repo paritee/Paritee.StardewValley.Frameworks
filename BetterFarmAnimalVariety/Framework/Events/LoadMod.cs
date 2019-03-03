@@ -4,6 +4,8 @@ using System.Linq;
 using Harmony;
 using BetterFarmAnimalVariety.Framework.Editors;
 using PariteeCore = Paritee.StardewValley.Core;
+using System.Diagnostics;
+using System.IO;
 
 namespace BetterFarmAnimalVariety.Framework.Events
 {
@@ -13,6 +15,10 @@ namespace BetterFarmAnimalVariety.Framework.Events
         {
             // Always kill the mod if we could not set up the config
             LoadMod.SetUpConfig(mod);
+
+            // Seed a new cache with the vanilla animals; content packs loaded 
+            // later will modify these animals
+            LoadMod.SeedCacheWithVanillaFarmAnimals();
 
             // Harmony
             LoadMod.SetUpHarmonyPatches();
@@ -26,14 +32,21 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
         private static void SetUpConfig(ModEntry mod)
         {
+            Debug.WriteLine($"json {File.ReadAllText(Path.Combine(PariteeCore.Constants.Mod.Path, Constants.Mod.ConfigFileName))}");
+
+
+
             ModConfig config;
 
             string targetFormat = mod.ModManifest.Version.MajorVersion.ToString();
 
             try
             {
+                Debug.WriteLine($"SetUpConfig");
                 // Load the config
-                config = mod.Helper.ReadConfig<ModConfig>();
+                config = Helpers.Mod.ReadConfig<ModConfig>();
+                Debug.WriteLine($"ReadConfig as ModConfig");
+                Debug.WriteLine($"config.Format == null {config.Format == null}");
 
                 // Do this outside of the constructor so that we can use the ModManifest helper
                 if (config.Format == null)
@@ -42,43 +55,40 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 }
                 else
                 {
+                    Debug.WriteLine($"config.Format {config.Format}");
                     config.AssertValidFormat(targetFormat);
+                    Debug.WriteLine($"AssertedValidFormat");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // Try to load the last supported format...
-                Config.V2.ModConfig deprecatedConfig = mod.Helper.ReadConfig<Config.V2.ModConfig>();
+                Debug.WriteLine($"e.Message {e.Message}");
+                Debug.WriteLine($"json {File.ReadAllText(Path.Combine(PariteeCore.Constants.Mod.Path, Constants.Mod.ConfigFileName))}");
 
-                //... and migrate them to the current format
-                if (!Helpers.Mod.MigrateDeprecatedConfigToCurrentFormat<Config.V2.ModConfig>(deprecatedConfig, targetFormat, out config))
-                {
-                    // Escalate the exception if the deprecated config could not be migrated
-                    throw new FormatException($"Invalid config format. {mod.ModManifest.Version.ToString()} requires format:{mod.ModManifest.Version.MajorVersion.ToString()}.");
-                }
-            }
-
-            if (!config.IsEnabled)
-            {
-                throw new ApplicationException($"Mod is disabled. To enable, set IsEnabled to true in config.json.");
-            }
-
-            // Only seed the config with vanilla if it's the first initializaiton 
-            // of it or there are no farm animals in the list
-            if (!config.HasCategories())
-            {
-                config.SeedVanillaFarmAnimals();
+                MigrateDeprecatedConfig.OnEntry(mod, targetFormat, out config);
             }
 
             // Write back the config
             config.Write(mod.Helper);
 
-            // Cache the farm animals and overwrite any existing file
-            List<Cache.FarmAnimalCategory> categories = config.Categories
-                .Select(o => new Cache.FarmAnimalCategory(PariteeCore.Constants.Mod.Path, o))
+            if (!config.IsEnabled)
+            {
+                throw new ApplicationException($"Mod is disabled. To enable, set IsEnabled to true in config.json.");
+            }
+        }
+
+        private static void SeedCacheWithVanillaFarmAnimals()
+        {
+            // Seed with all of the vanilla farm animals
+            List<Cache.FarmAnimalCategory> categories = PariteeCore.Constants.VanillaFarmAnimalCategory.All()
+                .Select(o => new Framework.Cache.FarmAnimalCategory(PariteeCore.Constants.Mod.Path, o))
                 .ToList();
 
-            Helpers.FarmAnimals.Write(new Cache.FarmAnimals(categories));
+            // Reset the cache
+            Cache.FarmAnimals cache = new Cache.FarmAnimals(categories);
+
+            // Commit the seed
+            Helpers.FarmAnimals.Write(cache);
         }
 
         private static void SetUpHarmonyPatches()
