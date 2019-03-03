@@ -1,4 +1,4 @@
-﻿using BetterFarmAnimalVariety.Framework.Models;
+﻿using BetterFarmAnimalVariety.Framework.SaveData;
 using StardewModdingAPI.Events;
 using StardewValley;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
     {
         public static void OnSaving(SavingEventArgs e)
         {
-            FarmAnimalsSaveData saveData = Helpers.Mod.ReadSaveData<FarmAnimalsSaveData>(Constants.Mod.FarmAnimalsSaveDataKey);
+            FarmAnimals saveData = Helpers.Mod.ReadSaveData<FarmAnimals>(Constants.Mod.FarmAnimalsSaveDataKey);
 
             // Track the animal ID because we're going to remove 
             // animals that no longer exist from the save data 
@@ -50,9 +50,9 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         {
                             // ... always log the animal's type in the history 
                             // for convenience
-                            if (!saveData.Exists(moddedAnimal.GetUniqueId()))
+                            if (!saveData.AnimalExists(moddedAnimal.GetUniqueId()))
                             {
-                                saveData.AddTypeHistory(moddedAnimal);
+                                saveData.AddAnimal(moddedAnimal);
                             }
 
                             continue;
@@ -72,22 +72,28 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         // Make sure this animal exists in the save data and 
                         // has the most updated information. Could have been 
                         // created /purchased today and not saved yet.
-                        saveData.AddTypeHistory(moddedAnimal.GetUniqueId(), currentType, savedType);
+                        TypeLog typeLog = new TypeLog(currentType, savedType);
+
+                        saveData.AddAnimal(moddedAnimal, typeLog);
                     }
                 }
 
                 break;
             }
 
-            if (saveData.TypeHistory.Any())
+            if (saveData.HasAnyAnimals())
             {
                 // Remove any ids from the save data that should not be there
-                List<long> keysToBeRemoved = saveData.TypeHistory.Keys
-                    .Where(key => !animalIds.Contains(key))
+                List<long> keysToBeRemoved = saveData.Animals
+                    .Where(o => !animalIds.Contains(o.Id))
+                    .Select(o => o.Id)
                     .ToList();
 
-                saveData.RemoveTypeHistory(keysToBeRemoved);
+                saveData.RemoveAnimals(keysToBeRemoved);
             }
+
+            // Always write the save data after
+            saveData.Write();
         }
 
         public static void OnSaved(SavedEventArgs e)

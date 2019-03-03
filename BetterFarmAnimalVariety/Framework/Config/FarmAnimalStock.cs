@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
 using PariteeCore = Paritee.StardewValley.Core;
@@ -40,11 +39,6 @@ namespace BetterFarmAnimalVariety.Framework.Config
                 : farmAnimalStock.ExcludeFromShop;
         }
 
-        public Texture2D GetIconTexture()
-        {
-            return Helpers.Mod.LoadTexture(this.Icon);
-        }
-
         public string GetDefaultIconPath(string category)
         {
             return this.FormatIconPath($"{category.Replace(" ", "")}{Constants.Mod.AnimalShopIconExtension}");
@@ -66,7 +60,9 @@ namespace BetterFarmAnimalVariety.Framework.Config
 
             placeholder.Icon = placeholder.GetDefaultIconPath(category);
 
-            Helpers.Assert.ValidAnimalShopIcon(placeholder.Icon);
+            string iconPath = Helpers.Mod.GetFullAssetPath(placeholder.Icon);
+
+            Helpers.Assert.ValidAnimalShopIcon(iconPath);
 
             return placeholder;
         }

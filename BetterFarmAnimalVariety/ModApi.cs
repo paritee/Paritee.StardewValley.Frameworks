@@ -1,4 +1,4 @@
-﻿using BetterFarmAnimalVariety.Framework.Models;
+﻿using BetterFarmAnimalVariety.Framework.SaveData;
 using StardewModdingAPI;
 using System;
 using System.Collections.Generic;
@@ -37,11 +37,11 @@ namespace BetterFarmAnimalVariety
 
             int order = 0;
 
-            foreach (Framework.Config.FarmAnimal animal in this.Config.FarmAnimals)
+            foreach (Framework.Cache.FarmAnimalCategory animal in Framework.Helpers.FarmAnimals.GetCategories())
             {
-                PariteeCore.Models.FarmAnimalCategory category = animal.CanBePurchased()
-                    ? new PariteeCore.Models.FarmAnimalCategory(animal.Category, order++, animal.AnimalShop.Name, animal.AnimalShop.Description, animal.AnimalShop.Price, animal.Types, animal.Buildings, animal.AnimalShop.Exclude)
-                    : new PariteeCore.Models.FarmAnimalCategory(animal.Category, order++, animal.Types, animal.Buildings);
+                PariteeCore.Models.FarmAnimalCategory category = animal.Category.CanBePurchased()
+                    ? new PariteeCore.Models.FarmAnimalCategory(animal.Category.Category, order++, animal.Category.AnimalShop.Name, animal.Category.AnimalShop.Description, animal.Category.AnimalShop.Price, animal.Category.Types, animal.Category.Buildings, animal.Category.AnimalShop.Exclude)
+                    : new PariteeCore.Models.FarmAnimalCategory(animal.Category.Category, order++, animal.Category.Types, animal.Category.Buildings);
 
                 categories.Add(category);
             }
@@ -58,9 +58,9 @@ namespace BetterFarmAnimalVariety
 
             Framework.Helpers.Assert.GameLoaded();
 
-            FarmAnimalsSaveData saveData = Framework.Helpers.Mod.ReadSaveData<FarmAnimalsSaveData>(Framework.Constants.Mod.FarmAnimalsSaveDataKey);
+            FarmAnimals saveData = Framework.Helpers.Mod.ReadSaveData<FarmAnimals>(Framework.Constants.Mod.FarmAnimalsSaveDataKey);
 
-            return saveData.TypeHistory.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ConvertToKeyValuePair());
+            return saveData.Animals.ToDictionary(o => o.Id, o => o.TypeLog.ConvertToKeyValuePair());
         }
 
         /// <summary>Assert the version asked for is supported.</summary>

@@ -1,8 +1,5 @@
 ﻿using StardewModdingAPI;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Commands
 {
@@ -13,40 +10,40 @@ namespace BetterFarmAnimalVariety.Framework.Commands
 
         protected readonly IModHelper Helper;
         protected readonly IMonitor Monitor;
-        protected ModConfig Config;
 
-        public Command (string name, string description, IModHelper helper, IMonitor monitor, ModConfig config)
+        public Command (string name, string description, IModHelper helper, IMonitor monitor)
         {
             this.Name = name;
             this.Description = description;
 
             this.Helper = helper;
             this.Monitor = monitor;
-            this.Config = config;
         }
 
         public abstract void Callback(string command, string[] args);
 
-        protected string DescribeFarmAnimalCategory(Framework.Config.FarmAnimal animal)
+        protected string DescribeFarmAnimalCategory(Framework.Cache.FarmAnimalCategory animal)
         {
             string output = "";
 
-            output += $"{animal.Category}\n";
-            output += $"- Types: {String.Join(",", animal.Types)}\n";
-            output += $"- Buildings: {String.Join(",", animal.Buildings)}\n";
+            output += $"{animal.Category.Category}\n";
+            output += $"- Types: {String.Join(",", animal.Category.Types)}\n";
+            output += $"- Buildings: {String.Join(",", animal.Category.Buildings)}\n";
             
-            if (animal.CanBePurchased())
+            if (animal.Category.CanBePurchased())
             {
                 output += $"- AnimalShop:\n";
-                output += $"-- Name: {animal.AnimalShop.Name}\n";
-                output += $"-- Description: {animal.AnimalShop.Description}\n";
-                output += $"-- Price: {animal.AnimalShop.Price}\n";
-                output += $"-- Icon: {animal.AnimalShop.Icon}\n";
+                output += $"-- Name: {animal.Category.AnimalShop.Name}\n";
+                output += $"-- Description: {animal.Category.AnimalShop.Description}\n";
+                output += $"-- Price: {animal.Category.AnimalShop.Price}\n";
+                output += $"-- Icon: {animal.Category.AnimalShop.Icon}\n";
             }
             else
             {
                 output += $"- AnimalShop: null\n";
             }
+
+            output += $"- Asset Source Directory: {animal.AssetSourceDirectory}\n";
 
             return output;
         }

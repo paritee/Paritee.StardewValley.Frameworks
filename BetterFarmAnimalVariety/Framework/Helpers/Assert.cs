@@ -49,6 +49,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
 
         /// <param name="length">int</param>
         /// <param name="expected">int</param>
+        /// <param name="argument">string</param>
         /// <exception cref="ArgumentException"></exception>
         public static void RequiredArgumentOrder(int length, int expected, string argument)
         {
@@ -56,6 +57,31 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             {
                 throw new ArgumentException($"\"{argument}\" is required");
             }
+        }
+
+        /// <param name="argument">string</param>
+        /// <param name="str">string</param>
+        /// <param name="minLength">int</param>
+        /// <param name="maxLength">int</param>
+        /// <exception cref="ArgumentException"></exception>
+        public static void ValidStringLength(string argument, string str, int minLength, int maxLength = -1)
+        {
+            if (str.Length < minLength)
+            {
+                throw new ArgumentException($"\"{argument}\" must be at least {minLength} characters");
+            }
+
+            if (maxLength >= 0 && str.Length > maxLength)
+            {
+                throw new ArgumentException($"\"{argument}\" must be at most {minLength} characters");
+            }
+        }
+
+        /// <param name="type">string</param>
+        /// <exception cref="NotImplementedException"></exception>
+        public static void FarmAnimalTypeExists(string type)
+        {
+            Helpers.Assert.FarmAnimalTypesExist(new List<string>() { type });
         }
 
         /// <param name="types">List<string></param>
@@ -106,12 +132,9 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         /// <exception cref="NotImplementedException"></exception>
         public static void FarmAnimalCategoryExists(string category)
         {
-            // Check the config
-            ModConfig config = Helpers.Mod.ReadConfig<ModConfig>();
-
-            if (!config.CategoryExists(category))
+            if (!Helpers.FarmAnimals.CategoryExists(category))
             {
-                throw new NotImplementedException($"{category} is not a category in config.json");
+                throw new NotImplementedException($"{category} category does not exist");
             }
         }
 
@@ -147,10 +170,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         /// <exception cref="NotImplementedException"></exception>
         public static void FarmAnimalCanBePurchased(string category)
         {
-            // Check the config
-            ModConfig config = Helpers.Mod.ReadConfig<ModConfig>();
-
-            if (!config.CanBePurchased(category))
+            if (!Helpers.FarmAnimals.CanBePurchased(category))
             {
                 throw new NotImplementedException($"\"{category}\" is not available in the animal shop");
             }
@@ -160,7 +180,19 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         /// <exception cref="FormatException"></exception>
         public static void ValidMoneyAmount(string amount)
         {
-            if (!int.TryParse(amount, out int n) || n < 0)
+            if (!int.TryParse(amount, out int n))
+            {
+                throw new FormatException($"Amount must be a positive number");
+            }
+
+            Helpers.Assert.ValidMoneyAmount(n);
+        }
+
+        /// <param name="amount">int</param>
+        /// <exception cref="FormatException"></exception>
+        public static void ValidMoneyAmount(int amount)
+        {
+            if (amount < 0)
             {
                 throw new FormatException($"Amount must be a positive number");
             }
@@ -168,16 +200,20 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
 
         /// <param name="fileName">string</param>
         /// <exception cref="FileNotFoundException"></exception>
-        public static void ValidAnimalShopIcon(string fileName)
+        public static void FileExists(string filePath)
         {
-            string filePath = Path.Combine(Constants.Mod.AnimalShopIconDirectory, Path.GetFileName(fileName));
-
-            if (Helpers.Mod.TryGetFullAssetPath(filePath, out string fullPathToIcon))
+            if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException($"{fullPathToIcon} does not exist");
+                throw new FileNotFoundException($"{filePath} does not exist");
             }
+        }
 
-            Helpers.Assert.ValidFileExtension(fileName, Constants.Mod.AnimalShopIconExtension);
+        /// <param name="fileName">string</param>
+        /// <exception cref="FileNotFoundException"></exception>
+        public static void ValidAnimalShopIcon(string filePath)
+        {
+            Helpers.Assert.FileExists(filePath);
+            Helpers.Assert.ValidFileExtension(filePath, Constants.Mod.AnimalShopIconExtension);
         }
 
         /// <param name="fileName">string</param>
@@ -195,12 +231,12 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         /// <exception cref="ArgumentException"></exception>
         public static void UniqueFarmAnimalCategory(string category)
         {
-            // Check the config
-            ModConfig config = Helpers.Mod.ReadConfig<ModConfig>();
+            // Load the cache
+            Cache.FarmAnimals cache = Helpers.FarmAnimals.ReadCache();
 
-            if (config.CategoryExists(category))
+            if (cache.CategoryExists(category))
             {
-                throw new ArgumentException($"\"{category}\" already exists in config.json");
+                throw new ArgumentException($"\"{category}\" category already exists");
             }
         }
 

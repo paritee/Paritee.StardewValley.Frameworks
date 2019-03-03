@@ -54,7 +54,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
             Decorators.Incubator moddedIncubator = new Decorators.Incubator(incubator);
 
             // Grab the types with their associated categories in string form
-            Dictionary<string, List<string>> restrictions = Helpers.Mod.ReadConfig<ModConfig>().GroupTypesByCategory()
+            Dictionary<string, List<string>> restrictions = Helpers.FarmAnimals.GroupTypesByCategory()
                 .ToDictionary(kvp => kvp.Key, kvp => moddedPlayer.SanitizeBlueChickens(kvp.Value));
 
             // Return a matched type or user default coop dweller
@@ -70,11 +70,8 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
 
         private static void HandleNewborn(ref Decorators.AnimalHouse moddedAnimalHouse, string name, ref QuestionEvent questionEvent, Decorators.Farmer moddedPlayer)
         {
-            // Check the config
-            ModConfig config = Helpers.Mod.ReadConfig<ModConfig>();
-
             // Grab the types with their associated categories in string form
-            Dictionary<string, List<string>> restrictions = Helpers.Mod.ReadConfig<ModConfig>().GroupTypesByCategory()
+            Dictionary<string, List<string>> restrictions = Helpers.FarmAnimals.GroupTypesByCategory()
                 .ToDictionary(kvp => kvp.Key, kvp => moddedPlayer.SanitizeBlueChickens(kvp.Value));
 
             Decorators.FarmAnimal moddedParent = new Decorators.FarmAnimal(questionEvent.animal);

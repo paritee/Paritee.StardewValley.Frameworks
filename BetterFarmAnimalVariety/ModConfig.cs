@@ -1,4 +1,4 @@
-﻿using StardewValley;
+﻿using StardewModdingAPI;
 using System.Collections.Generic;
 using System.Linq;
 using PariteeCore = Paritee.StardewValley.Core;
@@ -9,52 +9,38 @@ namespace BetterFarmAnimalVariety
     {
         public string Format;
         public bool IsEnabled;
-        public List<Framework.Config.FarmAnimal> FarmAnimals;
+        public List<Framework.Config.FarmAnimalCategory> Categories;
 
         public ModConfig()
         {
             this.Format = null;
             this.IsEnabled = true;
-            this.FarmAnimals = new List<Framework.Config.FarmAnimal>();
+            this.Categories = new List<Framework.Config.FarmAnimalCategory>();
         }
 
-        public Dictionary<string, List<string>> GroupTypesByCategory()
+        public void Write(IModHelper helper)
         {
-            return this.FarmAnimals.ToDictionary(o => o.Category, o => new List<string>(o.Types));
+            helper.WriteConfig(this);
         }
 
-        public List<string> TypesInShop(Framework.Config.FarmAnimal animal)
+        public Framework.Config.FarmAnimalCategory GetCategory(string category)
         {
-            return animal.CanBePurchased()
-                ? animal.Types.Where(t => !animal.AnimalShop.Exclude.Contains(t)).ToList()
-                : new List<string>();
+            return this.Categories.FirstOrDefault(o => o.Category.Equals(category));
         }
 
-        public Dictionary<string, List<string>> GroupPurchaseableTypesByCategory()
+        public bool HasCategories()
         {
-            return this.FarmAnimals.ToDictionary(o => o.Category, this.TypesInShop)
-                .Where(kvp => kvp.Value.Any()) // Filter out empty lists
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            return this.Categories.Any();
         }
 
-        public bool CategoryExists(string category)
+        public void AddCategory(Framework.Config.FarmAnimalCategory category)
         {
-            if (this.FarmAnimals == null)
-            {
-                return false;
-            }
-
-            return this.FarmAnimals.Exists(o => o.Category.Equals(category));
-        }
-
-        public Framework.Config.FarmAnimal GetCategory(string category)
-        {
-            return this.FarmAnimals.FirstOrDefault(o => o.Category.Equals(category));
+            this.Categories.Add(category);
         }
 
         public void RemoveCategory(string category)
         {
-            this.FarmAnimals.RemoveAll(o => o.Category.Equals(category));
+            this.Categories.RemoveAll(o => o.Category.Equals(category));
         }
 
         public void AssertValidFormat(string targetFormat)
@@ -64,21 +50,9 @@ namespace BetterFarmAnimalVariety
 
         public void SeedVanillaFarmAnimals()
         {
-            this.FarmAnimals = PariteeCore.Constants.VanillaFarmAnimalCategory.All()
-                .Select(o => new Framework.Config.FarmAnimal(o))
+            this.Categories = PariteeCore.Constants.VanillaFarmAnimalCategory.All()
+                .Select(o => new Framework.Config.FarmAnimalCategory(o))
                 .ToList();
-        }
-
-        public List<StardewValley.Object> GetPurchaseAnimalStock(Farm farm)
-        {
-            return this.FarmAnimals.Where(o => o.CanBePurchased())
-                .Select(o => o.ToAnimalAvailableForPurchase(farm))
-                .ToList();
-        }
-
-        public bool CanBePurchased(string category)
-        {
-            return this.FarmAnimals.Exists(o => o.Category.Equals(category) && o.CanBePurchased());
         }
     }
 }

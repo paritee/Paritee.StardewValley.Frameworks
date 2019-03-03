@@ -84,7 +84,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
 
         private static string GetRandomType(Decorators.Farmer moddedPlayer, string category)
         {
-            List<string> types = Helpers.Mod.ReadConfig<ModConfig>().GroupPurchaseableTypesByCategory()[category];
+            List<string> types = Helpers.FarmAnimals.GroupPurchaseableTypesByCategory()[category];
 
             types = moddedPlayer.SanitizeBlueChickens(types);
 

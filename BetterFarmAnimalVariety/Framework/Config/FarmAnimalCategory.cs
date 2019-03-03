@@ -5,7 +5,7 @@ using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Config
 {
-    public class FarmAnimal
+    public class FarmAnimalCategory
     {
         [JsonProperty(Order = 1)]
         public string Category;
@@ -20,12 +20,12 @@ namespace BetterFarmAnimalVariety.Framework.Config
         public FarmAnimalStock AnimalShop;
 
         [JsonConstructor]
-        public FarmAnimal()
+        public FarmAnimalCategory()
         {
             // Do nothing; this is for loading an existing config
         }
 
-        public FarmAnimal(PariteeCore.Models.FarmAnimalCategory farmAnimalStock)
+        public FarmAnimalCategory(PariteeCore.Models.FarmAnimalCategory farmAnimalStock)
         {
             this.Category = farmAnimalStock.ToString();
             this.Types = farmAnimalStock.Types.Select(o => o.ToString()).ToArray();

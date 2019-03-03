@@ -12,13 +12,10 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
         {
             Decorators.PurchaseAnimalsMenu moddedMenu = new Decorators.PurchaseAnimalsMenu(__instance);
 
-            // Load the config
-            ModConfig config = Helpers.Mod.ReadConfig<ModConfig>();
-
             // Grab the icons from the config by category
-            Dictionary<string, Texture2D> icons = config.FarmAnimals
-                .Where(o => o.CanBePurchased())
-                .ToDictionary(o => o.Category, o => o.AnimalShop.GetIconTexture());
+            Dictionary<string, Texture2D> icons = Helpers.FarmAnimals.GetCategories()
+                .Where(o => o.Category.CanBePurchased())
+                .ToDictionary(o => o.Category.Category, o => o.GetAnimalShopIconTexture());
 
             // We need to completely redo the animalsToPurchase to account for the custom sprites
             moddedMenu.SetUpAnimalsToPurchase(stock, icons, out int iconHeight);
