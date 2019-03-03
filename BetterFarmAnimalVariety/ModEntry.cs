@@ -239,47 +239,8 @@ namespace BetterFarmAnimalVariety
             this.ChangedPurchaseAnimalsMenuClickableComponents = false;
         }
 
-        private void AttemptToCleanSaves(ButtonPressedEventArgs e)
-        {
-            // Always attempt to clean up the animal types to prevent on save load crashes
-            // if the patch mod had been removed without the animals being sold/deleted
-            if (Game1.activeClickableMenu is TitleMenu titleMenu && TitleMenu.subMenu is LoadGameMenu loadGameMenu)
-            {
-                if (loadGameMenu.slotButtons == null)
-                {
-                    return;
-                }
-
-                List<MenuSlot> menuSlots = this.Helper.Reflection.GetField<List<MenuSlot>>(loadGameMenu, "menuSlots").GetValue();
-
-                if (menuSlots == null || !menuSlots.Any())
-                {
-                    return;
-                }
-
-                int x = (int)e.Cursor.ScreenPixels.X;
-                int y = (int)e.Cursor.ScreenPixels.Y;
-
-                int currentItemIndex = this.Helper.Reflection.GetField<int>(loadGameMenu, "currentItemIndex").GetValue();
-
-                for (int index = 0; index < loadGameMenu.slotButtons.Count; index++)
-                {
-                    if (currentItemIndex + index < menuSlots.Count && loadGameMenu.slotButtons[index].containsPoint(x, y))
-                    {
-                        SaveFileSlot saveFileSlot = menuSlots[currentItemIndex + index] as SaveFileSlot;
-
-                        this.Helper.ConsoleCommands.Trigger("bfav_fa_fix", new string[] { saveFileSlot.Farmer.slotName });
-
-                        break;
-                    }
-                }
-            }
-        }
-
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
-            this.AttemptToCleanSaves(e);
-
             // Ignore if player hasn't loaded a save yet
             if (!Context.IsWorldReady)
             {
