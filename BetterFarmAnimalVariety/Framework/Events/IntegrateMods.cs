@@ -10,12 +10,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
 {
     class IntegrateMods
     {
-        public static void OnGameLaunched(GameLaunchedEventArgs e, IModHelper helper, IMonitor monitor)
-        {
-            IntegrateMods.SetUpModIntegrations(helper, monitor);
-        }
-
-        private static void SetUpModIntegrations(IModHelper helper, IMonitor monitor)
+        public static void SetUpModIntegrations(IModHelper helper, IMonitor monitor)
         {
             // Supported integrations:
             // <integrator, integrator arguments>

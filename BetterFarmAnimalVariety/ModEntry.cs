@@ -44,14 +44,17 @@ namespace BetterFarmAnimalVariety
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            // Firstly the cache needs to be reset ..
-            RefreshCache.OnGameLaunched(e);
+            // Seed a new cache with the vanilla animals ..
+            RefreshCache.SeedCacheWithVanillaFarmAnimals();
 
-            // .. then content packs are loaded to apply changes to the cache
-            LoadContentPacks.OnGameLaunched(e, this.Helper.ContentPacks.GetOwned(), this.Monitor);
+            // .. then content packs are loaded to apply changes to the cache ..
+            LoadContentPacks.SetUpContentPacks(this.Helper.ContentPacks.GetOwned(), this.Monitor);
+
+            // .. and validate all of the cached animals ..
+            RefreshCache.ValidateCachedFarmAnimals(this.Monitor);
 
             // .. finally hook into other mods' APIs
-            IntegrateMods.OnGameLaunched(e, this.Helper, this.Monitor);
+            IntegrateMods.SetUpModIntegrations(this.Helper, this.Monitor);
         }
 
         /// <summary>Raised before/after the game reads data from a save file and initialises the world. This event isn't raised after saving; if you want to do something at the start of each day, see DayStarted instead.</summary>
