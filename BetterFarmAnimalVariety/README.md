@@ -45,13 +45,13 @@ You can configure your mod at `Stardew Valley/Mods/Paritee's Better Farm Animal 
 
 A content pack is a folder with these files:
 
-- a `manifest.json` for SMAPI to read (see [content packs](https://stardewvalleywiki.com/Modding:Content_packs) guide);
-- a `content.json` which describes the changes you want to make;
-- and any images or files you want to use.
+- A `manifest.json` (see [content packs](https://stardewvalleywiki.com/Modding:Content_packs) guide)
+- A `content.json` which includes the animal categories you want to modify
+- Any image assets required by your categories
 
 The `content.json` file has a list of `Categories`. Each entry is called a `category` with an associated `action`. There isn't a limit to the number of categories you can include.
 
-Here is an example of a `content.json` with multiple actions.
+Here is an example of a `content.json` with multiple actions:
 
 ```js
 {
