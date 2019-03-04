@@ -162,7 +162,7 @@ This action will remove an existing category (`"Action": "Remove"`). It is not p
 
 ## API
 
-See [SMAPI Modder Guide](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Integrations#Using_an_API) for usage. Requires the  [Paritee.StardewValley.Core](https://github.com/paritee/Paritee.StardewValley.Core) Nuget package.
+See [SMAPI Modder Guide](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Integrations#Using_an_API) for usage. Requires the  [Paritee.StardewValley.Core](https://github.com/paritee/Paritee.StardewValley.Core) (also available as a [Nuget Package](https://www.nuget.org/packages/Paritee.StardewValley.Core)).
 
 ```c#
 /// <param name="version">string</param>
