@@ -15,9 +15,7 @@ using StardewValley;
 using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using static StardewValley.Menus.LoadGameMenu;
 
 namespace BetterFarmAnimalVariety
 {
@@ -26,10 +24,6 @@ namespace BetterFarmAnimalVariety
     {
         public ModConfig Config;
         public ModCommand Command;
-
-        public Player Player;
-        public BlueVariation BlueFarmAnimals;
-        public VoidVariation VoidFarmAnimals;
 
         private bool ChangedPurchaseAnimalsMenuClickableComponents = false;
 
@@ -67,7 +61,6 @@ namespace BetterFarmAnimalVariety
             this.Helper.Content.AssetEditors.Add(new AnimalBirthEditor(this));
 
             // Events
-            this.Helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
             this.Helper.Events.Display.RenderingActiveMenu += this.OnRenderingActiveMenu;
             this.Helper.Events.Display.RenderedActiveMenu += this.OnRenderedActiveMenu;
             this.Helper.Events.Input.ButtonPressed += this.OnButtonPressed;
@@ -129,22 +122,17 @@ namespace BetterFarmAnimalVariety
             return config;
         }
 
-        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+        private AnimalShop GetAnimalShop(Player player)
         {
-            this.Player = new Player(Game1.player, this.Helper);
-
             // Set up everything else
-            BlueConfig blueConfig = new BlueConfig(this.Player.HasSeenEvent(BlueVariation.EVENT_ID));
-            this.BlueFarmAnimals = new BlueVariation(blueConfig);
+            BlueConfig blueConfig = new BlueConfig(player.HasSeenEvent(BlueVariation.EVENT_ID));
+            BlueVariation blueFarmAnimals = new BlueVariation(blueConfig);
 
-            VoidConfig voidConfig = new VoidConfig(this.Config.VoidFarmAnimalsInShop, this.Player.HasCompletedQuest(VoidVariation.QUEST_ID));
-            this.VoidFarmAnimals = new VoidVariation(voidConfig);
-        }
+            VoidConfig voidConfig = new VoidConfig(this.Config.VoidFarmAnimalsInShop, player.HasCompletedQuest(VoidVariation.QUEST_ID));
+            VoidVariation voidFarmAnimals = new VoidVariation(voidConfig);
 
-        private AnimalShop GetAnimalShop()
-        {
             List<FarmAnimalForPurchase> farmAnimalsForPurchase = this.Config.GetFarmAnimalsForPurchase(Game1.getFarm());
-            StockConfig stockConfig = new StockConfig(farmAnimalsForPurchase, this.BlueFarmAnimals, this.VoidFarmAnimals);
+            StockConfig stockConfig = new StockConfig(farmAnimalsForPurchase, blueFarmAnimals, voidFarmAnimals);
             Stock stock = new Stock(stockConfig);
 
             return new AnimalShop(stock);
@@ -167,9 +155,15 @@ namespace BetterFarmAnimalVariety
 
             if (namingMenu.GetType() == typeof(StardewValley.Menus.NamingMenu))
             {
+                Player player = new Player(Game1.player, this.Helper);
+
+                // Set up everything else
+                BlueConfig blueConfig = new BlueConfig(player.HasSeenEvent(BlueVariation.EVENT_ID));
+                BlueVariation blueFarmAnimals = new BlueVariation(blueConfig);
+
                 Dictionary<string, List<string>> farmAnimals = this.Config.GetFarmAnimalTypes();
-                BreedFarmAnimalConfig breedFarmAnimalConfig = new BreedFarmAnimalConfig(farmAnimals, this.BlueFarmAnimals, this.Config.RandomizeNewbornFromCategory, this.Config.RandomizeHatchlingFromCategory, this.Config.IgnoreParentProduceCheck);
-                BreedFarmAnimal breedFarmAnimal = new BreedFarmAnimal(this.Player, breedFarmAnimalConfig);
+                BreedFarmAnimalConfig breedFarmAnimalConfig = new BreedFarmAnimalConfig(farmAnimals, blueFarmAnimals, this.Config.RandomizeNewbornFromCategory, this.Config.RandomizeHatchlingFromCategory, this.Config.IgnoreParentProduceCheck);
+                BreedFarmAnimal breedFarmAnimal = new BreedFarmAnimal(player, breedFarmAnimalConfig);
 
                 NameFarmAnimalMenu nameFarmAnimalMenu = new NameFarmAnimalMenu(namingMenu, breedFarmAnimal);
 
@@ -216,7 +210,8 @@ namespace BetterFarmAnimalVariety
                     }
                 }
 
-                AnimalShop animalShop = this.GetAnimalShop();
+                Player player = new Player(Game1.player, this.Helper);
+                AnimalShop animalShop = this.GetAnimalShop(player);
 
                 purchaseAnimalsMenu.animalsToPurchase = animalShop.FarmAnimalStock.DetermineClickableComponents(purchaseAnimalsMenu, textures);
 
@@ -268,9 +263,11 @@ namespace BetterFarmAnimalVariety
             // Purchasing a new animal
             StardewValley.Menus.PurchaseAnimalsMenu purchaseAnimalsMenu = activeClickableMenu.GetMenu() as StardewValley.Menus.PurchaseAnimalsMenu;
 
-            AnimalShop animalShop = this.GetAnimalShop();
 
-            PurchaseFarmAnimal purchaseFarmAnimal = new PurchaseFarmAnimal(this.Player, animalShop);
+            Player player = new Player(Game1.player, this.Helper);
+            AnimalShop animalShop = this.GetAnimalShop(player);
+
+            PurchaseFarmAnimal purchaseFarmAnimal = new PurchaseFarmAnimal(player, animalShop);
             PurchaseFarmAnimalMenu purchaseFarmAnimalMenu = new PurchaseFarmAnimalMenu(purchaseAnimalsMenu, purchaseFarmAnimal);
 
             purchaseFarmAnimalMenu.HandleTap(e);
