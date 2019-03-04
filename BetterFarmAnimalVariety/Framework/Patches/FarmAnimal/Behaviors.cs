@@ -6,7 +6,7 @@ using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 {
-    //[HarmonyPatch(typeof(StardewValley.FarmAnimal), "behaviors")]
+    [HarmonyPatch(typeof(StardewValley.FarmAnimal), "behaviors")]
     class Behaviors
     {
         public static bool Prefix(ref StardewValley.FarmAnimal __instance, ref GameTime time, ref GameLocation location, ref bool __result)
@@ -110,10 +110,17 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
         private static void AssertCanFindProduce(Decorators.FarmAnimal moddedAnimal, Decorators.Farmer moddedPlayer)
         {
+            Helpers.Assert.CanFindProduce(moddedAnimal);
+
+            Debug.WriteLine($"moddedAnimal.GetName() {moddedAnimal.GetName()}");
+            Debug.WriteLine($"moddedAnimal.GetTypeString() {moddedAnimal.GetTypeString()}");
+
             int produceIndex = moddedAnimal.RollProduce(moddedPlayer.GetOriginal());
 
+
+            Debug.WriteLine($"produceIndex{produceIndex}");
+
             Helpers.Assert.ProduceIsAnItem(produceIndex);
-            Helpers.Assert.CanFindProduce(moddedAnimal);
         }
 
         private static void AssertRollChance()
