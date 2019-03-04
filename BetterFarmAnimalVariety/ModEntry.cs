@@ -44,7 +44,13 @@ namespace BetterFarmAnimalVariety
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
+            // Firstly the cache needs to be reset ..
+            RefreshCache.OnGameLaunched(e);
+
+            // .. then content packs are loaded to apply changes to the cache
             LoadContentPacks.OnGameLaunched(e, this.Helper.ContentPacks.GetOwned(), this.Monitor);
+
+            // .. finally hook into other mods' APIs
             IntegrateMods.OnGameLaunched(e, this.Helper, this.Monitor);
         }
 
@@ -57,7 +63,7 @@ namespace BetterFarmAnimalVariety
             // Don't need to clean up saves prior to loading. Dirty saves will 
             // automatically be fixed on the next save. Only impact would be to 
             // players who upgraded from 1.x or 2.x who removed patches without 
-            // selling /deleting the animals and without going through the cleaning 
+            // selling/deleting the animals and without going through the cleaning 
             // script. Minor impact.
 
             try

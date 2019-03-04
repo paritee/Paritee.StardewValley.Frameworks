@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Harmony;
-using PariteeCore = Paritee.StardewValley.Core;
-using System.IO;
 
 namespace BetterFarmAnimalVariety.Framework.Events
 {
@@ -11,10 +8,6 @@ namespace BetterFarmAnimalVariety.Framework.Events
     {
         public static void OnEntry(ModEntry mod)
         {
-            // Seed a new cache with the vanilla animals; content packs loaded 
-            // later will modify these animals
-            LoadMod.SeedCacheWithVanillaFarmAnimals();
-
             // Always kill the mod if we could not set up the config
             LoadMod.SetUpConfig(mod);
 
@@ -64,20 +57,6 @@ namespace BetterFarmAnimalVariety.Framework.Events
             {
                 throw new ApplicationException($"Mod is disabled. To enable, set IsEnabled to true in config.json.");
             }
-        }
-
-        private static void SeedCacheWithVanillaFarmAnimals()
-        {
-            // Seed with all of the vanilla farm animals
-            List<Cache.FarmAnimalCategory> categories = PariteeCore.Constants.VanillaFarmAnimalCategory.All()
-                .Select(o => new Cache.FarmAnimalCategory(PariteeCore.Constants.Mod.Path, o))
-                .ToList();
-
-            // Reset the cache
-            Cache.FarmAnimals cache = new Cache.FarmAnimals(categories);
-
-            // Commit the seed
-            Helpers.FarmAnimals.Write(cache);
         }
 
         private static void SetUpHarmonyPatches()
