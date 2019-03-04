@@ -33,7 +33,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
         private List<string> TypesInShop(Framework.Cache.FarmAnimalCategory category)
         {
             return category.CanBePurchased()
-                ? category.Types.Where(o => !category.AnimalShop.Exclude.Contains(o.Type)).Select(o => o.Type).ToList()
+                ? category.Types.Where(o => category.AnimalShop.Exclude == null || !category.AnimalShop.Exclude.Contains(o.Type)).Select(o => o.Type).ToList()
                 : new List<string>();
         }
 

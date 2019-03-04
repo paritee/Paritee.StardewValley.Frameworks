@@ -42,9 +42,17 @@ namespace BetterFarmAnimalVariety
                 string[] types = animal.Types.Select(o => o.Type).ToArray();
                 int price = PariteeCore.Api.FarmAnimal.GetCheapestPrice(types.ToList());
 
+                string[] buildings = animal.Buildings == null
+                    ? new string[0]
+                    : animal.Buildings.ToArray();
+
+                string[] excludeFromShop = animal.AnimalShop.Exclude == null
+                    ? new string[0]
+                    : animal.AnimalShop.Exclude.ToArray();
+
                 PariteeCore.Models.FarmAnimalCategory category = animal.CanBePurchased()
-                    ? new PariteeCore.Models.FarmAnimalCategory(animal.Category, order++, animal.AnimalShop.Name, animal.AnimalShop.Description, price, types, animal.Buildings.ToArray(), animal.AnimalShop.Exclude.ToArray())
-                    : new PariteeCore.Models.FarmAnimalCategory(animal.Category, order++, types, animal.Buildings.ToArray());
+                    ? new PariteeCore.Models.FarmAnimalCategory(animal.Category, order++, animal.AnimalShop.Name, animal.AnimalShop.Description, price, types, buildings, excludeFromShop)
+                    : new PariteeCore.Models.FarmAnimalCategory(animal.Category, order++, types, buildings);
 
                 categories.Add(category);
             }

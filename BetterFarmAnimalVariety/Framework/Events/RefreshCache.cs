@@ -13,16 +13,20 @@ namespace BetterFarmAnimalVariety.Framework.Events
             // Validate the cached animals
             foreach (Cache.FarmAnimalCategory category in Helpers.FarmAnimals.GetCategories())
             {
-                try
-                {
+                //try
+                //{
                     // Validate category
                     Helpers.Assert.ValidStringLength("category", category.Category, 1);
 
                     // Validate types
-                    Helpers.Assert.FarmAnimalTypesExist(category.Types.Select(o => o.Type).ToList());
+                    List<string> types = category.Types.Select(o => o.Type).ToList();
+
+                    Helpers.Assert.AtLeastOneTypeRequired(types);
+                    Helpers.Assert.FarmAnimalTypesExist(types);
 
                     // Validate buildings
-                    Helpers.Assert.BuildingsExist(category.Buildings.ToList());
+                    Helpers.Assert.AtLeastOneBuildingRequired(category.Buildings);
+                    Helpers.Assert.BuildingsExist(category.Buildings);
 
                     if (category.CanBePurchased())
                     {
@@ -35,17 +39,20 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         Helpers.Assert.ValidFileExtension(category.AnimalShop.Icon, Constants.Mod.AnimalShopIconExtension);
 
                         // Validate excluded types
-                        Helpers.Assert.FarmAnimalTypesExist(category.AnimalShop.Exclude.ToList());
+                        if (category.AnimalShop.Exclude != null)
+                        {
+                            Helpers.Assert.FarmAnimalTypesExist(category.AnimalShop.Exclude);
+                        }
                     }
-                }
-                catch (Exception exception)
-                {
-                    monitor.Log($"{category.Category} will not load: {exception.Message}", LogLevel.Warn);
+                //}
+                //catch (Exception exception)
+                //{
+                //    monitor.Log($"{category.Category} will not load: {exception.Message}", LogLevel.Warn);
 
-                    // Remove it from the cache for this session
-                    // i.e. Cache gets reloaded every time the game is started
-                    Helpers.FarmAnimals.RemoveCategory(category.Category);
-                }
+                //    // Remove it from the cache for this session
+                //    // i.e. Cache gets reloaded every time the game is started
+                //    Helpers.FarmAnimals.RemoveCategory(category.Category);
+                //}
             }
         }
 

@@ -71,7 +71,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
                 return false;
             }
 
-            if (PariteeCore.Helpers.Random.NextDouble() >- 0.002)
+            if (PariteeCore.Helpers.Random.NextDouble() >= 0.002)
             {
                 return false;
             }
@@ -147,7 +147,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
                 return;
             }
 
-            if (PariteeCore.Helpers.Random.NextDouble() < 0.0002)
+            if (PariteeCore.Helpers.Random.NextDouble() >= 0.0002)
             {
                 return;
             }

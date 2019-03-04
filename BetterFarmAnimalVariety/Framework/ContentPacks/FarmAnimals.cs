@@ -148,7 +148,7 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
 
                 if (category.AnimalShop.Exclude != null)
                 {
-                    cacheCategory.AnimalShop.Exclude = category.ForceOverrideExclude
+                    cacheCategory.AnimalShop.Exclude = category.ForceOverrideExclude || cacheCategory.AnimalShop.Exclude == null
                         ? category.AnimalShop.Exclude
                         : cacheCategory.AnimalShop.Exclude.Union(category.AnimalShop.Exclude).ToList();
                 }

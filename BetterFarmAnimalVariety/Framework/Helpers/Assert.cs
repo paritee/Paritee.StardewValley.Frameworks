@@ -138,13 +138,23 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             }
         }
 
-        /// <param name="types">string[]</param>
+        /// <param name="types">List<string></param>
         /// <exception cref="ArgumentException"></exception>
-        public static void AtLeastOneTypeRequired(string[] types)
+        public static void AtLeastOneTypeRequired(List<string> types)
         {
-            if (types.Length < 1)
+            if (types.Count < 1)
             {
                 throw new ArgumentException($"At least one type is required");
+            }
+        }
+
+        /// <param name="buildings">List<string></param>
+        /// <exception cref="ArgumentException"></exception>
+        public static void AtLeastOneBuildingRequired(List<string> buildings)
+        {
+            if (buildings.Count < 1)
+            {
+                throw new ArgumentException($"At least one building is required");
             }
         }
 

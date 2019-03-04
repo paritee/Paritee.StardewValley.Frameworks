@@ -69,7 +69,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
                 return false;
             }
 
-            return !this.AnimalShop.Exclude.Contains(type);
+            return this.AnimalShop.Exclude == null ? true : !this.AnimalShop.Exclude.Contains(type);
         }
 
         public StardewValley.Object ToAnimalAvailableForPurchase(Farm farm)

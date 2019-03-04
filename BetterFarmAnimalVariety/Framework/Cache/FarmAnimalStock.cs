@@ -30,7 +30,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
             this.Name = farmAnimalStock.DisplayName;
             this.Description = farmAnimalStock.Description;
             this.Icon = this.GetDefaultIconPath(farmAnimalStock.ToString());
-            this.Exclude = farmAnimalStock.ExcludeFromShop.Any()
+            this.Exclude = farmAnimalStock.ExcludeFromShop != null && farmAnimalStock.ExcludeFromShop.Any()
                 ? farmAnimalStock.ExcludeFromShop.Select(o => o.ToString()).ToList()
                 : new List<string>();
         }
