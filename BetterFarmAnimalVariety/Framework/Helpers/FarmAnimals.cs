@@ -83,7 +83,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             return cache.GroupPurchaseableTypesByCategory();
         }
 
-        public static Framework.Cache.FarmAnimalCategory GetCategory(string category)
+        public static Cache.FarmAnimalCategory GetCategory(string category)
         {
             // Load the cache
             Cache.FarmAnimals cache = Helpers.FarmAnimals.ReadCache();

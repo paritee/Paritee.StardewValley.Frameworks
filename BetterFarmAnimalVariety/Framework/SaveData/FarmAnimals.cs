@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using PariteeCore = Paritee.StardewValley.Core;
 
@@ -138,8 +137,6 @@ namespace BetterFarmAnimalVariety.Framework.SaveData
             // If there's a save data entry, use that; otherwise this might be 
             // an animal created before being saved (ie. created in current day)
             string currentType = typeHistory == null ? (requestedType ?? moddedAnimal.GetTypeString()) : typeHistory.Current;
-
-            Debug.WriteLine($"currentType");
 
             // Set the animal with the new type's data values
             moddedAnimal.UpdateFromData(currentType);

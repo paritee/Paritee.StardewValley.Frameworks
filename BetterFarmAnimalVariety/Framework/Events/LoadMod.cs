@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Harmony;
-using BetterFarmAnimalVariety.Framework.Editors;
 using PariteeCore = Paritee.StardewValley.Core;
-using System.Diagnostics;
 using System.IO;
 
 namespace BetterFarmAnimalVariety.Framework.Events
@@ -13,12 +11,12 @@ namespace BetterFarmAnimalVariety.Framework.Events
     {
         public static void OnEntry(ModEntry mod)
         {
-            // Always kill the mod if we could not set up the config
-            LoadMod.SetUpConfig(mod);
-
             // Seed a new cache with the vanilla animals; content packs loaded 
             // later will modify these animals
             LoadMod.SeedCacheWithVanillaFarmAnimals();
+
+            // Always kill the mod if we could not set up the config
+            LoadMod.SetUpConfig(mod);
 
             // Harmony
             LoadMod.SetUpHarmonyPatches();
@@ -28,25 +26,21 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
             // Asset Editors
             LoadMod.SetUpAssetEditors(mod);
+
+            // Asset Loaders
+            LoadMod.SetUpAssetLoaders(mod);
         }
 
         private static void SetUpConfig(ModEntry mod)
         {
-            Debug.WriteLine($"json {File.ReadAllText(Path.Combine(PariteeCore.Constants.Mod.Path, Constants.Mod.ConfigFileName))}");
-
-
-
             ModConfig config;
 
             string targetFormat = mod.ModManifest.Version.MajorVersion.ToString();
 
             try
             {
-                Debug.WriteLine($"SetUpConfig");
                 // Load the config
                 config = Helpers.Mod.ReadConfig<ModConfig>();
-                Debug.WriteLine($"ReadConfig as ModConfig");
-                Debug.WriteLine($"config.Format == null {config.Format == null}");
 
                 // Do this outside of the constructor so that we can use the ModManifest helper
                 if (config.Format == null)
@@ -55,16 +49,11 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 }
                 else
                 {
-                    Debug.WriteLine($"config.Format {config.Format}");
                     config.AssertValidFormat(targetFormat);
-                    Debug.WriteLine($"AssertedValidFormat");
                 }
             }
             catch (Exception e)
             {
-                Debug.WriteLine($"e.Message {e.Message}");
-                Debug.WriteLine($"json {File.ReadAllText(Path.Combine(PariteeCore.Constants.Mod.Path, Constants.Mod.ConfigFileName))}");
-
                 MigrateDeprecatedConfig.OnEntry(mod, targetFormat, out config);
             }
 
@@ -81,7 +70,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
         {
             // Seed with all of the vanilla farm animals
             List<Cache.FarmAnimalCategory> categories = PariteeCore.Constants.VanillaFarmAnimalCategory.All()
-                .Select(o => new Framework.Cache.FarmAnimalCategory(PariteeCore.Constants.Mod.Path, o))
+                .Select(o => new Cache.FarmAnimalCategory(PariteeCore.Constants.Mod.Path, o))
                 .ToList();
 
             // Reset the cache
@@ -120,7 +109,13 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
         private static void SetUpAssetEditors(ModEntry mod)
         {
-            mod.Helper.Content.AssetEditors.Add(new AnimalBirth(mod));
+            mod.Helper.Content.AssetEditors.Add(new Editors.AnimalBirth(mod));
+            mod.Helper.Content.AssetEditors.Add(new Editors.FarmAnimalData());
+        }
+
+        private static void SetUpAssetLoaders(ModEntry mod)
+        {
+            mod.Helper.Content.AssetLoaders.Add(new Loaders.FarmAnimalSprites());
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using StardewValley;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using PariteeCore = Paritee.StardewValley.Core;
@@ -13,47 +14,47 @@ namespace BetterFarmAnimalVariety.Framework.Cache
         public string Category;
 
         [JsonProperty(Order = 1)]
-        public string[] Types;
+        public List<FarmAnimalType> Types;
 
         [JsonProperty(Order = 2)]
-        public string[] Buildings;
+        public List<string> Buildings;
 
         [JsonProperty(Order = 3)]
         public FarmAnimalStock AnimalShop;
-
-        [JsonProperty(Order = 4)]
-        public string AssetSourceDirectory;
 
         public FarmAnimalCategory() { }
 
         public FarmAnimalCategory(string assetSourceDirectory, ContentPacks.FarmAnimalCategory category)
         {
-            this.AssetSourceDirectory = assetSourceDirectory;
             this.Category = category.Category;
             this.Types = category.Types;
             this.Buildings = category.Buildings;
             this.AnimalShop = category.AnimalShop;
+
+            if (this.CanBePurchased())
+            {
+                this.AnimalShop.Icon = Path.Combine(assetSourceDirectory, this.AnimalShop.Icon);
+            }
         }
 
         public FarmAnimalCategory(string assetSourceDirectory, PariteeCore.Models.FarmAnimalCategory farmAnimalStock)
         {
-            this.AssetSourceDirectory = assetSourceDirectory;
             this.Category = farmAnimalStock.ToString();
-            this.Types = farmAnimalStock.Types.Select(o => o.ToString()).ToArray();
-            this.Buildings = farmAnimalStock.Buildings;
+            this.Types = farmAnimalStock.Types.Select(o => new FarmAnimalType(o)).ToList();
+            this.Buildings = farmAnimalStock.Buildings.ToList();
             this.AnimalShop = farmAnimalStock.CanBePurchased()
                 ? new FarmAnimalStock(farmAnimalStock)
                 : null;
-        }
 
-        public string GetAssetPath(string asset)
-        {
-            return Path.Combine(this.AssetSourceDirectory, asset);
+            if (this.CanBePurchased())
+            {
+                this.AnimalShop.Icon = Path.Combine(assetSourceDirectory, this.AnimalShop.Icon);
+            }
         }
 
         public Texture2D GetAnimalShopIconTexture()
         {
-            return this.CanBePurchased() ? PariteeCore.Api.Mod.LoadTexture(this.GetAssetPath(this.AnimalShop.Icon)) : null;
+            return this.CanBePurchased() ? PariteeCore.Api.Mod.LoadTexture(this.AnimalShop.Icon) : null;
         }
 
         public bool CanBePurchased()
@@ -78,7 +79,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
                 return null;
             }
 
-            return PariteeCore.Api.AnimalShop.FormatAsAnimalAvailableForPurchase(farm, this.Category, this.AnimalShop.Name, this.AnimalShop.Price, this.Buildings);
+            return PariteeCore.Api.AnimalShop.FormatAsAnimalAvailableForPurchase(farm, this.Category, this.AnimalShop.Name, this.AnimalShop.Price, this.Buildings.ToArray());
         }
     }
 }

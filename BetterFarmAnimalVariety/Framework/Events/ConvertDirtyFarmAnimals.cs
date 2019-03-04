@@ -1,5 +1,4 @@
-﻿using BetterFarmAnimalVariety.Framework.SaveData;
-using StardewModdingAPI.Events;
+﻿using StardewModdingAPI.Events;
 using StardewValley;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
     {
         public static void OnSaving(SavingEventArgs e)
         {
-            FarmAnimals saveData = Helpers.Mod.ReadSaveData<FarmAnimals>(Constants.Mod.FarmAnimalsSaveDataKey);
+            SaveData.FarmAnimals saveData = Helpers.Mod.ReadSaveData<SaveData.FarmAnimals>(Constants.Mod.FarmAnimalsSaveDataKey);
 
             // Track the animal ID because we're going to remove 
             // animals that no longer exist from the save data 
@@ -72,7 +71,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         // Make sure this animal exists in the save data and 
                         // has the most updated information. Could have been 
                         // created /purchased today and not saved yet.
-                        TypeLog typeLog = new TypeLog(currentType, savedType);
+                        SaveData.TypeLog typeLog = new SaveData.TypeLog(currentType, savedType);
 
                         saveData.AddAnimal(moddedAnimal, typeLog);
                     }

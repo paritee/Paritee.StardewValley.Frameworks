@@ -22,13 +22,13 @@ namespace BetterFarmAnimalVariety.Framework.Commands
 
         public abstract void Callback(string command, string[] args);
 
-        protected string DescribeFarmAnimalCategory(Framework.Cache.FarmAnimalCategory animal)
+        protected string DescribeFarmAnimalCategory(Cache.FarmAnimalCategory animal)
         {
             string output = "";
 
             output += $"{animal.Category}\n";
-            output += $"- Types: {String.Join(",", animal.Types)}\n";
-            output += $"- Buildings: {String.Join(",", animal.Buildings)}\n";
+            output += $"- Types: {string.Join(",", animal.Types)}\n";
+            output += $"- Buildings: {string.Join(",", animal.Buildings)}\n";
             
             if (animal.CanBePurchased())
             {
@@ -42,8 +42,6 @@ namespace BetterFarmAnimalVariety.Framework.Commands
             {
                 output += $"- AnimalShop: null\n";
             }
-
-            output += $"- Asset Source Directory: {animal.AssetSourceDirectory}\n";
 
             return output;
         }

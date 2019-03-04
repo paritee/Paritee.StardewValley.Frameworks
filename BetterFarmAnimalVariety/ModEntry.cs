@@ -16,17 +16,17 @@ namespace BetterFarmAnimalVariety
         /// <param name="helper">Provides simplified APIs for writing mods.</param>
         public override void Entry(IModHelper helper)
         {
-            //try
-            //{
+            try
+            {
                 LoadMod.OnEntry(this);
-            //}
-            //catch (Exception e)
-            //{
-            //    // Any errors that happen here should be considered show-stoppers
-            //    this.Monitor.Log(e.Message, LogLevel.Error);
+            }
+            catch (Exception e)
+            {
+                // Any errors that happen here should be considered show-stoppers
+                this.Monitor.Log(e.Message, LogLevel.Error);
 
-            //    return;
-            //}
+                return;
+            }
 
             // Events
             this.Helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;

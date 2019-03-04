@@ -7,7 +7,7 @@ namespace BetterFarmAnimalVariety.Framework.Integrations
 {
     class MoreAnimals : Integration
     {
-        public static string Key => Framework.Constants.Integration.MoreAnimals;
+        public static string Key => Constants.Integration.MoreAnimals;
         public static Type ApiInterface => typeof(IMoreAnimalsAPI);
 
         private readonly IMoreAnimalsAPI Api;
@@ -26,7 +26,7 @@ namespace BetterFarmAnimalVariety.Framework.Integrations
             {
                 this.RegisterAnimalType(entry, out bool hasBaby, out bool canShear);
 
-                monitor.Log($"Registered {entry.Key} (hasBaby:{hasBaby}, canShear:{canShear}) with {Framework.Constants.Integration.MoreAnimals}", LogLevel.Trace);
+                monitor.Log($"Registered {entry.Key} (hasBaby:{hasBaby}, canShear:{canShear}) with {Constants.Integration.MoreAnimals}", LogLevel.Trace);
             }
         }
 

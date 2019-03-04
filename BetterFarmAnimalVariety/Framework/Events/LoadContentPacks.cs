@@ -15,7 +15,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
             LoadContentPacks.ValidateCachedFarmAnimals(monitor);
         }
 
-        private static void SetUpContentPacks(IEnumerable<IContentPack> contentPacks, IMonitor monitor)
+        public static void SetUpContentPacks(IEnumerable<IContentPack> contentPacks, IMonitor monitor)
         {
             foreach (IContentPack contentPack in contentPacks)
             {
@@ -52,7 +52,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                     Helpers.Assert.ValidStringLength("category", category.Category, 1);
 
                     // Validate types
-                    Helpers.Assert.FarmAnimalTypesExist(category.Types.ToList());
+                    Helpers.Assert.FarmAnimalTypesExist(category.Types.Select(o => o.Type).ToList());
 
                     // Validate buildings
                     Helpers.Assert.BuildingsExist(category.Buildings.ToList());
@@ -67,7 +67,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         Helpers.Assert.ValidMoneyAmount(category.AnimalShop.Price);
 
                         // Validate shop icon
-                        Helpers.Assert.FileExists(category.GetAssetPath(category.AnimalShop.Icon));
+                        Helpers.Assert.FileExists(category.AnimalShop.Icon);
                         Helpers.Assert.ValidFileExtension(category.AnimalShop.Icon, Constants.Mod.AnimalShopIconExtension);
 
                         // Validate excluded types

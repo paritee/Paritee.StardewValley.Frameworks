@@ -1,6 +1,7 @@
 ﻿using StardewModdingAPI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.ContentPacks
@@ -18,22 +19,21 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
 
         public void SetUp(IContentPack contentPack)
         {
-
             // Go through each category
-            foreach (Framework.ContentPacks.FarmAnimalCategory category in this.Categories)
+            foreach (ContentPacks.FarmAnimalCategory category in this.Categories)
             {
                 // Handle the actions
                 switch (category.Action)
                 {
-                    case Framework.ContentPacks.FarmAnimalCategory.Actions.Create:
+                    case ContentPacks.FarmAnimalCategory.Actions.Create:
                         this.HandleCreateAction(contentPack, category);
                         break;
 
-                    case Framework.ContentPacks.FarmAnimalCategory.Actions.Update:
+                    case ContentPacks.FarmAnimalCategory.Actions.Update:
                         this.HandleUpdateAction(contentPack, category);
                         break;
 
-                    case Framework.ContentPacks.FarmAnimalCategory.Actions.Remove:
+                    case ContentPacks.FarmAnimalCategory.Actions.Remove:
                         this.HandleRemoveAction(contentPack, category);
                         break;
 
@@ -43,10 +43,33 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
             }
         }
 
+        private Cache.FarmAnimalType CastSpritesToFullPaths(Cache.FarmAnimalType type, string directoryPath)
+        {
+            if (type.AdultSprite != null)
+            {
+                type.AdultSprite = Path.Combine(directoryPath, type.AdultSprite);
+            }
+
+            if (type.BabySprite != null)
+            {
+                type.BabySprite = Path.Combine(directoryPath, type.BabySprite);
+            }
+
+            if (type.ShearedSprite != null)
+            {
+                type.ShearedSprite = Path.Combine(directoryPath, type.ShearedSprite);
+            }
+
+            return type;
+        }
+
         public void HandleCreateAction(IContentPack contentPack, ContentPacks.FarmAnimalCategory category)
         {
             // Assert unique category
             Helpers.Assert.UniqueFarmAnimalCategory(category.Category);
+
+            // Need to modify the sprite paths
+            category.Types = category.Types.Select(o => this.CastSpritesToFullPaths(o, contentPack.DirectoryPath)).ToList();
 
             Helpers.FarmAnimals.AddOrReplaceCategory(new Cache.FarmAnimalCategory(contentPack.DirectoryPath, category));
         }
@@ -61,9 +84,29 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
             // Add the missing types
             if (category.Types != null)
             {
-                cacheCategory.Types = category.ForceOverrideTypes
-                    ? category.Types
-                    : cacheCategory.Types.Union(category.Types).ToArray();
+                // Need to modify the sprite paths
+                List<Cache.FarmAnimalType> types = category.Types.Select(o => this.CastSpritesToFullPaths(o, contentPack.DirectoryPath)).ToList();
+
+                if (category.ForceOverrideTypes)
+                {
+                    cacheCategory.Types = types;
+                }
+                else
+                {
+                    foreach (Cache.FarmAnimalType type in types)
+                    {
+                        Cache.FarmAnimalType cacheCategoryType = cacheCategory.Types.FirstOrDefault(o => o.Type == type.Type);
+
+                        if (cacheCategoryType != null)
+                        {
+                            cacheCategoryType = type;
+                        }
+                        else
+                        {
+                            cacheCategory.Types.Add(type);
+                        }
+                    }
+                }
             }
 
             // Add the missing buildings
@@ -71,7 +114,7 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
             {
                 cacheCategory.Buildings = category.ForceOverrideBuildings 
                     ? category.Buildings
-                    : cacheCategory.Buildings.Union(category.Buildings).ToArray();
+                    : cacheCategory.Buildings.Union(category.Buildings).ToList();
             }
 
             // Check if the force remove from shop flag was used
@@ -100,10 +143,7 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
 
                 if (category.AnimalShop.Icon != null)
                 {
-                    cacheCategory.AnimalShop.Icon = category.AnimalShop.Icon;
-
-                    // Also update the asset source
-                    cacheCategory.AssetSourceDirectory = contentPack.DirectoryPath;
+                    cacheCategory.AnimalShop.Icon = Path.Combine(contentPack.DirectoryPath, category.AnimalShop.Icon);
                 }
 
                 if (category.AnimalShop.Price != default(int))
@@ -115,7 +155,7 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
                 {
                     cacheCategory.AnimalShop.Exclude = category.ForceOverrideExclude
                         ? category.AnimalShop.Exclude
-                        : cacheCategory.Types.Union(category.AnimalShop.Exclude).ToArray();
+                        : cacheCategory.AnimalShop.Exclude.Union(category.AnimalShop.Exclude).ToList();
                 }
             }
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using StardewValley;
 using System.Collections.Generic;
-using System.Diagnostics;
 using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Decorators
@@ -47,8 +46,6 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
 
         public void UpdateFromData(string type)
         {
-            Debug.WriteLine($"UpdateFromData");
-            Debug.WriteLine($"type {type}");
             PariteeCore.Api.FarmAnimal.UpdateFromData(this.GetOriginal(), type);
         }
 

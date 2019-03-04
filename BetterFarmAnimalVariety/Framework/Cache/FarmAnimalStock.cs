@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using PariteeCore = Paritee.StardewValley.Core;
@@ -20,7 +21,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
         public int Price;
 
         [JsonProperty(Order = 4)]
-        public string[] Exclude;
+        public List<string> Exclude;
 
         public FarmAnimalStock()
         {
@@ -34,8 +35,8 @@ namespace BetterFarmAnimalVariety.Framework.Cache
             this.Icon = this.GetDefaultIconPath(farmAnimalStock.ToString());
             this.Price = farmAnimalStock.Price;
             this.Exclude = farmAnimalStock.ExcludeFromShop.Any()
-                ? farmAnimalStock.ExcludeFromShop.Select(o => o.ToString()).ToArray()
-                : new string[0];
+                ? farmAnimalStock.ExcludeFromShop.Select(o => o.ToString()).ToList()
+                : new List<string>();
         }
 
         public string GetDefaultIconPath(string category)

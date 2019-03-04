@@ -21,7 +21,6 @@ namespace BetterFarmAnimalVariety.Framework.Constants
         public const string ConfigMigrationContentPackAuthor = "Anonymous";
         public const string ConfigMigrationContentPackVersion = "1.0.0";
         public const string ConfigMigrationContentPackDescription = "Your custom content pack for BFAV";
-        public static string ConfigMigrationContentPackUniqueID => $"{ConfigMigrationContentPackAuthor}.{ConfigMigrationContentPackName.Replace("[", "").Replace("]", "").Replace(" ", "").Trim()}";
         public static string ConfigMigrationContentPackFullPath => Path.Combine(Directory.GetParent(PariteeCore.Constants.Mod.Path).FullName, ConfigMigrationContentPackName);
         
         // Save data

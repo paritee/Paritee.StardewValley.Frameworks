@@ -27,13 +27,13 @@ namespace BetterFarmAnimalVariety.Framework.Cache
 
         public Dictionary<string, List<string>> GroupTypesByCategory()
         {
-            return this.Categories.ToDictionary(o => o.Category, o => new List<string>(o.Types));
+            return this.Categories.ToDictionary(o => o.Category, o => o.Types.Select(t => t.Type).ToList());
         }
 
         private List<string> TypesInShop(Framework.Cache.FarmAnimalCategory category)
         {
             return category.CanBePurchased()
-                ? category.Types.Where(t => !category.AnimalShop.Exclude.Contains(t)).ToList()
+                ? category.Types.Where(o => !category.AnimalShop.Exclude.Contains(o.Type)).Select(o => o.Type).ToList()
                 : new List<string>();
         }
 
@@ -44,7 +44,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
-        public Framework.Cache.FarmAnimalCategory GetCategory(string category)
+        public Cache.FarmAnimalCategory GetCategory(string category)
         {
             return this.Categories.FirstOrDefault(o => o.Category.Equals(category));
         }

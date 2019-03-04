@@ -16,7 +16,7 @@ namespace BetterFarmAnimalVariety.Framework.Commands
             // Load the cache
             Cache.FarmAnimals cache = Helpers.FarmAnimals.ReadCache();
 
-            foreach (Framework.Cache.FarmAnimalCategory animal in Helpers.FarmAnimals.GetCategories())
+            foreach (Cache.FarmAnimalCategory animal in Helpers.FarmAnimals.GetCategories())
             {
                 output += this.DescribeFarmAnimalCategory(animal);
             }
