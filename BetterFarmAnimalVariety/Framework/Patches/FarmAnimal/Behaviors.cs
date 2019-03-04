@@ -1,7 +1,6 @@
 ﻿using Harmony;
 using Microsoft.Xna.Framework;
 using StardewValley;
-using System;
 using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
@@ -30,23 +29,16 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
             Decorators.Location moddedLocation = new Decorators.Location(location);
 
-            try
+            Behaviors.HandleFindGrassToEat(ref moddedAnimal, ref moddedLocation);
+
+            if (Behaviors.HandleNightTimeRoutine(ref moddedAnimal, ref moddedLocation))
             {
-                Behaviors.HandleFindGrassToEat(ref moddedAnimal, ref moddedLocation);
-
-                if (Behaviors.HandleNightTimeRoutine(ref moddedAnimal, ref moddedLocation))
-                {
-                    __result = true;
-                }
-                else
-                {
-                    Behaviors.HandleFindProduce(ref moddedAnimal, ref moddedLocation);
-
-                    __result = false;
-                }
+                __result = true;
             }
-            catch
+            else
             {
+                Behaviors.HandleFindProduce(ref moddedAnimal, ref moddedLocation);
+
                 __result = false;
             }
 
@@ -101,37 +93,29 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             return false;
         }
 
-        private static void AssertValidLocation(Decorators.Location moddedLocation)
+        private static bool IsValidLocation(Decorators.Location moddedLocation)
         {
-            Helpers.Assert.Outdoors(moddedLocation);
-            Helpers.Assert.NotRaining();
-            Helpers.Assert.NotWinter();
+            return moddedLocation.IsOutdoors() && !PariteeCore.Api.Weather.IsRaining() && !PariteeCore.Api.Season.IsWinter();
         }
 
-        private static void AssertCanFindProduce(Decorators.FarmAnimal moddedAnimal, Decorators.Farmer moddedPlayer)
+        private static bool CanFindProduce(Decorators.FarmAnimal moddedAnimal, Decorators.Farmer moddedPlayer)
         {
-            Helpers.Assert.CanFindProduce(moddedAnimal);
-
-            Debug.WriteLine($"moddedAnimal.GetName() {moddedAnimal.GetName()}");
-            Debug.WriteLine($"moddedAnimal.GetTypeString() {moddedAnimal.GetTypeString()}");
-
-            int produceIndex = moddedAnimal.RollProduce(moddedPlayer.GetOriginal());
-
-
-            Debug.WriteLine($"produceIndex{produceIndex}");
-
-            Helpers.Assert.ProduceIsAnItem(produceIndex);
-        }
-
-        private static void AssertRollChance()
-        {
-            if (PariteeCore.Helpers.Random.NextDouble() < 0.0002)
+            if (moddedAnimal.IsBaby())
             {
-                throw new ApplicationException($"failed roll chance");
+                return false;
             }
-        }
 
-        private static void AssertNoImpediments(Decorators.FarmAnimal moddedAnimal, Decorators.Location moddedLocation)
+            if (!moddedAnimal.CanFindProduce())
+            {
+                return false;
+            }
+
+            int currentProduce = moddedAnimal.GetCurrentProduce();
+
+            return PariteeCore.Api.FarmAnimal.IsProduceAnItem(currentProduce);
+        }
+        
+        private static bool HasNoImpediments(Decorators.FarmAnimal moddedAnimal, Decorators.Location moddedLocation)
         {
             Microsoft.Xna.Framework.Rectangle boundingBox = moddedAnimal.GetBoundingBox();
 
@@ -142,19 +126,36 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
                 if (moddedLocation.GetOriginal().terrainFeatures.ContainsKey(key) || moddedLocation.GetOriginal().objects.ContainsKey(key))
                 {
-                    throw new ApplicationException($"tile is occupied");
+                    return false;
                 }
             }
+
+            return true;
         }
 
         private static void HandleFindProduce(ref Decorators.FarmAnimal moddedAnimal, ref Decorators.Location moddedLocation)
         {
             Decorators.Farmer moddedPlayer = new Decorators.Farmer(PariteeCore.Api.Game.GetPlayer());
 
-            Behaviors.AssertValidLocation(moddedLocation);
-            Behaviors.AssertCanFindProduce(moddedAnimal, moddedPlayer);
-            Behaviors.AssertRollChance();
-            Behaviors.AssertNoImpediments(moddedAnimal, moddedLocation);
+            if (!Behaviors.IsValidLocation(moddedLocation))
+            {
+                return;
+            }
+
+            if (!Behaviors.CanFindProduce(moddedAnimal, moddedPlayer))
+            {
+                return;
+            }
+
+            if (PariteeCore.Helpers.Random.NextDouble() < 0.0002)
+            {
+                return;
+            }
+
+            if (!Behaviors.HasNoImpediments(moddedAnimal, moddedLocation))
+            {
+                return;
+            }
 
             if (moddedPlayer.IsCurrentLocation(moddedLocation.GetOriginal()))
             {

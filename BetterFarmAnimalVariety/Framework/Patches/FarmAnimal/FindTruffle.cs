@@ -35,7 +35,8 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             int quantity = 1;
             int produceIndex = moddedAnimal.RollProduce(who);
 
-            if (PariteeCore.Api.FarmAnimal.IsProduceAnItem(produceIndex))
+
+            if (!PariteeCore.Api.FarmAnimal.IsProduceAnItem(produceIndex))
             {
                 return false;
             }

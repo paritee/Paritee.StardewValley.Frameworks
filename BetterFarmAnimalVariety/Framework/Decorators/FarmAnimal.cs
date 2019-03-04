@@ -105,6 +105,11 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
             PariteeCore.Api.FarmAnimal.SetFindHomeDoorPathController(this.GetOriginal(), location);
         }
 
+        public bool IsBaby()
+        {
+            return PariteeCore.Api.FarmAnimal.IsBaby(this.GetOriginal());
+        }
+
         public bool CanFindProduce()
         {
             return PariteeCore.Api.FarmAnimal.CanFindProduce(this.GetOriginal());
