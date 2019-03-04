@@ -263,7 +263,6 @@ namespace BetterFarmAnimalVariety
             // Purchasing a new animal
             StardewValley.Menus.PurchaseAnimalsMenu purchaseAnimalsMenu = activeClickableMenu.GetMenu() as StardewValley.Menus.PurchaseAnimalsMenu;
 
-
             Player player = new Player(Game1.player, this.Helper);
             AnimalShop animalShop = this.GetAnimalShop(player);
 
