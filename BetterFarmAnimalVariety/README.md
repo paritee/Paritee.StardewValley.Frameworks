@@ -7,6 +7,7 @@ Customize the types and species of farm animals you can raise without needing to
 - [Get Started](#get-started)
 - [Content Packs](#content-packs)
 - [API](#api)
+- [Integrations](#integrations)
 
 ## Get Started
 
@@ -178,3 +179,11 @@ public List<PariteeCore.Models.FarmAnimalCategory> GetFarmAnimalCategories(strin
 /// <returns>Returns Dictionary<long, KeyValuePair<string, string>></returns>
 public Dictionary<long, KeyValuePair<string, string>> GetFarmAnimalTypeHistory(string version);
 ```
+
+## Integrations
+
+Supported integrations are:
+
+| Mod | Version Support |
+| --- | --- |
+| [More Animals](https://www.nexusmods.com/stardewvalley/mods/2274) | `BFAV 3.x` => `More Animals 3.x` |
