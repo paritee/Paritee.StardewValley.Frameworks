@@ -23,6 +23,11 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
             return PariteeCore.Api.FarmAnimal.SanitizeBlueChickens(types, this.GetOriginal());
         }
 
+        public List<string> SanitizeAffordableTypes(List<string> types)
+        {
+            return PariteeCore.Api.FarmAnimal.SanitizeAffordableTypes(types, this.GetOriginal());
+        }
+
         public StardewValley.FarmAnimal CreateFarmAnimal(string type, string name = null, StardewValley.Buildings.Building building = null)
         {
             return PariteeCore.Api.FarmAnimal.CreateFarmAnimal(type, this.GetUniqueId(), name, building);

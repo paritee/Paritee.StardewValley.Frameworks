@@ -71,6 +71,7 @@
     <Compile Include="Framework\Decorators\AutoGrabber.cs" />
     <Compile Include="Framework\Decorators\Decorator.cs" />
     <Compile Include="Framework\Editors\FarmAnimalData.cs" />
+    <Compile Include="Framework\Events\RefreshCache.cs" />
     <Compile Include="Framework\Events\IntegrateMods.cs" />
     <Compile Include="Framework\Events\LoadContentPacks.cs" />
     <Compile Include="Framework\Events\LoadMod.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Framework\Patches\FarmAnimal\FindTruffle.cs" />
     <Compile Include="Framework\Patches\Object\DayUpdate.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\Constructor.cs" />
+    <Compile Include="Framework\Patches\PurchaseAnimalsMenu\Draw.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\ReceiveLeftClick.cs" />
     <Compile Include="Framework\SaveData\FarmAnimal.cs" />
     <Compile Include="Framework\SaveData\FarmAnimals.cs" />

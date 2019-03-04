@@ -79,7 +79,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
                 return null;
             }
 
-            return PariteeCore.Api.AnimalShop.FormatAsAnimalAvailableForPurchase(farm, this.Category, this.AnimalShop.Name, this.AnimalShop.Price, this.Buildings.ToArray());
+            return PariteeCore.Api.AnimalShop.FormatAsAnimalAvailableForPurchase(farm, this.Category, this.AnimalShop.Name, this.Types.Select(o => o.Type).ToArray(), this.Buildings.ToArray());
         }
     }
 }

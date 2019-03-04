@@ -39,6 +39,11 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
             return PariteeCore.Api.FarmAnimal.GetCurrentProduce(this.GetOriginal());
         }
 
+        public int GetPrice()
+        {
+            return PariteeCore.Api.FarmAnimal.GetPrice(this.GetOriginal());
+        }
+
         public void SetCurrentProduce(int produceIndex)
         {
             PariteeCore.Api.FarmAnimal.SetCurrentProduce(this.GetOriginal(), produceIndex);
@@ -138,6 +143,11 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
         public string GetDisplayType()
         {
             return PariteeCore.Api.FarmAnimal.GetDisplayType(this.GetOriginal());
+        }
+
+        public string GetDisplayHouse()
+        {
+            return PariteeCore.Api.FarmAnimal.GetDisplayHouse(this.GetOriginal());
         }
 
         public bool CanLiveIn(StardewValley.Buildings.Building building)
