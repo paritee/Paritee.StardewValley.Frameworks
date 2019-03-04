@@ -28,6 +28,9 @@ namespace BetterFarmAnimalVariety.Framework.Editors
             if (asset.AssetNameEquals(PariteeCore.Constants.Content.DataFarmAnimalsContentPath))
             {
                 IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                
+                // Always use the first lang parameter (ex. zh-CN)
+                string locale = asset.Locale.Split('-')[0];
 
                 foreach (Cache.FarmAnimalType type in Helpers.FarmAnimals.GetCategories().SelectMany(o => o.Types))
                 {
@@ -37,7 +40,7 @@ namespace BetterFarmAnimalVariety.Framework.Editors
                     }
 
                     // Adjust for localization and add to the dictionary
-                    data[type.Type] = type.LocalizeData(asset.Locale);
+                    data[type.Type] = type.LocalizeData(locale);
                 }
             }
         }
