@@ -130,7 +130,7 @@ Create a new, unique category (`"Action": "Create"`).
 | `AnimalShop.Name` | _Required if AnimalShop is included_ | The name of the category in the purchase animal menu. |
 | `AnimalShop.Description` | _Required if AnimalShop is included_ | The description of the category in the purchase animal menu. |
 | `AnimalShop.Icon` | _Required if AnimalShop is included_ | The relative path to the icon of the category in the purchase animal menu. Must be a `.png`. BFAV comes with some animal shop icons in `assets/AnimalShop` you can base this icon on. |
-| `AnimalShop.Exclude` | _Optional_ | List of names of types that should be ecxluded from the shop. Types are added to an existing category's excludes unless `ForceOverrideExclude` is used. (`Void Chicken` is excluded from the `Chicken` category) |
+| `AnimalShop.Exclude` | _Optional_ | List of names of types that should be ecxluded from the shop. Types are added to an existing category's excludes unless `ForceOverrideExclude` is used. `Void Chicken` is excluded from the `Chicken` category by default. |
 
 ##### Update
 
