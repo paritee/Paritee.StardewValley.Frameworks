@@ -1,6 +1,5 @@
 ﻿using Harmony;
 using System.Collections.Generic;
-using System.Diagnostics;
 using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu

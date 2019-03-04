@@ -1,7 +1,6 @@
 ﻿using Harmony;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley.BellsAndWhistles;
-using System.Diagnostics;
 using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
