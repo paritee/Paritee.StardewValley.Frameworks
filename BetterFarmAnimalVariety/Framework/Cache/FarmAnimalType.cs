@@ -27,7 +27,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
 
         public string LocalizeData(string locale)
         {
-            if (!this.Localization.ContainsKey(locale))
+            if (this.Localization == null || !this.Localization.ContainsKey(locale))
             {
                 return this.Data;
             }
