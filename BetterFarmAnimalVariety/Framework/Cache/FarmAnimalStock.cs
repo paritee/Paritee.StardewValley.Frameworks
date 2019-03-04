@@ -18,9 +18,6 @@ namespace BetterFarmAnimalVariety.Framework.Cache
         public string Icon;
 
         [JsonProperty(Order = 3)]
-        public int Price;
-
-        [JsonProperty(Order = 4)]
         public List<string> Exclude;
 
         public FarmAnimalStock()
@@ -33,7 +30,6 @@ namespace BetterFarmAnimalVariety.Framework.Cache
             this.Name = farmAnimalStock.DisplayName;
             this.Description = farmAnimalStock.Description;
             this.Icon = this.GetDefaultIconPath(farmAnimalStock.ToString());
-            this.Price = farmAnimalStock.Price;
             this.Exclude = farmAnimalStock.ExcludeFromShop.Any()
                 ? farmAnimalStock.ExcludeFromShop.Select(o => o.ToString()).ToList()
                 : new List<string>();

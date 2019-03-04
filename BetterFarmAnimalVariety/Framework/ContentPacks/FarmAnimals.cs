@@ -146,11 +146,6 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
                     cacheCategory.AnimalShop.Icon = Path.Combine(contentPack.DirectoryPath, category.AnimalShop.Icon);
                 }
 
-                if (category.AnimalShop.Price != default(int))
-                {
-                    cacheCategory.AnimalShop.Price = category.AnimalShop.Price;
-                }
-
                 if (category.AnimalShop.Exclude != null)
                 {
                     cacheCategory.AnimalShop.Exclude = category.ForceOverrideExclude

@@ -108,7 +108,6 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         Name = oldFarmAnimals.Value.AnimalShop.Name,
                         Description = oldFarmAnimals.Value.AnimalShop.Description,
                         Icon = icon,
-                        Price = Math.Abs(price),
                         Exclude = exclude
                     };
 

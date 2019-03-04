@@ -30,9 +30,6 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         Helpers.Assert.ValidStringLength("name", category.AnimalShop.Name, 1);
                         Helpers.Assert.ValidStringLength("description", category.AnimalShop.Description, 1);
 
-                        // Validate price
-                        Helpers.Assert.ValidMoneyAmount(category.AnimalShop.Price);
-
                         // Validate shop icon
                         Helpers.Assert.FileExists(category.AnimalShop.Icon);
                         Helpers.Assert.ValidFileExtension(category.AnimalShop.Icon, Constants.Mod.AnimalShopIconExtension);

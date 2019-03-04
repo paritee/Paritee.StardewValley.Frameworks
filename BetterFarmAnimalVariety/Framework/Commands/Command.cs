@@ -34,7 +34,6 @@ namespace BetterFarmAnimalVariety.Framework.Commands
                 output += $"- AnimalShop:\n";
                 output += $"-- Name: {animal.AnimalShop.Name}\n";
                 output += $"-- Description: {animal.AnimalShop.Description}\n";
-                output += $"-- Price: {animal.AnimalShop.Price}\n";
                 output += $"-- Icon: {animal.AnimalShop.Icon}\n";
             }
             else
