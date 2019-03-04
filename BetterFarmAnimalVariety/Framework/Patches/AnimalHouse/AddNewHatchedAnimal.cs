@@ -39,7 +39,6 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
             if (moddedAnimalHouse.IsFull())
             {
                 // Game does nothing
-                // TODO: handle this more immersively
                 return;
             }
 

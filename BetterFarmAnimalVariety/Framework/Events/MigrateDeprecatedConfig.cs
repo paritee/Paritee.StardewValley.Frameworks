@@ -14,9 +14,6 @@ namespace BetterFarmAnimalVariety.Framework.Events
         public static void OnEntry(ModEntry mod, string targetFormat, out ModConfig config)
         {
             // Try to load the last supported format...
-            //Config.V2.ModConfig deprecatedConfig = Helpers.Mod.ReadConfig<Config.V2.ModConfig>();
-
-
             string path = Path.Combine(PariteeCore.Constants.Mod.Path, Constants.Mod.ConfigFileName);
             string json = File.ReadAllText(path);
             Config.V2.ModConfig deprecatedConfig = JsonConvert.DeserializeObject<Config.V2.ModConfig>(json);
