@@ -19,7 +19,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
             Config.V2.ModConfig deprecatedConfig = JsonConvert.DeserializeObject<Config.V2.ModConfig>(json);
 
             //... and migrate them to the current format
-            if (!MigrateDeprecatedConfig.ToCurrentFormat<Config.V2.ModConfig>(mod, deprecatedConfig, targetFormat, out config))
+            if (deprecatedConfig.Format == null || Int32.Parse(deprecatedConfig.Format) > Int32.Parse(targetFormat) || !MigrateDeprecatedConfig.ToCurrentFormat<Config.V2.ModConfig>(mod, deprecatedConfig, targetFormat, out config))
             {
                 // Escalate the exception if the deprecated config could not be migrated
                 throw new FormatException($"Invalid config format. {mod.ModManifest.Version.ToString()} requires format:{mod.ModManifest.Version.MajorVersion.ToString()}.");
@@ -59,6 +59,11 @@ namespace BetterFarmAnimalVariety.Framework.Events
             ContentPacks.FarmAnimals farmAnimals = new ContentPacks.FarmAnimals(new List<ContentPacks.FarmAnimalCategory>());
 
             List<string> iconsToBeMoved = new List<string>();
+
+            if (deprecatedConfig.FarmAnimals == null)
+            {
+                return false;
+            }
 
             // Go through all of the old categories so that we can determine if we need to make a new content pack to preserve the changes
             foreach (KeyValuePair<string, Config.V2.ConfigFarmAnimal> oldFarmAnimals in deprecatedConfig.FarmAnimals)

@@ -1,5 +1,5 @@
 ﻿using StardewModdingAPI;
-using System;
+using System.Collections.Generic;
 
 namespace BetterFarmAnimalVariety.Framework.Commands
 {
@@ -27,9 +27,8 @@ namespace BetterFarmAnimalVariety.Framework.Commands
             string output = "";
 
             output += $"{animal.Category}\n";
-            output += $"- Types: {string.Join(",", animal.Types)}\n";
             output += $"- Buildings: {string.Join(",", animal.Buildings)}\n";
-            
+
             if (animal.CanBePurchased())
             {
                 output += $"- AnimalShop:\n";
@@ -41,6 +40,31 @@ namespace BetterFarmAnimalVariety.Framework.Commands
             else
             {
                 output += $"- AnimalShop: null\n";
+            }
+
+            output += $"- Types:\n";
+
+            foreach (Cache.FarmAnimalType type in animal.Types)
+            {
+                output += $"-- Type: {type.Type}\n";
+                output += $"--- Data: {type.Data ?? "null"}\n";
+                output += $"--- AdultSprite: {type.AdultSprite ?? "null"}\n";
+                output += $"--- BabySprite: {type.BabySprite ?? "null"}\n";
+                output += $"--- ShearedSprite: {type.ShearedSprite ?? "null"}\n";
+
+                if (type.Localization != null)
+                {
+                    output += $"--- Localization:\n";
+
+                    foreach (KeyValuePair<string, string[]> entry in type.Localization)
+                    {
+                        output += $"---- {entry.Key}: {string.Join(",", entry.Value)}\n";
+                    }
+                }
+                else
+                {
+                    output += $"--- Localization: null\n";
+                }
             }
 
             return output;

@@ -1,9 +1,7 @@
 ﻿using StardewModdingAPI;
-using StardewModdingAPI.Events;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.Events
 {
@@ -13,7 +11,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
         {
             foreach (IContentPack contentPack in contentPacks)
             {
-                monitor.Log($"Reading content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}", LogLevel.Trace);
+                monitor.Log($"Reading content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version}", LogLevel.Trace);
 
                 try
                 {
