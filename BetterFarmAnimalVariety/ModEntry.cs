@@ -44,16 +44,16 @@ namespace BetterFarmAnimalVariety
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            // Seed a new cache with the vanilla animals ..
+            // Seed a new cache with the vanilla animals...
             RefreshCache.SeedCacheWithVanillaFarmAnimals();
 
-            // .. then content packs are loaded to apply changes to the cache ..
+            //... then content packs are loaded to apply changes to the cache...
             LoadContentPacks.SetUpContentPacks(this.Helper.ContentPacks.GetOwned(), this.Monitor);
 
-            // .. and validate all of the cached animals ..
+            // ... and validate all of the cached animals...
             RefreshCache.ValidateCachedFarmAnimals(this.Monitor);
 
-            // .. finally hook into other mods' APIs
+            // ... finally hook into other mods' APIs
             IntegrateMods.SetUpModIntegrations(this.Helper, this.Monitor);
         }
 

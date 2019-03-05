@@ -18,7 +18,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
             string json = File.ReadAllText(path);
             Config.V2.ModConfig deprecatedConfig = JsonConvert.DeserializeObject<Config.V2.ModConfig>(json);
 
-            //... and migrate them to the current format
+            // ... and migrate them to the current format
             if (deprecatedConfig.Format == null || Int32.Parse(deprecatedConfig.Format) > Int32.Parse(targetFormat) || !MigrateDeprecatedConfig.ToCurrentFormat<Config.V2.ModConfig>(mod, deprecatedConfig, targetFormat, out config))
             {
                 // Escalate the exception if the deprecated config could not be migrated
