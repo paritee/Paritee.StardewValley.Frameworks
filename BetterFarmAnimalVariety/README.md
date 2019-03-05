@@ -168,9 +168,11 @@ See [SMAPI Modder Guide](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs
 ### Version 3.x
 
 ```c#
+/// <summary>Determine if the mod is enabled.</summary>
 /// <returns>Returns bool</returns>
 public bool IsEnabled();
 
+/// <summary>Get all farm animal categories that have been loaded.</summary>
 /// <returns>Returns List<Paritee.Core.Models.FarmAnimalCategory></returns>
 public List<PariteeCore.Models.FarmAnimalCategory> GetFarmAnimalCategories();
 
