@@ -165,19 +165,18 @@ This action will remove an existing category (`"Action": "Remove"`). It is not p
 
 See [SMAPI Modder Guide](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Integrations#Using_an_API) for usage. Requires the  [Paritee.StardewValley.Core](https://github.com/paritee/Paritee.StardewValley.Core) (also available as a [Nuget Package](https://www.nuget.org/packages/Paritee.StardewValley.Core)).
 
-```c#
-/// <param name="version">string</param>
-/// <returns>Returns bool</returns>
-public bool IsEnabled(string version);
+### Version 3.x
 
-/// <param name="version">string</param>
+```c#
+/// <returns>Returns bool</returns>
+public bool IsEnabled();
+
 /// <returns>Returns List<Paritee.Core.Models.FarmAnimalCategory></returns>
-public List<PariteeCore.Models.FarmAnimalCategory> GetFarmAnimalCategories(string version);
+public List<PariteeCore.Models.FarmAnimalCategory> GetFarmAnimalCategories();
 
 /// <summary>Get the farm animal's types from the save data.</summary>
-/// <param name="version">string</param>
 /// <returns>Returns Dictionary<long, KeyValuePair<string, string>></returns>
-public Dictionary<long, KeyValuePair<string, string>> GetFarmAnimalTypeHistory(string version);
+public Dictionary<long, KeyValuePair<string, string>> GetFarmAnimalTypeHistory();
 ```
 
 ## Integrations
