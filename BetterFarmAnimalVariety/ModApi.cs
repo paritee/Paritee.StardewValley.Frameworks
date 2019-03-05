@@ -1,6 +1,5 @@
 ﻿using BetterFarmAnimalVariety.Framework.SaveData;
 using StardewModdingAPI;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using PariteeCore = Paritee.StardewValley.Core;

@@ -13,8 +13,8 @@ namespace BetterFarmAnimalVariety.Framework.Events
             // Validate the cached animals
             foreach (Cache.FarmAnimalCategory category in Helpers.FarmAnimals.GetCategories())
             {
-                //try
-                //{
+                try
+                {
                     // Validate category
                     Helpers.Assert.ValidStringLength("category", category.Category, 1);
 
@@ -44,16 +44,16 @@ namespace BetterFarmAnimalVariety.Framework.Events
                             Helpers.Assert.FarmAnimalTypesExist(category.AnimalShop.Exclude);
                         }
                     }
-                //}
-                //catch (Exception exception)
-                //{
-                //    monitor.Log($"{category.Category} will not load: {exception.Message}", LogLevel.Warn);
-
-                //    // Remove it from the cache for this session
-                //    // i.e. Cache gets reloaded every time the game is started
-                //    Helpers.FarmAnimals.RemoveCategory(category.Category);
-                //}
             }
+                catch (Exception exception)
+            {
+                monitor.Log($"{category.Category} will not load: {exception.Message}", LogLevel.Warn);
+
+                // Remove it from the cache for this session
+                // i.e. Cache gets reloaded every time the game is started
+                Helpers.FarmAnimals.RemoveCategory(category.Category);
+            }
+        }
         }
 
         public static void SeedCacheWithVanillaFarmAnimals()
