@@ -18,12 +18,14 @@ namespace BetterFarmAnimalVariety
             this.ModVersion = modVersion;
         }
 
+        /// <summary>Determine if the mod is enabled.</summary>
         /// <returns>Returns bool</returns>
         public bool IsEnabled()
         {
             return this.Config.IsEnabled;
         }
 
+        /// <summary>Get all farm animal categories that have been loaded.</summary>
         /// <returns>Returns List<Paritee.Core.Models.FarmAnimalCategory></returns>
         public List<PariteeCore.Models.FarmAnimalCategory> GetFarmAnimalCategories()
         {
