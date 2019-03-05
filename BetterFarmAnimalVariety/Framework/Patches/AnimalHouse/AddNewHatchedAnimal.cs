@@ -69,11 +69,15 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
 
         private static void HandleNewborn(ref Decorators.AnimalHouse moddedAnimalHouse, string name, ref QuestionEvent questionEvent, Decorators.Farmer moddedPlayer)
         {
-            // Grab the types with their associated categories in string form
-            Dictionary<string, List<string>> restrictions = Helpers.FarmAnimals.GroupTypesByCategory()
-                .ToDictionary(kvp => kvp.Key, kvp => moddedPlayer.SanitizeBlueChickens(kvp.Value));
-
             Decorators.FarmAnimal moddedParent = new Decorators.FarmAnimal(questionEvent.animal);
+
+            // Grab the types with their associated categories in string form and 
+            // limit it to the parent's category. Ex. Sport Horses an Sheep both 
+            // produce wool, but if the parent is a Sport Horse, only Sport Horses 
+            // should be considered.
+            Dictionary<string, List<string>> restrictions = Helpers.FarmAnimals.GroupTypesByCategory()
+                .Where(kvp => kvp.Value.Contains(moddedParent.GetTypeString()))
+                .ToDictionary(kvp => kvp.Key, kvp => moddedPlayer.SanitizeBlueChickens(kvp.Value));
 
             // Return a matched type or user default barn dweller
             string type = moddedParent.GetRandomTypeFromProduce(restrictions);
