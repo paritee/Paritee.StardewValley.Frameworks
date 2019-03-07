@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
+using StardewModdingAPI;
 using System.IO;
 using PariteeCore = Paritee.StardewValley.Core;
 
@@ -57,16 +58,11 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             return Path.Combine(Constants.Mod.AssetsDirectory, filePath);
         }
 
-        public static string GetFullAssetPath(string filePath)
+        public static bool TryGetApi<TInterface>(IModHelper helper, string key, out TInterface api) where TInterface : class
         {
-            return Path.Combine(PariteeCore.Constants.Mod.Path, Helpers.Mod.GetShortAssetPath(filePath));
-        }
+            api = helper.ModRegistry.GetApi<TInterface>(key);
 
-        public static bool TryGetFullAssetPath(string filePath, out string path)
-        {
-            path = Helpers.Mod.GetFullAssetPath(filePath);
-
-            return !File.Exists(path);
+            return api != null;
         }
     }
 }

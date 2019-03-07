@@ -8,7 +8,17 @@ namespace BetterFarmAnimalVariety.Framework.Events
 {
     class RefreshCache
     {
-        public static void ValidateCachedFarmAnimals(IMonitor monitor)
+        public static void SeedCache(IModHelper helper, IMonitor monitor)
+        {
+            // Seed a new cache with the vanilla animals...
+            RefreshCache.SeedCacheWithVanillaFarmAnimals();
+
+            //... then content packs are loaded to apply changes to the cache
+            LoadContentPacks.SetUpContentPacks(helper.ContentPacks.GetOwned(), monitor);
+        }
+
+
+        public static void ValidateCachedFarmAnimals(IModHelper helper, IMonitor monitor)
         {
             // Validate the cached animals
             foreach (Cache.FarmAnimalCategory category in Helpers.FarmAnimals.GetCategories())
@@ -44,18 +54,18 @@ namespace BetterFarmAnimalVariety.Framework.Events
                             Helpers.Assert.FarmAnimalTypesExist(category.AnimalShop.Exclude);
                         }
                     }
-            }
+                }
                 catch (Exception exception)
-            {
-                monitor.Log($"{category.Category} will not load: {exception.Message}", LogLevel.Warn);
+                {
+                    monitor.Log($"{category.Category} will not load: {exception.Message}", LogLevel.Warn);
 
-                // Remove it from the cache for this session
-                // i.e. Cache gets reloaded every time the game is started
-                Helpers.FarmAnimals.RemoveCategory(category.Category);
+                    // Remove it from the cache for this session
+                    // i.e. Cache gets reloaded every time the game is started
+                    Helpers.FarmAnimals.RemoveCategory(category.Category);
+                }
             }
         }
-        }
-
+        
         public static void SeedCacheWithVanillaFarmAnimals()
         {
             // Seed with all of the vanilla farm animals

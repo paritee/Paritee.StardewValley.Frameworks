@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BetterFarmAnimalVariety.Framework.Events;
+using StardewModdingAPI;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using PariteeCore = Paritee.StardewValley.Core;
@@ -14,25 +16,35 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         {
             if (!(version == target))
             {
-                throw new NotSupportedException($"Version {version} is not supported.");
+                throw new NotSupportedException($"Version {version} is not supported");
             }
         }
 
-        /// <exception cref="ApplicationException"></exception>
-        public static void GameLoaded()
+        /// <param name="api">object</param>
+        /// <exception cref="Exceptions.ApiNotFoundException"></exception>
+        public static void ApiExists<TInterface>(IModHelper helper, string key, out TInterface api) where TInterface: class
+        {
+            if (!Helpers.Mod.TryGetApi(helper, key, out api))
+            {
+                throw new Exceptions.ApiNotFoundException(key);
+            }
+        }
+
+        /// <exception cref="Exceptions.SaveNotLoadedException"></exception>
+        public static void SaveLoaded()
         {
             if (!PariteeCore.Api.Game.IsSaveLoaded())
             {
-                throw new ApplicationException($"Save has not been loaded.");
+                throw new Exceptions.SaveNotLoadedException();
             }
         }
 
         /// <exception cref="ApplicationException"></exception>
-        public static void GameNotLoaded()
+        public static void SaveNotLoaded()
         {
             if (PariteeCore.Api.Game.IsSaveLoaded())
             {
-                throw new ApplicationException($"Save has been loaded.");
+                throw new ApplicationException($"Save has been loaded");
             }
         }
 
@@ -100,6 +112,36 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             }
         }
 
+        /// <param name="strIndex">string</param>
+        /// <exception cref="NotImplementedException"></exception>
+        public static void ValidFarmAnimalProduce(IModHelper helper, string strIndex, out int produceIndex)
+        {
+            if (!Int32.TryParse(strIndex, out produceIndex))
+            {
+                // Try to find a JsonAsset
+                if (IntegrateWithJsonAssets.TryParseFarmAnimalProduceName(helper, strIndex, out produceIndex))
+                {
+                    // Found a JsonAsset, nothing more to do
+                    return;
+                }
+
+                // No JsonAsset was found and not a valid integer
+                throw new NotImplementedException($"\"{strIndex}\" is not a known Object");
+            }
+
+            // "no produce" (-1) should not trigger the assert
+            if (!PariteeCore.Api.FarmAnimal.IsProduceAnItem(produceIndex))
+            {
+                return;
+            }
+
+            // Check to see if this object actually exists
+            if (!PariteeCore.Api.Object.ObjectExists(produceIndex))
+            {
+                throw new NotImplementedException($"\"{strIndex}\" is not a known Object");
+            }
+        }
+        
         /// <param name="buildings">List<string></param>
         /// <exception cref="NotImplementedException"></exception>
         public static void BuildingsExist(List<string> buildings)
@@ -256,7 +298,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         {
             if (!moddedLocation.IsOutdoors())
             {
-                throw new ApplicationException($"Location is not outdoors.");
+                throw new ApplicationException($"Location is not outdoors");
             }
         }
 
@@ -265,7 +307,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         {
             if (PariteeCore.Api.Weather.IsRaining())
             {
-                throw new ApplicationException($"It is raining.");
+                throw new ApplicationException($"It is raining");
             }
         }
 
@@ -274,7 +316,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         {
             if (PariteeCore.Api.Season.IsWinter())
             {
-                throw new ApplicationException($"It is winter.");
+                throw new ApplicationException($"It is winter");
             }
         }
 
@@ -284,7 +326,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         {
             if (!PariteeCore.Api.FarmAnimal.IsProduceAnItem(produceIndex))
             {
-                throw new KeyNotFoundException($"\"{produceIndex}\" is not produce.");
+                throw new KeyNotFoundException($"\"{produceIndex}\" is not produce");
             }
         }
 
@@ -294,7 +336,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         {
             if (!moddedAnimal.CanFindProduce())
             {
-                throw new ApplicationException($"{moddedAnimal.GetType()} cannot find produce.");
+                throw new ApplicationException($"{moddedAnimal.GetType()} cannot find produce");
             }
         }
     }

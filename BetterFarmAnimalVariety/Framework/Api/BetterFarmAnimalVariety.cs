@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using PariteeCore = Paritee.StardewValley.Core;
 
-namespace BetterFarmAnimalVariety
+namespace BetterFarmAnimalVariety.Framework.Api
 {
-    public class ModApi
+    public class BetterFarmAnimalVariety : Api.IBetterFarmAnimalVariety
     {
         private readonly ModConfig Config;
         private readonly ISemanticVersion ModVersion;
 
-        public ModApi(ModConfig config, ISemanticVersion modVersion)
+        public BetterFarmAnimalVariety(ModConfig config, ISemanticVersion modVersion)
         {
             this.Config = config;
             this.ModVersion = modVersion;
@@ -59,7 +59,7 @@ namespace BetterFarmAnimalVariety
         /// <returns>Returns Dictionary<long, KeyValuePair<string, string>></returns>
         public Dictionary<long, KeyValuePair<string, string>> GetFarmAnimalTypeHistory()
         {
-            Framework.Helpers.Assert.GameLoaded();
+            Framework.Helpers.Assert.SaveLoaded();
 
             FarmAnimals saveData = Framework.Helpers.Mod.ReadSaveData<FarmAnimals>(Framework.Constants.Mod.FarmAnimalsSaveDataKey);
 

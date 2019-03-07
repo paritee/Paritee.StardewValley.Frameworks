@@ -204,5 +204,20 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
         {
             return PariteeCore.Api.FarmAnimal.IsAProducer(this.GetOriginal());
         }
+
+        public bool HasProduceThatMatchesAtLeastOne(int[] targets)
+        {
+            return PariteeCore.Api.FarmAnimal.HasProduceThatMatchesAtLeastOne(this.GetOriginal(), targets);
+        }
+
+        public int GetDefaultProduce()
+        {
+            return PariteeCore.Api.FarmAnimal.GetDefaultProduce(this.GetOriginal());
+        }
+
+        public int GetDeluxeProduce()
+        {
+            return PariteeCore.Api.FarmAnimal.GetDeluxeProduce(this.GetOriginal());
+        }
     }
 }

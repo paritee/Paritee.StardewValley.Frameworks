@@ -88,8 +88,8 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
         private static void SetUpAssetEditors(ModEntry mod)
         {
-            mod.Helper.Content.AssetEditors.Add(new Editors.AnimalBirth(mod));
-            mod.Helper.Content.AssetEditors.Add(new Editors.FarmAnimalData());
+            mod.Helper.Content.AssetEditors.Add(new Editors.AnimalBirth(mod.Helper));
+            mod.Helper.Content.AssetEditors.Add(new Editors.FarmAnimalData(mod.Helper, mod.Monitor));
         }
 
         private static void SetUpAssetLoaders(ModEntry mod)

@@ -39,9 +39,9 @@ namespace BetterFarmAnimalVariety
         {
             ModConfig config = Framework.Helpers.Mod.ReadConfig<ModConfig>();
 
-            return new ModApi(config, this.ModManifest.Version);
+            return new Framework.Api.BetterFarmAnimalVariety(config, this.ModManifest.Version);
         }
-
+        
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             // Seed a new cache with the vanilla animals...
@@ -51,10 +51,17 @@ namespace BetterFarmAnimalVariety
             LoadContentPacks.SetUpContentPacks(this.Helper.ContentPacks.GetOwned(), this.Monitor);
 
             // ... and validate all of the cached animals...
-            RefreshCache.ValidateCachedFarmAnimals(this.Monitor);
+            RefreshCache.ValidateCachedFarmAnimals(this.Helper, this.Monitor);
 
-            // ... finally hook into other mods' APIs
-            IntegrateMods.SetUpModIntegrations(this.Helper, this.Monitor);
+            // ... finally register the types with MoreAnimals
+            try
+            {
+                IntegrateWithMoreAnimals.RegisterAnimals(this.Helper, this.Monitor);
+            }
+            catch (Framework.Exceptions.ApiNotFoundException exception)
+            {
+                this.Monitor.Log($"Cannot register animals with More Animals: {exception.Message}", LogLevel.Trace);
+            }
         }
 
         /// <summary>Raised before/after the game reads data from a save file and initialises the world. This event isn't raised after saving; if you want to do something at the start of each day, see DayStarted instead.</summary>
@@ -62,15 +69,29 @@ namespace BetterFarmAnimalVariety
         /// <param name="e">The event arguments.</param>
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            // NOTE:
-            // Don't need to clean up saves prior to loading. Dirty saves will 
-            // automatically be fixed on the next save. Only impact would be to 
-            // players who upgraded from 1.x or 2.x who removed patches without 
-            // selling/deleting the animals and without going through the cleaning 
-            // script. Minor impact.
+            try
+            {
+                // Invalidate the farm animals data cache for JsonAssets
+                IntegrateWithJsonAssets.RefreshFarmAnimalData(this.Helper);
+            }
+            catch (Framework.Exceptions.ApiNotFoundException exception)
+            {
+                this.Monitor.Log($"Cannot refresh farm animal data: {exception.Message}", LogLevel.Trace);
+            }
+            catch (Framework.Exceptions.SaveNotLoadedException exception)
+            {
+                this.Monitor.Log($"Cannot refresh farm animal data: {exception.Message}", LogLevel.Trace);
+            }
 
             try
             {
+                // NOTE:
+                // Don't need to clean up saves prior to loading. Dirty saves will 
+                // automatically be fixed on the next save. Only impact would be to 
+                // players who upgraded from 1.x or 2.x who removed patches without 
+                // selling/deleting the animals and without going through the cleaning 
+                // script. Minor impact.
+
                 ConvertDirtyFarmAnimals.OnSaveLoaded(e);
             }
             catch (KeyNotFoundException exception)

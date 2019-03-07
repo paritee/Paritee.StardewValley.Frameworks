@@ -6,11 +6,11 @@ namespace BetterFarmAnimalVariety.Framework.Editors
 {
     class AnimalBirth : IAssetEditor
     {
-        private readonly ModEntry Mod;
+        private readonly IModHelper Helper;
 
-        public AnimalBirth(ModEntry mod)
+        public AnimalBirth(IModHelper helper)
         {
-            this.Mod = mod;
+            this.Helper = helper;
         }
 
         /// <summary>Get whether this instance can edit the given asset.</summary>
@@ -40,7 +40,7 @@ namespace BetterFarmAnimalVariety.Framework.Editors
                 IDictionary<string, string> strings = asset.AsDictionary<string, string>().Data;
 
                 // Remove the short parent type to allow for potential to expand outside the parent's type
-                strings["AnimalBirth"] = this.Mod.Helper.Translation.Get("Strings.Events.AnimalBirth");
+                strings["AnimalBirth"] = this.Helper.Translation.Get("Strings.Events.AnimalBirth");
                 strings["AnimalNamingTitle"] = PariteeCore.Api.Content.LoadString("Strings\\StringsFromCSFiles:PurchaseAnimalsMenu.cs.11357");
             }
 
@@ -49,10 +49,10 @@ namespace BetterFarmAnimalVariety.Framework.Editors
                 IDictionary<string, string> strings = asset.AsDictionary<string, string>().Data;
 
                 // Set all of the hatching strings to be the same and type-agnostic
-                strings["AnimalHouse_Incubator_Hatch_RegularEgg"] = this.Mod.Helper.Translation.Get("Strings.Locations.AnimalHouse_Incubator_Hatch");
-                strings["AnimalHouse_Incubator_Hatch_VoidEgg"] = this.Mod.Helper.Translation.Get("Strings.Locations.AnimalHouse_Incubator_Hatch");
-                strings["AnimalHouse_Incubator_Hatch_DuckEgg"] = this.Mod.Helper.Translation.Get("Strings.Locations.AnimalHouse_Incubator_Hatch");
-                strings["AnimalHouse_Incubator_Hatch_DinosaurEgg"] = this.Mod.Helper.Translation.Get("Strings.Locations.AnimalHouse_Incubator_Hatch");
+                strings["AnimalHouse_Incubator_Hatch_RegularEgg"] = this.Helper.Translation.Get("Strings.Locations.AnimalHouse_Incubator_Hatch");
+                strings["AnimalHouse_Incubator_Hatch_VoidEgg"] = this.Helper.Translation.Get("Strings.Locations.AnimalHouse_Incubator_Hatch");
+                strings["AnimalHouse_Incubator_Hatch_DuckEgg"] = this.Helper.Translation.Get("Strings.Locations.AnimalHouse_Incubator_Hatch");
+                strings["AnimalHouse_Incubator_Hatch_DinosaurEgg"] = this.Helper.Translation.Get("Strings.Locations.AnimalHouse_Incubator_Hatch");
             }
         }
     }

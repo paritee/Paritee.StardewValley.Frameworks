@@ -140,13 +140,6 @@ namespace BetterFarmAnimalVariety.Framework.SaveData
 
             // Set the animal with the new type's data values
             moddedAnimal.UpdateFromData(currentType);
-
-            // Make sure we always reset the current produce of 
-            // non -producers at every chance we get
-            if (!moddedAnimal.IsAProducer())
-            {
-                moddedAnimal.SetCurrentProduce(PariteeCore.Constants.FarmAnimal.NoProduce);
-            }
         }
     }
 }

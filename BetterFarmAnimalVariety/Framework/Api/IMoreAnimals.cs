@@ -1,6 +1,6 @@
-﻿namespace BetterFarmAnimalVariety.Framework.Integrations
+﻿namespace BetterFarmAnimalVariety.Framework.Api
 {
-    public interface IMoreAnimalsAPI
+    public interface IMoreAnimals
     {
         void RegisterAnimalType(string id, bool hasBaby = true, bool canShear = false);
     }

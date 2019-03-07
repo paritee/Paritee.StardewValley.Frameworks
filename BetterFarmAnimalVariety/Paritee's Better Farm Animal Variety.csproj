@@ -41,7 +41,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Paritee.StardewValley.Core, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Paritee.StardewValley.Core.1.2.0\lib\net452\Paritee.StardewValley.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Paritee.StardewValley.Core\Paritee.StardewValley.Core\bin\Debug\Paritee.StardewValley.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -70,11 +71,14 @@
     <Compile Include="Framework\Decorators\AutoGrabber.cs" />
     <Compile Include="Framework\Decorators\Decorator.cs" />
     <Compile Include="Framework\Editors\FarmAnimalData.cs" />
+    <Compile Include="Framework\Events\IntegrateWithJsonAssets.cs" />
     <Compile Include="Framework\Events\RefreshCache.cs" />
-    <Compile Include="Framework\Events\IntegrateMods.cs" />
+    <Compile Include="Framework\Events\IntegrateWithMoreAnimals.cs" />
     <Compile Include="Framework\Events\LoadContentPacks.cs" />
     <Compile Include="Framework\Events\LoadMod.cs" />
     <Compile Include="Framework\Events\MigrateDeprecatedConfig.cs" />
+    <Compile Include="Framework\Exceptions\ApiNotFoundException.cs" />
+    <Compile Include="Framework\Exceptions\SaveNotLoadedException.cs" />
     <Compile Include="Framework\Helpers\Assert.cs" />
     <Compile Include="Framework\Helpers\FarmAnimals.cs" />
     <Compile Include="Framework\Helpers\Mod.cs" />
@@ -86,9 +90,9 @@
     <Compile Include="Framework\Decorators\Incubator.cs" />
     <Compile Include="Framework\Decorators\Location.cs" />
     <Compile Include="Framework\Decorators\PurchaseAnimalsMenu.cs" />
-    <Compile Include="Framework\Integrations\Integration.cs" />
-    <Compile Include="Framework\Integrations\IMoreAnimalsAPI.cs" />
-    <Compile Include="Framework\Integrations\MoreAnimals.cs" />
+    <Compile Include="Framework\Api\IBetterFarmAnimalVariety.cs" />
+    <Compile Include="Framework\Api\IJsonAssets.cs" />
+    <Compile Include="Framework\Api\IMoreAnimals.cs" />
     <Compile Include="Framework\Cache\FarmAnimals.cs" />
     <Compile Include="Framework\Loaders\FarmAnimalSprites.cs" />
     <Compile Include="Framework\Patches\AnimalHouse\ResetSharedState.cs" />
@@ -106,7 +110,7 @@
     <Compile Include="Framework\Patches\FarmAnimal\Reload.cs" />
     <Compile Include="Framework\Patches\Patch.cs" />
     <Compile Include="Framework\Patches\PurchaseAnimalsMenu\GetAnimalDescription.cs" />
-    <Compile Include="ModApi.cs" />
+    <Compile Include="Framework\Api\BetterFarmAnimalVariety.cs" />
     <Compile Include="Framework\Editors\AnimalBirth.cs" />
     <Compile Include="ModConfig.cs" />
     <Compile Include="ModEntry.cs" />
