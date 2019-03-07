@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Constants
@@ -10,8 +11,17 @@ namespace BetterFarmAnimalVariety.Framework.Constants
 
         // Config
         public const string ConfigFileName = "config.json";
-        public static string AnimalShopIconDirectory = "AnimalShop";
-        public static string AnimalShopIconExtension = ".png";
+        public const string AnimalShopIconDirectory = "AnimalShop";
+        public const string AnimalShopIconExtension = ".png";
+        public static List<string> RestrictedFarmAnimalTypes => new List<string>()
+        {
+            // The assets for these animals are kept in the same directory as the 
+            // farm animal assets. Naming a type one of these keywords would cause 
+            // the asset load to fail.
+            PariteeCore.Constants.VanillaAnimalType.Cat.ToString(),
+            PariteeCore.Constants.VanillaAnimalType.Dog.ToString(),
+            PariteeCore.Constants.VanillaAnimalType.Horse.ToString(),
+        };
 
         // Content packs
         public const string ContentPackContentFileName = "content.json";

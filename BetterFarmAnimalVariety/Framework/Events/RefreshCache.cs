@@ -17,11 +17,15 @@ namespace BetterFarmAnimalVariety.Framework.Events
             LoadContentPacks.SetUpContentPacks(helper.ContentPacks.GetOwned(), monitor);
         }
 
-
         public static void ValidateCachedFarmAnimals(IModHelper helper, IMonitor monitor)
         {
+            // Get the cache
+            Cache.FarmAnimals cache = Helpers.FarmAnimals.ReadCache();
+
+            List<string> categoriesToBeRemoved = new List<string>();
+
             // Validate the cached animals
-            foreach (Cache.FarmAnimalCategory category in Helpers.FarmAnimals.GetCategories())
+            foreach (Cache.FarmAnimalCategory category in cache.Categories)
             {
                 try
                 {
@@ -29,10 +33,31 @@ namespace BetterFarmAnimalVariety.Framework.Events
                     Helpers.Assert.ValidStringLength("category", category.Category, 1);
 
                     // Validate types
-                    List<string> types = category.Types.Select(o => o.Type).ToList();
+                    List<string> typesToBeRemoved = new List<string>();
 
-                    Helpers.Assert.AtLeastOneTypeRequired(types);
-                    Helpers.Assert.FarmAnimalTypesExist(types);
+                    foreach (Cache.FarmAnimalType type in category.Types)
+                    {
+                        try
+                        {
+                            Helpers.Assert.FarmAnimalTypeIsNotRestricted(type.Type);
+                            Helpers.Assert.FarmAnimalTypeExists(type.Type);
+                        }
+                        catch (Exception exception)
+                        {
+                            monitor.Log($"{type.Type} type will not load: {exception.Message}", LogLevel.Warn);
+
+                            typesToBeRemoved.Add(type.Type);
+                        }
+                    }
+
+                    if (typesToBeRemoved.Any())
+                    {
+                        // Remove any types that failed the validation check to 
+                        // allow for the category to potentially still exist
+                        category.Types.RemoveAll(o => typesToBeRemoved.Contains(o.Type));
+                    }
+
+                    Helpers.Assert.AtLeastOneTypeRequired(category.Types.Select(o => o.Type).ToList());
 
                     // Validate buildings
                     Helpers.Assert.AtLeastOneBuildingRequired(category.Buildings);
@@ -57,13 +82,21 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 }
                 catch (Exception exception)
                 {
-                    monitor.Log($"{category.Category} will not load: {exception.Message}", LogLevel.Warn);
+                    monitor.Log($"{category.Category} category will not load: {exception.Message}", LogLevel.Warn);
 
-                    // Remove it from the cache for this session
-                    // i.e. Cache gets reloaded every time the game is started
-                    Helpers.FarmAnimals.RemoveCategory(category.Category);
+                    categoriesToBeRemoved.Add(category.Category);
                 }
             }
+
+            if (categoriesToBeRemoved.Any())
+            {
+                // Remove it from the cache for this session
+                // i.e. Cache gets reloaded every time the game is started
+                cache.Categories.RemoveAll(o => categoriesToBeRemoved.Contains(o.Category));
+            }
+
+            // Write back the cache
+            Helpers.FarmAnimals.Write(cache);
         }
         
         public static void SeedCacheWithVanillaFarmAnimals()

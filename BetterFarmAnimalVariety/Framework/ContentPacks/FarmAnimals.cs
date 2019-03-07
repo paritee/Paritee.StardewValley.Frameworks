@@ -19,6 +19,10 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
 
         public void SetUp(IContentPack contentPack)
         {
+            // There should never be multiple occurrences of the same category 
+            // in a single content pack
+            Helpers.Assert.UniqueValues(this.Categories.Select(o => o.Category).ToList());
+
             // Go through each category
             foreach (ContentPacks.FarmAnimalCategory category in this.Categories)
             {
@@ -67,6 +71,9 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
         {
             // Assert unique category
             Helpers.Assert.UniqueFarmAnimalCategory(category.Category);
+
+            // Assert no duplicate types
+            Helpers.Assert.UniqueValues(category.Types.Select(o => o.Type).ToList());
 
             // Need to modify the sprite paths
             category.Types = category.Types.Select(o => this.CastSpritesToFullPaths(o, contentPack.DirectoryPath)).ToList();

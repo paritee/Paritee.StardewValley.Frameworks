@@ -53,7 +53,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
         public static bool CreateContentPack(ModEntry mod, Config.V2.ModConfig deprecatedConfig)
         {
-            string voidChicken = PariteeCore.Constants.VanillaFarmAnimalType.VoidChicken.ToString();
+            string voidChicken = PariteeCore.Constants.VanillaAnimalType.VoidChicken.ToString();
 
             // Get ready to make a new content pack
             ContentPacks.FarmAnimals farmAnimals = new ContentPacks.FarmAnimals(new List<ContentPacks.FarmAnimalCategory>());

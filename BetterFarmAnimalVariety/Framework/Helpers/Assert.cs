@@ -3,6 +3,7 @@ using StardewModdingAPI;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Helpers
@@ -103,12 +104,33 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             Dictionary<string, string> contentData = PariteeCore.Api.Content.LoadData<string, string>(PariteeCore.Constants.Content.DataFarmAnimalsContentPath);
 
             // Check if these new types are valid
-            foreach (string key in types)
+            foreach (string type in types)
             {
-                if (!contentData.ContainsKey(key))
+                if (!contentData.ContainsKey(type))
                 {
-                    throw new NotImplementedException($"\"{key}\" does not exist in Data/FarmAnimals");
+                    throw new NotImplementedException($"\"{type}\" does not exist in Data/FarmAnimals");
                 }
+            }
+        }
+
+        /// <param name="types">List<string></param>
+        /// <exception cref="NotSupportedException"></exception>
+        public static void FarmAnimalTypeIsNotRestricted(string type)
+        {
+            if (Constants.Mod.RestrictedFarmAnimalTypes.Select(str => str.ToLower()).Contains(type.ToLower()))
+            {
+                throw new NotSupportedException($"\"{type}\" is a restricted type and cannot be used");
+            }
+        }
+
+        /// <param name="types">List<string></param>
+        /// <exception cref="NotSupportedException"></exception>
+        public static void FarmAnimalTypesAreNotRestricted(List<string> types)
+        {
+            // Check if these new types are valid
+            foreach (string type in types)
+            {
+                Helpers.Assert.FarmAnimalTypeIsNotRestricted(type);
             }
         }
 
@@ -276,6 +298,21 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             if (!Path.GetExtension(fileName).ToLower().Equals(extension))
             {
                 throw new FormatException($"{fileName} must be a {extension}");
+            }
+        }
+
+        /// <param name="List<T>">T</param>
+        /// <exception cref="FormatException"></exception>
+        public static void UniqueValues<T>(List<T> values)
+        {
+            HashSet<T> uniqueValues = new HashSet<T>();
+
+            foreach (T value in values)
+            {
+                if (!uniqueValues.Add(value))
+                {
+                    throw new FormatException($"Multiple instances of \"{value}\" exists in the same set");
+                }
             }
         }
 
