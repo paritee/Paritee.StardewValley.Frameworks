@@ -140,14 +140,14 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         {
             if (!Int32.TryParse(strIndex, out produceIndex))
             {
-                // Try to find a JsonAsset
-                if (IntegrateWithJsonAssets.TryParseFarmAnimalProduceName(helper, strIndex, out produceIndex))
+                // Try to find an item by name
+                if (IntegrateWithJsonAssets.TryParseFarmAnimalProduceName(strIndex, out produceIndex))
                 {
-                    // Found a JsonAsset, nothing more to do
+                    // Found an item by name
                     return;
                 }
 
-                // No JsonAsset was found and not a valid integer
+                // No item found by name and not a valid numeric index
                 throw new NotImplementedException($"\"{strIndex}\" is not a known Object");
             }
 
