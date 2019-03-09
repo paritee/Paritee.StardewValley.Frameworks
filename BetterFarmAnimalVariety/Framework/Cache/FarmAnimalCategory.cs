@@ -37,13 +37,13 @@ namespace BetterFarmAnimalVariety.Framework.Cache
             }
         }
 
-        public FarmAnimalCategory(string assetSourceDirectory, PariteeCore.Models.FarmAnimalCategory farmAnimalStock)
+        public FarmAnimalCategory(string assetSourceDirectory, PariteeCore.Models.FarmAnimalCategory category)
         {
-            this.Category = farmAnimalStock.ToString();
-            this.Types = farmAnimalStock.Types.Select(o => new FarmAnimalType(o)).ToList();
-            this.Buildings = farmAnimalStock.Buildings.ToList();
-            this.AnimalShop = farmAnimalStock.CanBePurchased()
-                ? new FarmAnimalStock(farmAnimalStock)
+            this.Category = category.ToString();
+            this.Types = category.Types.Select(o => new FarmAnimalType(o, category.DeluxeProduceLuck)).ToList();
+            this.Buildings = category.Buildings.ToList();
+            this.AnimalShop = category.CanBePurchased()
+                ? new FarmAnimalStock(category)
                 : null;
 
             if (this.CanBePurchased())

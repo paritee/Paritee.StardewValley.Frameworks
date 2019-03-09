@@ -119,7 +119,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 ContentPacks.FarmAnimalCategory category = new ContentPacks.FarmAnimalCategory(action)
                 {
                     Category = oldFarmAnimals.Key,
-                    Types = oldFarmAnimals.Value.Types.Select(str => new Cache.FarmAnimalType(str)).ToList(),
+                    Types = oldFarmAnimals.Value.Types.Select(str => new Cache.FarmAnimalType(str, default(double))).ToList(),
                     Buildings = oldFarmAnimals.Value.Buildings.ToList(),
                     AnimalShop = animalShop,
                     ForceOverrideTypes = true,

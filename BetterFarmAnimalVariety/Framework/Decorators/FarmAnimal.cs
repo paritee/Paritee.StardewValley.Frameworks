@@ -29,9 +29,9 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
             return PariteeCore.Api.FarmAnimal.IsVanilla(this.GetTypeString());
         }
 
-        public int RollProduce(StardewValley.Farmer farmer, int seed)
+        public int RollProduce(int seed, StardewValley.Farmer farmer = null, double deluxeProduceLuck = default(double))
         {
-            return PariteeCore.Api.FarmAnimal.RollProduce(this.GetOriginal(), farmer, seed);
+            return PariteeCore.Api.FarmAnimal.RollProduce(this.GetOriginal(), seed, farmer, deluxeProduceLuck);
         }
 
         public int GetCurrentProduce()

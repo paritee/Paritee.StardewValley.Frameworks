@@ -140,7 +140,17 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
             // Roll the current produce
             StardewValley.Farmer owner = PariteeCore.Api.Game.GetPlayer();
-            int parentSheetIndex = moddedAnimal.RollProduce(owner, seed);
+
+            Cache.FarmAnimals cache = Helpers.FarmAnimals.ReadCache();
+
+            string typeStr = moddedAnimal.GetTypeString();
+            Cache.FarmAnimalType type = cache.Categories.SelectMany(o => o.Types).Where(o => o.Type == typeStr).FirstOrDefault();
+
+            double deluxeProduceLuck = type == null
+                ? default(double)
+                : type.DeluxeProduceLuck;
+
+            int parentSheetIndex = moddedAnimal.RollProduce(seed, owner, deluxeProduceLuck);
 
             Debug.WriteLine($"HandleCurrentProduce: parentSheetIndex {parentSheetIndex}");
 

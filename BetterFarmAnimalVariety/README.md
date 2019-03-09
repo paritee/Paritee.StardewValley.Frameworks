@@ -123,6 +123,7 @@ Create a new, unique category (`"Action": "Create"`).
 | `Types` | _Required_ | A list of types that belong to this category. Types are added to an existing category's types unless `ForceOverrideTypes` is used. There isn't a limit to the number of types you can list. |
 | `Types.Type` | _Required_ | The unique name of the type. The same type can belong to multiple categories. |
 | `Types.Data` | _Optional if Type exists_ | A string of data values for the type. This is required if the type does not already exist. See the [Modding Animal Data](https://stardewvalleywiki.com/Modding:Animal_data) guide for help. |
+| `Types.DeluxeLuckChance` | _Optional_ | A numeric value (`double`) that greatly reduces the drop rate of deluxe produce (ex. `Rabbits` have `0.02` and `Ducks` have `0.01`). |
 | `Types.AdultSprite` |  _Optional if Type exists_ | The relative path to the adult sprite image. Must be a `.png`. |
 | `Types.BabySprite` |  _Optional if Type exists_ | The relative path to the baby sprite image. Must be a `.png`. |
 | `Types.ShearedSprite` | _Optional if Type exists or if texture does not change when ready for harvest_ | The relative path to the sheared sprite image. Must be a `.png`. See the [Modding Animal Data](https://stardewvalleywiki.com/Modding:Animal_data) guide for help. |
@@ -143,6 +144,7 @@ Update an existing category (`"Action": "Update"`).
 | `Types` | _Optional_ | A list of types that belong to this category. Types are added to an existing category's types unless `ForceOverrideTypes` is used. There isn't a limit to the number of types you can list. |
 | `Types.Type` | _Required if Types is included_ | The unique name of the type. The same type can belong to multiple categories. |
 | `Types.Data` | _Optional if Type exists_ | A string of data values for the type. This is required if the type does not already exist. See the [Modding Animal Data](https://stardewvalleywiki.com/Modding:Animal_data) guide for help. |
+| `Types.DeluxeLuckChance` | _Optional_ | A numeric value (`double`) that greatly reduces the drop rate of deluxe produce (ex. `Rabbits` have `0.02` and `Ducks` have `0.01`). |
 | `Types.AdultSprite` | _Optional if Type exists_ | The relative path to the adult sprite image. Must be a `.png`. |
 | `Types.BabySprite` | _Optional if Type exists_ | The relative path to the baby sprite image. Must be a `.png`. |
 | `Types.ShearedSprite` | _Optional if Type exists or if texture does not change when ready for harvest_ | The relative path to the sheared sprite image. Must be a `.png`. See the [Modding Animal Data](https://stardewvalleywiki.com/Modding:Animal_data) guide for help. |

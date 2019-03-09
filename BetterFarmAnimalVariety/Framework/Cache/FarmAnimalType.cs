@@ -7,6 +7,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
     {
         public string Type;
         public string Data;
+        public double DeluxeProduceLuck;
         public string BabySprite;
         public string AdultSprite;
         public string ShearedSprite;
@@ -20,15 +21,17 @@ namespace BetterFarmAnimalVariety.Framework.Cache
 
         public FarmAnimalType() { }
 
-        public FarmAnimalType(string type)
+        public FarmAnimalType(string type, double deluxeProduceLuck)
         {
             this.Type = type;
+            this.DeluxeProduceLuck = deluxeProduceLuck;
         }
 
-        public FarmAnimalType(string type, string data, string babySprite, string adultSprite, string shearedSprite, Dictionary<string, string[]> localization)
+        public FarmAnimalType(string type, string data, double deluxeProduceLuck, string babySprite, string adultSprite, string shearedSprite, Dictionary<string, string[]> localization)
         {
             this.Type = type;
             this.Data = data;
+            this.DeluxeProduceLuck = deluxeProduceLuck;
             this.BabySprite = babySprite;
             this.AdultSprite = adultSprite;
             this.ShearedSprite = shearedSprite;
