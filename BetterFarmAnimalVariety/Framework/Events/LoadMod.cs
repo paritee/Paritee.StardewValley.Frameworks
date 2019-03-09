@@ -45,7 +45,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                     config.AssertValidFormat(targetFormat);
                 }
             }
-            catch (Exception e)
+            catch
             {
                 MigrateDeprecatedConfig.OnEntry(mod, targetFormat, out config);
             }

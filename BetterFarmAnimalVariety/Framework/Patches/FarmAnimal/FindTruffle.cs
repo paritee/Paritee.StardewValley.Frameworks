@@ -32,18 +32,26 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
         private static bool AttemptToSpawnProduce(ref Decorators.FarmAnimal moddedAnimal, Farmer who)
         {
             Vector2 tileLocation = StardewValley.Utility.getTranslatedVector2(moddedAnimal.GetTileLocation(), moddedAnimal.GetFacingDirection(), 1f);
-            int quantity = 1;
-            int produceIndex = moddedAnimal.RollProduce(who);
 
+            // Don't roll the produce since we set this in dayUpdate postfix
+            int produceIndex = moddedAnimal.GetCurrentProduce();
 
             if (!PariteeCore.Api.FarmAnimal.IsProduceAnItem(produceIndex))
             {
                 return false;
             }
 
-            StardewValley.Object obj = new StardewValley.Object(moddedAnimal.GetTileLocation(), produceIndex, quantity);
+            // Create the item
+            StardewValley.Object obj = new StardewValley.Object(Vector2.Zero, produceIndex, (string)null, false, true, false, true)
+            {
+                Quality = moddedAnimal.GetProduceQuality()
+            };
 
+            // Spawn the item
             PariteeCore.Api.Location.SpawnObject(PariteeCore.Api.Game.GetFarm(), tileLocation, obj);
+
+            // Reset current produce since an item was spawned
+            moddedAnimal.SetCurrentProduce(PariteeCore.Constants.FarmAnimal.NoProduce);
 
             return true;
         }

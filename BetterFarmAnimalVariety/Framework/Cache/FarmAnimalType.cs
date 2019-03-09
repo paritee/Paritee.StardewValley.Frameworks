@@ -25,6 +25,16 @@ namespace BetterFarmAnimalVariety.Framework.Cache
             this.Type = type;
         }
 
+        public FarmAnimalType(string type, string data, string babySprite, string adultSprite, string shearedSprite, Dictionary<string, string[]> localization)
+        {
+            this.Type = type;
+            this.Data = data;
+            this.BabySprite = babySprite;
+            this.AdultSprite = adultSprite;
+            this.ShearedSprite = shearedSprite;
+            this.Localization = localization;
+        }
+
         public string LocalizeData(string locale)
         {
             if (this.Localization == null || !this.Localization.ContainsKey(locale))

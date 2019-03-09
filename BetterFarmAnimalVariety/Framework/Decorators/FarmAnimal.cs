@@ -29,9 +29,9 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
             return PariteeCore.Api.FarmAnimal.IsVanilla(this.GetTypeString());
         }
 
-        public int RollProduce(StardewValley.Farmer farmer)
+        public int RollProduce(StardewValley.Farmer farmer, int seed)
         {
-            return PariteeCore.Api.FarmAnimal.RollProduce(this.GetOriginal(), farmer);
+            return PariteeCore.Api.FarmAnimal.RollProduce(this.GetOriginal(), farmer, seed);
         }
 
         public int GetCurrentProduce()
@@ -88,6 +88,11 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
         public byte GetFullness()
         {
             return PariteeCore.Api.FarmAnimal.GetFullness(this.GetOriginal());
+        }
+
+        public byte GetHappiness()
+        {
+            return PariteeCore.Api.FarmAnimal.GetHappiness(this.GetOriginal());
         }
 
         public void SetFindGrassPathController(GameLocation location)
@@ -218,6 +223,86 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
         public int GetDeluxeProduce()
         {
             return PariteeCore.Api.FarmAnimal.GetDeluxeProduce(this.GetOriginal());
+        }
+
+        public bool IsType(PariteeCore.Constants.VanillaAnimalType type)
+        {
+            return PariteeCore.Api.FarmAnimal.IsType(this.GetOriginal(), type);
+        }
+
+        public long GetOwnerId()
+        {
+            return PariteeCore.Api.FarmAnimal.GetOwnerId(this.GetOriginal());
+        }
+
+        public StardewValley.Farmer GetOwner()
+        {
+            return PariteeCore.Api.Game.GetFarmer(this.GetOwnerId());
+        }
+
+        public byte GetDaysToLay(StardewValley.Farmer farmer)
+        {
+            return PariteeCore.Api.FarmAnimal.GetDaysToLay(this.GetOriginal(), farmer);
+        }
+
+        public byte GetDaysSinceLastLay()
+        {
+            return PariteeCore.Api.FarmAnimal.GetDaysSinceLastLay(this.GetOriginal());
+        }
+
+        public int GetMeatIndex()
+        {
+            return PariteeCore.Api.FarmAnimal.GetMeatIndex(this.GetOriginal());
+        }
+
+        public StardewValley.Buildings.Building GetHome()
+        {
+            return PariteeCore.Api.FarmAnimal.GetHome(this.GetOriginal());
+        }
+
+        public void SetDaysSinceLastLay(byte days)
+        {
+            PariteeCore.Api.FarmAnimal.SetDaysSinceLastLay(this.GetOriginal(), days);
+        }
+
+        public PariteeCore.Constants.Object.Quality RollProduceQuality(StardewValley.Farmer farmer, int seed)
+        {
+            return PariteeCore.Api.FarmAnimal.RollProduceQuality(this.GetOriginal(), farmer, seed);
+        }
+
+        public void SetProduceQuality(PariteeCore.Constants.Object.Quality quality)
+        {
+            PariteeCore.Api.FarmAnimal.SetProduceQuality(this.GetOriginal(), quality);
+        }
+
+        public bool LaysProduce()
+        {
+            return PariteeCore.Api.FarmAnimal.LaysProduce(this.GetOriginal());
+        }
+
+        public int GetProduceQuality()
+        {
+            return PariteeCore.Api.FarmAnimal.GetProduceQuality(this.GetOriginal());
+        }
+
+        public void SetPauseTimer(int timer)
+        {
+            PariteeCore.Api.FarmAnimal.SetPauseTimer(this.GetOriginal(), timer);
+        }
+
+        public int GetPauseTimer()
+        {
+            return PariteeCore.Api.FarmAnimal.GetPauseTimer(this.GetOriginal());
+        }
+
+        public void SetHitGlowTimer(int timer)
+        {
+            PariteeCore.Api.FarmAnimal.SetHitGlowTimer(this.GetOriginal(), timer);
+        }
+
+        public int GetHitGlowTimer()
+        {
+            return PariteeCore.Api.FarmAnimal.GetHitGlowTimer(this.GetOriginal());
         }
     }
 }

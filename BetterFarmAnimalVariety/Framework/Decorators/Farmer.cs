@@ -4,7 +4,7 @@ using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Decorators
 {
-    class Farmer : Decorator
+    public class Farmer : Decorator
     {
         public Farmer(StardewValley.Farmer original) : base(original) { }
 
@@ -46,6 +46,11 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
         public void SpendMoney(int amount)
         {
             PariteeCore.Api.Farmer.SpendMoney(this.GetOriginal(), amount);
+        }
+
+        public bool HasProfession(PariteeCore.Constants.Farmer.Profession profession)
+        {
+            return PariteeCore.Api.Farmer.HasProfession(this.GetOriginal(), profession);
         }
     }
 }
