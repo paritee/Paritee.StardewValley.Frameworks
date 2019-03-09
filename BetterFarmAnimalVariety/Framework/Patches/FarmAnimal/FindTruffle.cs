@@ -50,9 +50,6 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             // Spawn the item
             PariteeCore.Api.Location.SpawnObject(PariteeCore.Api.Game.GetFarm(), tileLocation, obj);
 
-            // Reset current produce since an item was spawned
-            moddedAnimal.SetCurrentProduce(PariteeCore.Constants.FarmAnimal.NoProduce);
-
             return true;
         }
     }
