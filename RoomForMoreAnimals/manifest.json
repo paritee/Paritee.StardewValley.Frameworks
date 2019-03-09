@@ -1,0 +1,10 @@
+﻿{
+   "Name": "Paritee's Room for More Animals",
+   "Author": "Paritee",
+   "Version": "1.0.0-alpha.1",
+   "Description": "Room for More Animals",
+   "UniqueID": "Paritee.RoomForMoreAnimals",
+   "EntryDll": "RoomForMoreAnimals.dll",
+   "MinimumApiVersion": "2.9",
+   "UpdateKeys": [ "Nexus:0000" ]
+}
