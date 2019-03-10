@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using StardewValley;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using PariteeCore = Paritee.StardewValley.Core;
 
@@ -31,18 +30,11 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             // pushAccumulator will always be set to 0 exiting postfix
             __instance.pushAccumulator = movedIntoHome ? 1 : 0;
 
-            Debug.WriteLine($"=========================================================");
-            Debug.WriteLine($"dayUpdate.Prefix: __instance.Name {__instance.Name}");
-            Debug.WriteLine($"dayUpdate.Prefix: movedIntoHome {movedIntoHome}");
-
             if (movedIntoHome)
             {
                 return true;
             }
-
-            Debug.WriteLine($"dayUpdate.Prefix: __instance.daysSinceLastLay.Value {__instance.daysSinceLastLay.Value}");
-            Debug.WriteLine($"dayUpdate.Prefix: __instance.currentProduce.Value {__instance.currentProduce.Value}");
-
+            
             // Temporarily use the pauseTimer to store the daysSinceLastLay value 
             // for use in the postfix
             __instance.pauseTimer = __instance.daysSinceLastLay.Value;
@@ -58,18 +50,11 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             // Set the days to 0 so we have full control over the current produce
             __instance.daysSinceLastLay.Value = PariteeCore.Constants.FarmAnimal.MinDaysSinceLastLay;
 
-            Debug.WriteLine($"dayUpdate.Prefix: __instance.pushAccumulator {__instance.pushAccumulator}");
-            Debug.WriteLine($"dayUpdate.Prefix: __instance.pauseTimer {__instance.pauseTimer}");
-            Debug.WriteLine($"dayUpdate.Prefix: __instance.hitGlowTimer {__instance.hitGlowTimer}");
-            Debug.WriteLine($"dayUpdate.Prefix: __instance.daysSinceLastLay.Value {__instance.daysSinceLastLay.Value}");
-
             return true;
         }
 
         public static void Postfix(ref StardewValley.FarmAnimal __instance, ref StardewValley.GameLocation environtment)
         {
-            Debug.WriteLine($"dayUpdate.Postfix: __instance.pushAccumulator {__instance.pushAccumulator}");
-
             if (__instance.pushAccumulator == 1)
             {
                 __instance.pushAccumulator = 0;
@@ -77,11 +62,6 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
                 // Don't do anything
                 return;
             }
-
-            Debug.WriteLine($"dayUpdate.Postfix: __instance.pauseTimer(OGdaysSinceLastLay) {__instance.pauseTimer}");
-            Debug.WriteLine($"dayUpdate.Postfix: __instance.hitGlowTimer(OGfullness) {__instance.hitGlowTimer}");
-            Debug.WriteLine($"dayUpdate.Postfix: __instance.daysSinceLastLay.Value {__instance.daysSinceLastLay.Value}");
-            Debug.WriteLine($"dayUpdate.Postfix: __instance.currentProduce.Value {__instance.currentProduce.Value}");
 
             Decorators.FarmAnimal moddedAnimal = new Decorators.FarmAnimal(__instance);
 
@@ -94,9 +74,6 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             moddedAnimal.SetHitGlowTimer(PariteeCore.Constants.FarmAnimal.MinHitGlowTimer);
 
             DayUpdate.HandleCurrentProduce(ref moddedAnimal, fullness);
-
-            Debug.WriteLine($"dayUpdate.Postfix.HandleCurrentProduce: __instance.daysSinceLastLay.Value {__instance.daysSinceLastLay.Value}");
-            Debug.WriteLine($"dayUpdate.Postfix.HandleCurrentProduce: __instance.currentProduce.Value {__instance.currentProduce.Value}");
         }
 
         private static void HandleCurrentProduce(ref Decorators.FarmAnimal moddedAnimal, byte originalFullness)
@@ -107,13 +84,6 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             // Roll a random chance check
             int seed = (int)moddedAnimal.GetUniqueId() / 2 + PariteeCore.Api.Game.GetDaysPlayed();
             bool produceChance = DayUpdate.RollRandomProduceChance(moddedAnimal, originalFullness, seed);
-
-            Debug.WriteLine($"HandleCurrentProduce: !moddedAnimal.IsAProducer() {!moddedAnimal.IsAProducer()}");
-            Debug.WriteLine($"HandleCurrentProduce: moddedAnimal.IsBaby() {moddedAnimal.IsBaby()}");
-            Debug.WriteLine($"HandleCurrentProduce: moddedAnimal.GetDaysSinceLastLay() {moddedAnimal.GetDaysSinceLastLay()}");
-            Debug.WriteLine($"HandleCurrentProduce: daysToLay {daysToLay}");
-            Debug.WriteLine($"HandleCurrentProduce: moddedAnimal.GetDaysSinceLastLay() < daysToLay {moddedAnimal.GetDaysSinceLastLay() < daysToLay}");
-            Debug.WriteLine($"HandleCurrentProduce: !produceChance {!produceChance}");
 
             // Non-producers and babies do not produce
             if (!moddedAnimal.IsAProducer() || moddedAnimal.IsBaby())
@@ -152,8 +122,6 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
             int parentSheetIndex = moddedAnimal.RollProduce(seed, owner, deluxeProduceLuck);
 
-            Debug.WriteLine($"HandleCurrentProduce: parentSheetIndex {parentSheetIndex}");
-
             moddedAnimal.SetCurrentProduce(parentSheetIndex);
 
             // Could have rolled no produce so no need to continue
@@ -177,11 +145,6 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
             bool fullnessChance = random.NextDouble() < fullness / DayUpdate.FullnessChanceOdds;
             bool happinessChance = random.NextDouble() < happiness / DayUpdate.HappinessChanceOdds;
-
-            Debug.WriteLine($"RollRandomProduceChance: fullness {fullness}");
-            Debug.WriteLine($"RollRandomProduceChance: fullnessChance {fullnessChance}");
-            Debug.WriteLine($"RollRandomProduceChance: happiness {happiness}");
-            Debug.WriteLine($"RollRandomProduceChance: happinessChance {happinessChance}");
 
             return fullnessChance && happinessChance;
         }
@@ -249,8 +212,6 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
             // Spawn the item
             PariteeCore.Api.Location.SpawnObject(animalHouse, tileLocation, obj);
-
-            Debug.WriteLine($"HandleProduceSpawn: true");
 
             // Remove the animal's produce
             moddedAnimal.SetCurrentProduce(PariteeCore.Constants.FarmAnimal.NoProduce);

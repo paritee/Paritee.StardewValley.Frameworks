@@ -8,6 +8,8 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
     [HarmonyPatch(typeof(StardewValley.FarmAnimal), "behaviors")]
     class Behaviors
     {
+        private const double FindProduceChance = 0.0002;
+
         public static bool Prefix(ref StardewValley.FarmAnimal __instance, ref GameTime time, ref GameLocation location, ref bool __result)
         {
             Decorators.FarmAnimal moddedAnimal = new Decorators.FarmAnimal(__instance);
@@ -147,7 +149,10 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
                 return;
             }
 
-            if (PariteeCore.Helpers.Random.NextDouble() >= 0.0002)
+            double roll = PariteeCore.Helpers.Random.NextDouble();
+            bool chance = roll >= Behaviors.FindProduceChance;
+
+            if (chance)
             {
                 return;
             }

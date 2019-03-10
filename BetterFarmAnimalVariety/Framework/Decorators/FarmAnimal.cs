@@ -14,6 +14,11 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
             return base.GetOriginal<StardewValley.FarmAnimal>();
         }
 
+        public void Reload(StardewValley.Buildings.Building building)
+        {
+            PariteeCore.Api.FarmAnimal.Reload(this.GetOriginal(), building);
+        }
+
         public string GetTypeString()
         {
             return PariteeCore.Api.FarmAnimal.GetType(this.GetOriginal());
@@ -223,6 +228,11 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
         public int GetDeluxeProduce()
         {
             return PariteeCore.Api.FarmAnimal.GetDeluxeProduce(this.GetOriginal());
+        }
+
+        public bool IsCurrentlyProducingDeluxe()
+        {
+            return PariteeCore.Api.FarmAnimal.IsCurrentlyProducingDeluxe(this.GetOriginal());
         }
 
         public bool IsType(PariteeCore.Constants.VanillaAnimalType type)

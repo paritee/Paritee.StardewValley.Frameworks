@@ -63,7 +63,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                         // Return the type that is logged for saves or 
                         // automatically default the coop/barn dwellers
                         string savedType = saveData.GetSavedTypeOrDefault(moddedAnimal);
-
+                        
                         // Overwrite the animal
                         // animal.reload() will be called in the "Saved" event
                         moddedAnimal.UpdateFromData(savedType);
