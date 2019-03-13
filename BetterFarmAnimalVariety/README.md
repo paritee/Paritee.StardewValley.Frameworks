@@ -172,15 +172,30 @@ See [SMAPI Modder Guide](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs
 ```c#
 /// <summary>Determine if the mod is enabled.</summary>
 /// <returns>Returns bool</returns>
-public bool IsEnabled();
+bool IsEnabled();
 
 /// <summary>Get all farm animal categories that have been loaded.</summary>
-/// <returns>Returns List<Paritee.Core.Models.FarmAnimalCategory></returns>
-public List<PariteeCore.Models.FarmAnimalCategory> GetFarmAnimalCategories();
+/// <returns>Returns Dictionary<string, List<string>></returns>
+Dictionary<string, List<string>> GetFarmAnimalCategories();
+
+/// <param name="farm">StardewValley.Farm</param>
+/// <summary>Get all livestock options.</summary>
+/// <returns>Returns List<StardewValley.Object></returns>
+List<StardewValley.Object> GetAnimalShopStock(StardewValley.Farm farm);
+
+/// <summary>Get all livestock icons.</summary>
+/// <returns>Returns Dictionary<string, Texture2D></returns>
+Dictionary<string, Texture2D> GetAnimalShopIcons();
+
+/// <param name="category">string</param>
+/// <param name="farmer">StardewValley.Farmer</param>
+/// <summary>Get a random farm animal type from the animal shop category.</summary>
+/// <returns>Returns string</returns>
+string GetRandomAnimalShopType(string category, StardewValley.Farmer farmer);
 
 /// <summary>Get the farm animal's types from the save data.</summary>
 /// <returns>Returns Dictionary<long, KeyValuePair<string, string>></returns>
-public Dictionary<long, KeyValuePair<string, string>> GetFarmAnimalTypeHistory();
+Dictionary<long, KeyValuePair<string, string>> GetFarmAnimalTypeHistory();
 ```
 
 ## Integrations
@@ -189,4 +204,6 @@ Supported integrations are:
 
 | Mod | Version Support |
 | --- | --- |
-| [More Animals](https://www.nexusmods.com/stardewvalley/mods/2274) | `BFAV 3.x` => `More Animals 3.x` |
+| [Animal Chooser](https://www.nexusmods.com/stardewvalley/mods/2573) | `BFAV 3.x` => `AC ???` ([unofficial](#)) |
+| [Farm Expansion](https://www.nexusmods.com/stardewvalley/mods/130) |  `BFAV 3.x` => `FE 3.x` ([unoffical](https://github.com/paritee/FarmExpansion)) |
+| [More Animals](https://www.nexusmods.com/stardewvalley/mods/2274) | `BFAV 3.x` => `MA 3.x` |
