@@ -62,9 +62,12 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
                 return true;
             }
 
+            ModConfig config = Helpers.Mod.ReadConfig<ModConfig>();
+            Api.BetterFarmAnimalVariety api = new Api.BetterFarmAnimalVariety(config);
+
             // Randomly choose a type from the category selected if the type is 
             // within the player's budget
-            string type = ReceiveLeftClick.GetRandomType(moddedPlayer, textureComponent.hoverText);
+            string type = api.GetRandomAnimalShopType(textureComponent.hoverText, moddedPlayer.GetOriginal());
 
             StardewValley.FarmAnimal animalBeingPurchased = moddedPlayer.CreateFarmAnimal(type);
 
@@ -86,19 +89,6 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
         {
             PariteeCore.Api.BellsAndWhistles.FadeToBlack(true, moddedMenu.GetOriginal().setUpForAnimalPlacement, 0.02f);
             PariteeCore.Api.BellsAndWhistles.PlaySound("smallSelect");
-        }
-
-        private static string GetRandomType(Decorators.Farmer moddedPlayer, string category)
-        {
-            List<string> types = Helpers.FarmAnimals.GroupPurchaseableTypesByCategory()[category];
-
-            // Remove blue chickens if needed
-            types = moddedPlayer.SanitizeBlueChickens(types);
-
-            // Remove any types that the player cannot afford
-            types = moddedPlayer.SanitizeAffordableTypes(types);
-
-            return types[PariteeCore.Helpers.Random.Next(types.Count)];
         }
 
         private static bool HandleOnFarm(ref Decorators.PurchaseAnimalsMenu moddedMenu, int x, int y, Decorators.Farmer moddedPlayer)

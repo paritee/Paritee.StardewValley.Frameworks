@@ -39,7 +39,7 @@ namespace BetterFarmAnimalVariety
         {
             ModConfig config = Framework.Helpers.Mod.ReadConfig<ModConfig>();
 
-            return new Framework.Api.BetterFarmAnimalVariety(config, this.ModManifest.Version);
+            return new Framework.Api.BetterFarmAnimalVariety(config);
         }
         
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)

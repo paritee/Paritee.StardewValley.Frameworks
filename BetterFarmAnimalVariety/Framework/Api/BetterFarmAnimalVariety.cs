@@ -1,5 +1,5 @@
 ﻿using BetterFarmAnimalVariety.Framework.SaveData;
-using StardewModdingAPI;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 using PariteeCore = Paritee.StardewValley.Core;
@@ -9,12 +9,10 @@ namespace BetterFarmAnimalVariety.Framework.Api
     public class BetterFarmAnimalVariety : Api.IBetterFarmAnimalVariety
     {
         private readonly ModConfig Config;
-        private readonly ISemanticVersion ModVersion;
 
-        public BetterFarmAnimalVariety(ModConfig config, ISemanticVersion modVersion)
+        public BetterFarmAnimalVariety(ModConfig config)
         {
             this.Config = config;
-            this.ModVersion = modVersion;
         }
 
         /// <summary>Determine if the mod is enabled.</summary>
@@ -25,34 +23,47 @@ namespace BetterFarmAnimalVariety.Framework.Api
         }
 
         /// <summary>Get all farm animal categories that have been loaded.</summary>
-        /// <returns>Returns List<Paritee.Core.Models.FarmAnimalCategory></returns>
-        public List<PariteeCore.Models.FarmAnimalCategory> GetFarmAnimalCategories()
+        /// <returns>Returns List<T></returns>
+        public Dictionary<string, List<string>> GetFarmAnimalCategories()
         {
-            List<PariteeCore.Models.FarmAnimalCategory> categories = new List<PariteeCore.Models.FarmAnimalCategory>();
+            return Framework.Helpers.FarmAnimals.GetCategories()
+                .ToDictionary(o => o.Category, o => o.Types.Select(t => t.Type).ToList());
+        }
 
-            int order = 0;
+        /// <param name="farm">StardewValley.Farm</param>
+        /// <summary>Determine if the mod is enabled.</summary>
+        /// <returns>Returns List<StardewValley.Object></returns>
+        public List<StardewValley.Object> GetAnimalShopStock(StardewValley.Farm farm)
+        {
+            return Helpers.FarmAnimals.GetPurchaseAnimalStock(farm);
+        }
 
-            foreach (Framework.Cache.FarmAnimalCategory animal in Framework.Helpers.FarmAnimals.GetCategories())
-            {
-                string[] types = animal.Types.Select(o => o.Type).ToArray();
-                int price = PariteeCore.Api.FarmAnimal.GetCheapestPrice(types.ToList());
+        /// <summary>Determine if the mod is enabled.</summary>
+        public Dictionary<string, Texture2D> GetAnimalShopIcons()
+        {
+            // Grab the icons from the config by category
+             return Helpers.FarmAnimals.GetCategories()
+                .Where(o => o.CanBePurchased())
+                .ToDictionary(o => o.Category, o => o.GetAnimalShopIconTexture());
+        }
 
-                string[] buildings = animal.Buildings == null
-                    ? new string[0]
-                    : animal.Buildings.ToArray();
+        /// <param name="category">string</param>
+        /// <param name="farmer">StardewValley.Farmer</param>
+        /// <summary>Determine if the mod is enabled.</summary>
+        /// <returns>Returns string</returns>
+        public string GetRandomAnimalShopType(string category, StardewValley.Farmer farmer)
+        {
+            Decorators.Farmer moddedFarmer = new Decorators.Farmer(farmer);
 
-                string[] excludeFromShop = animal.AnimalShop.Exclude == null
-                    ? new string[0]
-                    : animal.AnimalShop.Exclude.ToArray();
+            List<string> types = Helpers.FarmAnimals.GroupPurchaseableTypesByCategory()[category];
 
-                PariteeCore.Models.FarmAnimalCategory category = animal.CanBePurchased()
-                    ? new PariteeCore.Models.FarmAnimalCategory(animal.Category, order++, animal.AnimalShop.Name, animal.AnimalShop.Description, price, types, buildings, excludeFromShop)
-                    : new PariteeCore.Models.FarmAnimalCategory(animal.Category, order++, types, buildings);
+            // Remove blue chickens if needed
+            types = moddedFarmer.SanitizeBlueChickens(types);
 
-                categories.Add(category);
-            }
+            // Remove any types that the player cannot afford
+            types = moddedFarmer.SanitizeAffordableTypes(types);
 
-            return categories;
+            return types[PariteeCore.Helpers.Random.Next(types.Count)];
         }
 
         /// <summary>Get the farm animal's types from the save data.</summary>

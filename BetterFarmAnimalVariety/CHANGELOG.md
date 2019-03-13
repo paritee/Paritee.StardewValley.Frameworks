@@ -12,8 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Full language support
 - Integration with [MoreAnimals 3.x](https://github.com/Entoarox/StardewMods/tree/master/MoreAnimals) for animal skins
 - Integration with [JsonAssets 1.x](https://github.com/spacechase0/JsonAssets) for animal produce by item name
+- Support for integration with [FarmExpansion 3.x](https://github.com/AdvizeGH/FarmExpansion)
 - Farm animal data sanitation on game save to preserve clean saves and recover from dirty saves using save data
-- The following APIs: `IsEnabled`, `GetFarmAnimalCategories`, `GetFarmAnimalTypeHistory`
+- The following APIs: `IsEnabled`, `GetFarmAnimalCategories`, `GetAnimalShopStock`, `GetAnimalShopIcons`, `GetRandomAnimalShopType`, `GetFarmAnimalTypeHistory`
 - Support for backwards-compatible `config.json` migration from `Format:2` to  `Format:3`
 - A [changelog](https://github.com/paritee/Paritee.StardewValley.Frameworks/tree/bfav-3.0.0/BetterFarmAnimalVariety)
 
