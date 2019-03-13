@@ -86,7 +86,7 @@ namespace RoomForMoreAnimals
 
             if (hayObjects.Any())
             {
-                environtment.objects.Remove(environtment.objects.Pairs.First().Key);
+                environtment.objects.Remove(hayObjects.First().Key);
             }
             else if (Game1.getFarm().piecesOfHay.Value <= 0)
             {
