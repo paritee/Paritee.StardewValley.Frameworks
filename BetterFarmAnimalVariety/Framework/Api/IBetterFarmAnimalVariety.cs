@@ -10,20 +10,21 @@ namespace BetterFarmAnimalVariety.Framework.Api
         bool IsEnabled();
 
         /// <summary>Get all farm animal categories that have been loaded.</summary>
-        /// <returns>Returns List<T></returns>
+        /// <returns>Returns Dictionary<string, List<string>></returns>
         Dictionary<string, List<string>> GetFarmAnimalCategories();
 
         /// <param name="farm">StardewValley.Farm</param>
-        /// <summary>Determine if the mod is enabled.</summary>
+        /// <summary>Get all livestock options.</summary>
         /// <returns>Returns List<StardewValley.Object></returns>
         List<StardewValley.Object> GetAnimalShopStock(StardewValley.Farm farm);
 
-        /// <summary>Determine if the mod is enabled.</summary>
+        /// <summary>Get all livestock icons.</summary>
+        /// <returns>Returns Dictionary<string, Texture2D></returns>
         Dictionary<string, Texture2D> GetAnimalShopIcons();
 
         /// <param name="category">string</param>
         /// <param name="farmer">StardewValley.Farmer</param>
-        /// <summary>Determine if the mod is enabled.</summary>
+        /// <summary>Get a random farm animal type from the animal shop category.</summary>
         /// <returns>Returns string</returns>
         string GetRandomAnimalShopType(string category, StardewValley.Farmer farmer);
 
