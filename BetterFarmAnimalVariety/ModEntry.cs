@@ -18,6 +18,10 @@ namespace BetterFarmAnimalVariety
         {
             try
             {
+                // Seed a new cache with the vanilla animals first in case a content 
+                // pack gets created from a deprecated config
+                RefreshCache.SeedCacheWithVanillaFarmAnimals();
+
                 LoadMod.OnEntry(this);
             }
             catch (Exception e)
@@ -44,10 +48,7 @@ namespace BetterFarmAnimalVariety
         
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            // Seed a new cache with the vanilla animals...
-            RefreshCache.SeedCacheWithVanillaFarmAnimals();
-
-            //... then content packs are loaded to apply changes to the cache...
+            // Content packs are loaded to apply changes to the cache...
             LoadContentPacks.SetUpContentPacks(this.Helper.ContentPacks.GetOwned(), this.Monitor);
 
             // ... and validate all of the cached animals...
