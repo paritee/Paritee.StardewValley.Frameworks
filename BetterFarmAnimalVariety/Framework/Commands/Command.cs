@@ -48,15 +48,19 @@ namespace BetterFarmAnimalVariety.Framework.Commands
                 output += $"-- Type: {type.Type}\n";
                 output += $"--- Data: {type.Data ?? "null"}\n";
 
-                if (type.HasSprites())
+                bool hasAdultSprite = type.HasAdultSprite();
+                bool hasBabySprite = type.HasBabySprite();
+                bool hasReadyForHarvestSprite = type.HasReadyForHarvestSprite();
+
+                if (hasAdultSprite || hasBabySprite || hasReadyForHarvestSprite)
                 {
                     output += $"--- Sprites:\n";
-                    output += $"---- Adult: {type.Sprites.Adult ?? "null"}\n";
-                    output += $"---- Baby: {type.Sprites.Baby ?? "null"}\n";
-                    output += $"---- ReadyForHarvest: {type.Sprites.ReadyForHarvest ?? "null"}\n";
+                    output += hasAdultSprite ? $"---- Adult: {type.Sprites.Adult ?? "null"}\n" : "";
+                    output += hasBabySprite ? $"---- Baby: {type.Sprites.Baby ?? "null"}\n" : "";
+                    output += hasReadyForHarvestSprite ? $"---- ReadyForHarvest: {type.Sprites.ReadyForHarvest ?? "null"}\n" : "";
                 }
 
-                if (type.Localization != null)
+                if (type.HasLocalization())
                 {
                     output += $"--- Localization:\n";
 

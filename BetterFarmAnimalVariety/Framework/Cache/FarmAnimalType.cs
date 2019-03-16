@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Cache
@@ -8,8 +9,8 @@ namespace BetterFarmAnimalVariety.Framework.Cache
         public string Type;
         public string Data;
         public double DeluxeProduceLuck;
-        public FarmAnimalSprites Sprites;
-        public Dictionary<string, string[]> Localization;
+        public FarmAnimalSprites Sprites = new FarmAnimalSprites();
+        public Dictionary<string, string[]> Localization = new Dictionary<string, string[]>();
 
         public enum LocalizationIndex
         {
@@ -47,6 +48,11 @@ namespace BetterFarmAnimalVariety.Framework.Cache
             values[(int)PariteeCore.Constants.FarmAnimal.DataValueIndex.DisplayBuilding] = this.Localization[locale][(int)Cache.FarmAnimalType.LocalizationIndex.DisplayBuilding];
 
             return string.Join(PariteeCore.Constants.Content.DataValueDelimiter.ToString(), values);
+        }
+
+        public bool HasLocalization()
+        {
+            return this.Localization != null && this.Localization.Any();
         }
 
         public bool HasSprites()

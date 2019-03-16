@@ -14,10 +14,10 @@ namespace BetterFarmAnimalVariety.Framework.Cache
         public string Category;
 
         [JsonProperty(Order = 1)]
-        public List<FarmAnimalType> Types;
+        public List<FarmAnimalType> Types = new List<FarmAnimalType>();
 
         [JsonProperty(Order = 2)]
-        public List<string> Buildings;
+        public List<string> Buildings = new List<string>();
 
         [JsonProperty(Order = 3)]
         public FarmAnimalStock AnimalShop;

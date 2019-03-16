@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The animal type's price will be the actual cost of the animal instead of the category cost. The animal type's price in a scroll on building selection screen
 - Messages for hatched egg Coop event are type-agnostic
 - Animals that already exist will have content pack updates automatically applied to them instead of only being applied to new animals
+- `bfav_list` command has been renamed to `livestock_categories`
 
 ### Removed
 - Configuration for `VoidFarmAnimalsInShop`; should be handled by other content packs and mods
