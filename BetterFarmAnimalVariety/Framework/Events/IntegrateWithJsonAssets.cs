@@ -28,7 +28,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
         public static bool TryParseFarmAnimalProduceName(string objectName, out int index)
         {
-            return PariteeCore.Api.Object.TryParseObject(objectName, out index);
+            return PariteeCore.Api.Object.TryParse(objectName, out index);
         }
     }
 }

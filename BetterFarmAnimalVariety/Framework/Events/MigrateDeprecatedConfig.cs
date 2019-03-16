@@ -53,7 +53,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
         public static bool CreateContentPack(ModEntry mod, Config.V2.ModConfig deprecatedConfig)
         {
-            string voidChicken = PariteeCore.Constants.VanillaAnimalType.VoidChicken.ToString();
+            string voidChicken = PariteeCore.Constants.Animals.Livestock.VoidChicken.ToString();
 
             // Get ready to make a new content pack
             ContentPacks.Content farmAnimals = new ContentPacks.Content(new List<ContentPacks.Category>());
@@ -69,7 +69,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
             foreach (KeyValuePair<string, Config.V2.ConfigFarmAnimal> oldFarmAnimals in deprecatedConfig.FarmAnimals)
             {
                 // Check if this category is a vanila category
-                bool isVanilla = PariteeCore.Constants.VanillaFarmAnimalCategory.All()
+                bool isVanilla = PariteeCore.Constants.Animals.LivestockCategory.All()
                     .Exists(o => o.ToString() == oldFarmAnimals.Key);
 
                 // Always create the category with the update for vanilla and create for non-vanilla

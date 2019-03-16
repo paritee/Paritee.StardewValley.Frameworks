@@ -117,7 +117,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         /// <exception cref="NotSupportedException"></exception>
         public static void FarmAnimalTypeIsNotRestricted(string type)
         {
-            if (Constants.Mod.RestrictedFarmAnimalTypes.Select(str => str.ToLower()).Contains(type.ToLower()))
+            if (Constants.Mod.RestrictedFarmAnimalTypes.Select(o => o.ToString().ToLower()).Contains(type.ToLower()))
             {
                 throw new NotSupportedException($"\"{type}\" is a restricted type and cannot be used");
             }

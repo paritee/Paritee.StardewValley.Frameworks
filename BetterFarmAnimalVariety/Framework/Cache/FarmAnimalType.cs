@@ -26,6 +26,12 @@ namespace BetterFarmAnimalVariety.Framework.Cache
             this.DeluxeProduceLuck = deluxeProduceLuck;
         }
 
+        public FarmAnimalType(PariteeCore.Models.Livestock livestock)
+        {
+            this.Type = livestock.ToString();
+            this.DeluxeProduceLuck = livestock.DeluxeProduceLuck;
+        }
+
         public FarmAnimalType(string type, string data, double deluxeProduceLuck, string babySprite, string adultSprite, string readyForHarvestSprite, Dictionary<string, string[]> localization)
         {
             this.Type = type;

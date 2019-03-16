@@ -235,7 +235,7 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
             return PariteeCore.Api.FarmAnimal.IsCurrentlyProducingDeluxe(this.GetOriginal());
         }
 
-        public bool IsType(PariteeCore.Constants.VanillaAnimalType type)
+        public bool IsType(PariteeCore.Constants.Animals.Livestock type)
         {
             return PariteeCore.Api.FarmAnimal.IsType(this.GetOriginal(), type);
         }

@@ -25,13 +25,13 @@ namespace BetterFarmAnimalVariety.Framework.Cache
             // Do nothing; this is for loading an existing config
         }
 
-        public FarmAnimalStock(PariteeCore.Models.FarmAnimalCategory farmAnimalStock)
+        public FarmAnimalStock(PariteeCore.Models.LivestockCategory livestockCategory)
         {
-            this.Name = farmAnimalStock.DisplayName;
-            this.Description = farmAnimalStock.Description;
-            this.Icon = this.GetDefaultIconPath(farmAnimalStock.ToString());
-            this.Exclude = farmAnimalStock.ExcludeFromShop != null && farmAnimalStock.ExcludeFromShop.Any()
-                ? farmAnimalStock.ExcludeFromShop.Select(o => o.ToString()).ToList()
+            this.Name = livestockCategory.AnimalShop.Name;
+            this.Description = livestockCategory.AnimalShop.Description;
+            this.Icon = this.GetDefaultIconPath(livestockCategory.ToString());
+            this.Exclude = livestockCategory.AnimalShop.Exclude != null && livestockCategory.AnimalShop.Exclude.Any()
+                ? livestockCategory.AnimalShop.Exclude.Select(o => o.ToString()).ToList()
                 : new List<string>();
         }
 
