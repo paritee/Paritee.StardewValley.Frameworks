@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [3.0.0] - 2019-03-21
 ### Added
 - Support for [BFAV content packs](https://github.com/paritee/Paritee.StardewValley.Frameworks/tree/bfav-3.0.0/BetterFarmAnimalVariety#content-packs)
 - Full [harvest type](https://github.com/paritee/Paritee.StardewValley.FarmAnimals/tree/bfav-3.0.0#harvest-types) (i.e. `lay`, `tool`, `find`, `none`) support for any animal type via its data value string
