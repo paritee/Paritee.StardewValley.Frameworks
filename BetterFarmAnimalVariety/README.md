@@ -67,8 +67,10 @@ Here is an example of a `content.json` with multiple actions:
         {
           "Type": "White Bull",
           "Data": "1/5/184/186/cow/36/64/64/64/36/64/64/64/1/false/Barn/32/32/32/32/15/5/-1/639/1500/White Bull/Barn",
-          "AdultSprite": "assets/White Bull.png",
-          "BabySprite": "assets/BabyWhite Bull.png",
+          "Sprites": {
+            "Adult": "assets/White Bull.png",
+            "Baby": "assets/BabyWhite Bull.png",
+          },
           "Localization": {
             "de": [ "Weißer Stier", "Stall" ],
           },
@@ -84,9 +86,11 @@ Here is an example of a `content.json` with multiple actions:
         {
           "Type": "Sport Horse",
           "Data": "3/4/440/-1/grunt/36/64/84/64/36/64/84/64/1/true/Barn/32/32/32/32/15/5/Shears/644/8000/Sport Horse/Barn",
-          "AdultSprite": "assets/Sport Horse.png",
-          "BabySprite": "assets/BabySport Horse.png",
-          "ShearedSprite": "assets/ShearedSport Horse.png",
+          "Sprites": {
+            "Adult": "assets/Sport Horse.png",
+            "Baby": "assets/BabySport Horse.png",
+            "ReadyForHarvest": "assets/ShearedSport Horse.png",
+          },
         },
       ],
       "Buildings": [
@@ -125,9 +129,10 @@ Create a new, unique category (`"Action": "Create"`).
 | `Types.Type` | _Required_ | The unique name of the type. The same type can belong to multiple categories. |
 | `Types.Data` | _Optional if Type exists_ | A string of data values for the type. This is required if the type does not already exist. See the [Modding Animal Data](https://stardewvalleywiki.com/Modding:Animal_data) guide for help. |
 | `Types.DeluxeLuckChance` | _Optional_ | A numeric value (`double`) that greatly reduces the drop rate of deluxe produce (ex. `Rabbits` have `0.02` and `Ducks` have `0.01`). |
-| `Types.AdultSprite` |  _Optional if Type exists_ | The relative path to the adult sprite image. Must be a `.png`. |
-| `Types.BabySprite` |  _Optional if Type exists_ | The relative path to the baby sprite image. Must be a `.png`. |
-| `Types.ShearedSprite` | _Optional if Type exists or if texture does not change when ready for harvest_ | The relative path to the sheared sprite image. Must be a `.png`. See the [Modding Animal Data](https://stardewvalleywiki.com/Modding:Animal_data) guide for help. |
+| `Types.Sprites` |  _Optional if Type exists_ | The relative paths to the sprites. |
+| `Types.Sprites.Adult` |  _Optional if Type exists_ | The relative path to the adult sprite image. Must be a `.png`. |
+| `Types.Sprites.Baby` |  _Optional if Type exists_ | The relative path to the baby sprite image. Must be a `.png`. |
+| `Types.Sprites.ReadyForHarvest` | _Optional if Type exists or if texture does not change when ready for harvest_ | The relative path to the sheared sprite image. Must be a `.png`. See the [Modding Animal Data](https://stardewvalleywiki.com/Modding:Animal_data) guide for help. |
 | `Types.Localization` | _Optional_ | A dictionary of locales and list of display type and display house substitutions. (Ex. `"Localization": { "de": [ "Weißer Stier", "Stall" ] }`) |
 | `AnimalShop` | _Optional_ | Include if you would like this animal category to be available in [Marnie's Ranch](https://stardewvalleywiki.com/Marnie%27s_Ranch). |
 | `AnimalShop.Name` | _Required if AnimalShop is included_ | The name of the category in the purchase animal menu. |
@@ -146,9 +151,10 @@ Update an existing category (`"Action": "Update"`).
 | `Types.Type` | _Required if Types is included_ | The unique name of the type. The same type can belong to multiple categories. |
 | `Types.Data` | _Optional if Type exists_ | A string of data values for the type. This is required if the type does not already exist. See the [Modding Animal Data](https://stardewvalleywiki.com/Modding:Animal_data) guide for help. |
 | `Types.DeluxeLuckChance` | _Optional_ | A numeric value (`double`) that greatly reduces the drop rate of deluxe produce (ex. `Rabbits` have `0.02` and `Ducks` have `0.01`). |
-| `Types.AdultSprite` | _Optional if Type exists_ | The relative path to the adult sprite image. Must be a `.png`. |
-| `Types.BabySprite` | _Optional if Type exists_ | The relative path to the baby sprite image. Must be a `.png`. |
-| `Types.ShearedSprite` | _Optional if Type exists or if texture does not change when ready for harvest_ | The relative path to the sheared sprite image. Must be a `.png`. See the [Modding Animal Data](https://stardewvalleywiki.com/Modding:Animal_data) guide for help. |
+| `Types.Sprites` |  _Optional if Type exists_ | The relative paths to the sprites. |
+| `Types.Sprites.Adult` |  _Optional if Type exists_ | The relative path to the adult sprite image. Must be a `.png`. |
+| `Types.Sprites.Baby` |  _Optional if Type exists_ | The relative path to the baby sprite image. Must be a `.png`. |
+| `Types.Sprites.ReadyForHarvest` | _Optional if Type exists or if texture does not change when ready for harvest_ | The relative path to the sheared sprite image. Must be a `.png`. See the [Modding Animal Data](https://stardewvalleywiki.com/Modding:Animal_data) guide for help. |
 | `Types.Localization` | _Optional_ | A dictionary of locales and list of display type and display house substitutions. (Ex. `"Localization": { "de": [ "Weißer Stier", "Stall" ] }`) |
 | `AnimalShop` | _Optional_ | Include if you would like this animal category to be available in [Marnie's Ranch](https://stardewvalleywiki.com/Marnie%27s_Ranch). |
 | `AnimalShop.Name` | _Optional_ | The name of the category in the purchase animal menu. |
