@@ -56,6 +56,7 @@ Here is an example of a `content.json` with multiple actions:
 
 ```js
 {
+  "Format": "1.0",
   "Categories": [
   
     // Update an existing category with a new type
