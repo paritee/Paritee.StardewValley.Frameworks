@@ -211,6 +211,6 @@ Supported integrations are:
 
 | Mod | Version Support |
 | --- | --- |
-| [Animal Chooser](https://www.nexusmods.com/stardewvalley/mods/2573) | `BFAV 3.x` => `AC ???` ([unofficial](#)) |
-| [Farm Expansion](https://www.nexusmods.com/stardewvalley/mods/130) |  `BFAV 3.x` => `FE 3.x` ([unoffical](https://github.com/paritee/FarmExpansion)) |
+| [Animal Chooser](https://www.nexusmods.com/stardewvalley/mods/2573) | `BFAV 3.x` => `AC 1.4-unofficial.1` |
+| [Farm Expansion](https://www.nexusmods.com/stardewvalley/mods/130) |  `BFAV 3.x` => `FE 3.3.1-unofficial.1` |
 | [More Animals](https://www.nexusmods.com/stardewvalley/mods/2274) | `BFAV 3.x` => `MA 3.x` |
