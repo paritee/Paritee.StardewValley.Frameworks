@@ -23,16 +23,6 @@ namespace BetterFarmAnimalVariety.Framework.Constants
             PariteeCore.Constants.VanillaAnimalType.Horse.ToString(),
         };
 
-        // Content packs
-        public const string ContentPackContentFileName = "content.json";
-        public const string ContentPackManifestFileName = "manifest.json";
-        public const string ConfigMigrationContentPackPrefix = "[BFAV]";
-        public static string ConfigMigrationContentPackName => $"{ConfigMigrationContentPackPrefix} My Content Pack";
-        public const string ConfigMigrationContentPackAuthor = "Anonymous";
-        public const string ConfigMigrationContentPackVersion = "1.0.0";
-        public const string ConfigMigrationContentPackDescription = "Your custom content pack for BFAV";
-        public static string ConfigMigrationContentPackFullPath => Path.Combine(Directory.GetParent(PariteeCore.Constants.Mod.Path).FullName, ConfigMigrationContentPackName);
-        
         // Save data
         public const string FarmAnimalsSaveDataKey = "farm-animals";
 

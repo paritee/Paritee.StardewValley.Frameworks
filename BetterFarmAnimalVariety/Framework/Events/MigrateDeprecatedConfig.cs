@@ -56,7 +56,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
             string voidChicken = PariteeCore.Constants.VanillaAnimalType.VoidChicken.ToString();
 
             // Get ready to make a new content pack
-            ContentPacks.FarmAnimals farmAnimals = new ContentPacks.FarmAnimals(new List<ContentPacks.FarmAnimalCategory>());
+            ContentPacks.Content farmAnimals = new ContentPacks.Content(new List<ContentPacks.Category>());
 
             List<string> iconsToBeMoved = new List<string>();
 
@@ -73,7 +73,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                     .Exists(o => o.ToString() == oldFarmAnimals.Key);
 
                 // Always create the category with the update for vanilla and create for non-vanilla
-                ContentPacks.FarmAnimalCategory.Actions action = isVanilla ? ContentPacks.FarmAnimalCategory.Actions.Update : ContentPacks.FarmAnimalCategory.Actions.Create;
+                ContentPacks.Category.Actions action = isVanilla ? ContentPacks.Category.Actions.Update : ContentPacks.Category.Actions.Create;
 
                 Cache.FarmAnimalStock animalShop = null;
                 bool forceOverrideRemoveFromShop = true;
@@ -116,7 +116,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 }
 
                 // Create the start of the category
-                ContentPacks.FarmAnimalCategory category = new ContentPacks.FarmAnimalCategory(action)
+                ContentPacks.Category category = new ContentPacks.Category(action)
                 {
                     Category = oldFarmAnimals.Key,
                     Types = oldFarmAnimals.Value.Types.Select(str => new Cache.FarmAnimalType(str, default(double))).ToList(),
@@ -136,23 +136,23 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 return false;
             }
 
-            string contentPackDirectoryPath = Constants.Mod.ConfigMigrationContentPackFullPath;
+            string contentPackDirectoryPath = Constants.ContentPack.ConfigMigrationFullPath;
             string contentPackId = Guid.NewGuid().ToString("N");
 
             DirectoryInfo dir = new System.IO.DirectoryInfo(contentPackDirectoryPath);
             dir.Create(); // If the directory already exists, this method does nothing.
 
             // content.json
-            string contentJsonFilePath = Path.Combine(contentPackDirectoryPath, Constants.Mod.ContentPackContentFileName);
+            string contentJsonFilePath = Path.Combine(contentPackDirectoryPath, Constants.ContentPack.ContentFileName);
             string contentJson = JsonConvert.SerializeObject(farmAnimals, Formatting.Indented, new JsonSerializerSettings{ NullValueHandling = NullValueHandling.Ignore });
 
             // manifest.json
             JObject manifest = JObject.FromObject(new
             {
-                Name = Constants.Mod.ConfigMigrationContentPackName,
-                Author = Constants.Mod.ConfigMigrationContentPackAuthor,
-                Version = Constants.Mod.ConfigMigrationContentPackVersion,
-                Description = Constants.Mod.ConfigMigrationContentPackDescription,
+                Name = Constants.ContentPack.ConfigMigrationName,
+                Author = Constants.ContentPack.ConfigMigrationAuthor,
+                Version = Constants.ContentPack.ConfigMigrationVersion,
+                Description = Constants.ContentPack.ConfigMigrationDescription,
                 UniqueID = contentPackId,
                 ContentPackFor = new
                 {
@@ -160,7 +160,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 },
             });
 
-            string manifestJsonFilePath = Path.Combine(contentPackDirectoryPath, Constants.Mod.ContentPackManifestFileName);
+            string manifestJsonFilePath = Path.Combine(contentPackDirectoryPath, Constants.ContentPack.ManifestFileName);
             string manifestJson = JsonConvert.SerializeObject(manifest, Formatting.Indented);
 
             // Write the files
@@ -183,10 +183,10 @@ namespace BetterFarmAnimalVariety.Framework.Events
             IContentPack contentPack = mod.Helper.ContentPacks.CreateTemporary(
                directoryPath: contentPackDirectoryPath,
                id: contentPackId,
-               name: Constants.Mod.ConfigMigrationContentPackName,
-               description: Constants.Mod.ConfigMigrationContentPackDescription,
-               author: Constants.Mod.ConfigMigrationContentPackAuthor,
-               version: new SemanticVersion(Constants.Mod.ConfigMigrationContentPackVersion)
+               name: Constants.ContentPack.ConfigMigrationName,
+               description: Constants.ContentPack.ConfigMigrationDescription,
+               author: Constants.ContentPack.ConfigMigrationAuthor,
+               version: new SemanticVersion(Constants.ContentPack.ConfigMigrationVersion)
             );
 
             LoadContentPacks.SetUpContentPacks(new List<IContentPack>() { contentPack }, mod.Monitor);

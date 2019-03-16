@@ -24,7 +24,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
 
         public FarmAnimalCategory() { }
 
-        public FarmAnimalCategory(string assetSourceDirectory, ContentPacks.FarmAnimalCategory category)
+        public FarmAnimalCategory(string assetSourceDirectory, ContentPacks.Category category)
         {
             this.Category = category.Category;
             this.Types = category.Types;

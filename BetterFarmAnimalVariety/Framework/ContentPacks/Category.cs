@@ -3,7 +3,7 @@ using Newtonsoft.Json.Converters;
 
 namespace BetterFarmAnimalVariety.Framework.ContentPacks
 {
-    class FarmAnimalCategory : Cache.FarmAnimalCategory
+    class Category : Cache.FarmAnimalCategory
     {
         public enum Actions
         {
@@ -27,9 +27,9 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
         [JsonProperty(Order = 999)]
         public bool ForceOverrideExclude = false;
 
-        public FarmAnimalCategory() : base() { }
+        public Category() : base() { }
 
-        public FarmAnimalCategory(Actions action) : base()
+        public Category(Actions action) : base()
         {
             this.Action = action;
         }

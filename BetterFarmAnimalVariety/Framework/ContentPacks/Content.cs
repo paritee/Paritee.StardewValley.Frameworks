@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace BetterFarmAnimalVariety.Framework.ContentPacks
 {
-    class FarmAnimals
+    class Content
     {
-        public List<ContentPacks.FarmAnimalCategory> Categories;
+        public List<ContentPacks.Category> Categories;
 
-        public FarmAnimals() { }
+        public Content() { }
 
-        public FarmAnimals(List<ContentPacks.FarmAnimalCategory> categories)
+        public Content(List<ContentPacks.Category> categories)
         {
             this.Categories = categories;
         }
@@ -24,20 +24,20 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
             Helpers.Assert.UniqueValues(this.Categories.Select(o => o.Category).ToList());
 
             // Go through each category
-            foreach (ContentPacks.FarmAnimalCategory category in this.Categories)
+            foreach (ContentPacks.Category category in this.Categories)
             {
                 // Handle the actions
                 switch (category.Action)
                 {
-                    case ContentPacks.FarmAnimalCategory.Actions.Create:
+                    case ContentPacks.Category.Actions.Create:
                         this.HandleCreateAction(contentPack, category);
                         break;
 
-                    case ContentPacks.FarmAnimalCategory.Actions.Update:
+                    case ContentPacks.Category.Actions.Update:
                         this.HandleUpdateAction(contentPack, category);
                         break;
 
-                    case ContentPacks.FarmAnimalCategory.Actions.Remove:
+                    case ContentPacks.Category.Actions.Remove:
                         this.HandleRemoveAction(contentPack, category);
                         break;
 
@@ -49,25 +49,25 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
 
         private Cache.FarmAnimalType CastSpritesToFullPaths(Cache.FarmAnimalType type, string directoryPath)
         {
-            if (type.AdultSprite != null)
+            if (type.HasAdultSprite())
             {
-                type.AdultSprite = Path.Combine(directoryPath, type.AdultSprite);
+                type.Sprites.Adult = Path.Combine(directoryPath, type.Sprites.Adult);
             }
 
-            if (type.BabySprite != null)
+            if (type.HasBabySprite())
             {
-                type.BabySprite = Path.Combine(directoryPath, type.BabySprite);
+                type.Sprites.Baby = Path.Combine(directoryPath, type.Sprites.Baby);
             }
 
-            if (type.ShearedSprite != null)
+            if (type.HasReadyForHarvestSprite())
             {
-                type.ShearedSprite = Path.Combine(directoryPath, type.ShearedSprite);
+                type.Sprites.ReadyForHarvest = Path.Combine(directoryPath, type.Sprites.ReadyForHarvest);
             }
 
             return type;
         }
 
-        public void HandleCreateAction(IContentPack contentPack, ContentPacks.FarmAnimalCategory category)
+        public void HandleCreateAction(IContentPack contentPack, ContentPacks.Category category)
         {
             // Assert unique category
             Helpers.Assert.UniqueFarmAnimalCategory(category.Category);
@@ -81,7 +81,7 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
             Helpers.FarmAnimals.AddOrReplaceCategory(new Cache.FarmAnimalCategory(contentPack.DirectoryPath, category));
         }
 
-        public void HandleUpdateAction(IContentPack contentPack, ContentPacks.FarmAnimalCategory category)
+        public void HandleUpdateAction(IContentPack contentPack, ContentPacks.Category category)
         {
             // Assert existing category
             Helpers.Assert.FarmAnimalCategoryExists(category.Category);
@@ -164,7 +164,7 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
             Helpers.FarmAnimals.AddOrReplaceCategory(cacheCategory);
         }
 
-        public void HandleRemoveAction(IContentPack contentPack, ContentPacks.FarmAnimalCategory category)
+        public void HandleRemoveAction(IContentPack contentPack, ContentPacks.Category category)
         {
             // Assert unique category
             Helpers.Assert.FarmAnimalCategoryExists(category.Category);

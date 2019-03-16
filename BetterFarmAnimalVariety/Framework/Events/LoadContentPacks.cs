@@ -16,13 +16,13 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 try
                 {
                     // Check if the content JSON is there
-                    if (!File.Exists(Path.Combine(contentPack.DirectoryPath, Constants.Mod.ContentPackContentFileName)))
+                    if (!File.Exists(Path.Combine(contentPack.DirectoryPath, Constants.ContentPack.ContentFileName)))
                     {
-                        throw new FileNotFoundException($"{Constants.Mod.ContentPackContentFileName} not found.");
+                        throw new FileNotFoundException($"{Constants.ContentPack.ContentFileName} not found.");
                     }
 
                     // Read the content
-                    ContentPacks.FarmAnimals content = contentPack.ReadJsonFile<ContentPacks.FarmAnimals>(Constants.Mod.ContentPackContentFileName);
+                    ContentPacks.Content content = contentPack.ReadJsonFile<ContentPacks.Content>(Constants.ContentPack.ContentFileName);
 
                     content.SetUp(contentPack);
                 }

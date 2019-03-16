@@ -15,19 +15,19 @@ namespace BetterFarmAnimalVariety.Framework.Loaders
             foreach(Cache.FarmAnimalType type in Helpers.FarmAnimals.GetCategories().SelectMany(o => o.Types))
             {
                 // Check if trying to access the Animals/<type.Name>
-                if (type.AdultSprite != null && asset.AssetNameEquals(PariteeCore.Api.FarmAnimal.BuildSpriteAssetName(type.Type, false, false)))
+                if (type.HasAdultSprite() && asset.AssetNameEquals(PariteeCore.Api.FarmAnimal.BuildSpriteAssetName(type.Type, false, false)))
                 {
                     return true;
                 }
 
                 // Check if trying to access the Animals/Baby<type.Name>
-                if (type.BabySprite != null && asset.AssetNameEquals(PariteeCore.Api.FarmAnimal.BuildSpriteAssetName(type.Type, true, false)))
+                if (type.HasBabySprite() && asset.AssetNameEquals(PariteeCore.Api.FarmAnimal.BuildSpriteAssetName(type.Type, true, false)))
                 {
                     return true;
                 }
 
                 // Check if trying to access the Animals/Sheared<type.Name>
-                if (type.ShearedSprite != null && asset.AssetNameEquals(PariteeCore.Api.FarmAnimal.BuildSpriteAssetName(type.Type, false, true)))
+                if (type.HasReadyForHarvestSprite() && asset.AssetNameEquals(PariteeCore.Api.FarmAnimal.BuildSpriteAssetName(type.Type, false, true)))
                 {
                     return true;
                 }
@@ -44,22 +44,22 @@ namespace BetterFarmAnimalVariety.Framework.Loaders
             foreach (Cache.FarmAnimalType type in Helpers.FarmAnimals.GetCategories().SelectMany(o => o.Types))
             {
                 // Check if trying to access the Animals/<type.Name>
-                if (type.AdultSprite != null && asset.AssetNameEquals(PariteeCore.Api.FarmAnimal.BuildSpriteAssetName(type.Type, false, false)))
+                if (type.HasAdultSprite() && asset.AssetNameEquals(PariteeCore.Api.FarmAnimal.BuildSpriteAssetName(type.Type, false, false)))
                 {
                     // Check if the image exists; othewise use the default
-                    return (T)(object)PariteeCore.Api.Mod.LoadTexture(type.AdultSprite);
+                    return (T)(object)PariteeCore.Api.Mod.LoadTexture(type.Sprites.Adult);
                 }
 
                 // Check if trying to access the Animals/Baby<type.Name>
-                if (type.BabySprite != null && asset.AssetNameEquals(PariteeCore.Api.FarmAnimal.BuildSpriteAssetName(type.Type, true, false)))
+                if (type.HasBabySprite() && asset.AssetNameEquals(PariteeCore.Api.FarmAnimal.BuildSpriteAssetName(type.Type, true, false)))
                 {
-                    return (T)(object)PariteeCore.Api.Mod.LoadTexture(type.BabySprite);
+                    return (T)(object)PariteeCore.Api.Mod.LoadTexture(type.Sprites.Baby);
                 }
 
                 // Check if trying to access the Animals/Sheared<type.Name>
-                if (type.ShearedSprite != null && asset.AssetNameEquals(PariteeCore.Api.FarmAnimal.BuildSpriteAssetName(type.Type, false, true)))
+                if (type.HasReadyForHarvestSprite() && asset.AssetNameEquals(PariteeCore.Api.FarmAnimal.BuildSpriteAssetName(type.Type, false, true)))
                 {
-                    return (T)(object)PariteeCore.Api.Mod.LoadTexture(type.ShearedSprite);
+                    return (T)(object)PariteeCore.Api.Mod.LoadTexture(type.Sprites.ReadyForHarvest);
                 }
             }
 

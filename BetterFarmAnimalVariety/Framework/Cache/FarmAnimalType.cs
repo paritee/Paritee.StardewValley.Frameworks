@@ -8,9 +8,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
         public string Type;
         public string Data;
         public double DeluxeProduceLuck;
-        public string BabySprite;
-        public string AdultSprite;
-        public string ShearedSprite;
+        public FarmAnimalSprites Sprites;
         public Dictionary<string, string[]> Localization;
 
         public enum LocalizationIndex
@@ -27,14 +25,12 @@ namespace BetterFarmAnimalVariety.Framework.Cache
             this.DeluxeProduceLuck = deluxeProduceLuck;
         }
 
-        public FarmAnimalType(string type, string data, double deluxeProduceLuck, string babySprite, string adultSprite, string shearedSprite, Dictionary<string, string[]> localization)
+        public FarmAnimalType(string type, string data, double deluxeProduceLuck, string babySprite, string adultSprite, string readyForHarvestSprite, Dictionary<string, string[]> localization)
         {
             this.Type = type;
             this.Data = data;
             this.DeluxeProduceLuck = deluxeProduceLuck;
-            this.BabySprite = babySprite;
-            this.AdultSprite = adultSprite;
-            this.ShearedSprite = shearedSprite;
+            this.Sprites = new FarmAnimalSprites(babySprite, adultSprite, readyForHarvestSprite);
             this.Localization = localization;
         }
 
@@ -51,6 +47,26 @@ namespace BetterFarmAnimalVariety.Framework.Cache
             values[(int)PariteeCore.Constants.FarmAnimal.DataValueIndex.DisplayBuilding] = this.Localization[locale][(int)Cache.FarmAnimalType.LocalizationIndex.DisplayBuilding];
 
             return string.Join(PariteeCore.Constants.Content.DataValueDelimiter.ToString(), values);
+        }
+
+        public bool HasSprites()
+        {
+            return this.Sprites != null;
+        }
+
+        public bool HasAdultSprite()
+        {
+            return this.HasSprites() && this.Sprites.Adult != null;
+        }
+
+        public bool HasBabySprite()
+        {
+            return this.HasSprites() && this.Sprites.Baby != null;
+        }
+
+        public bool HasReadyForHarvestSprite()
+        {
+            return this.HasSprites() && this.Sprites.ReadyForHarvest != null;
         }
     }
 }

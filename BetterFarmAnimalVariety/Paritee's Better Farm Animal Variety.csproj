@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\Cache\FarmAnimalCategory.cs" />
+    <Compile Include="Framework\Cache\FarmAnimalSprites.cs" />
     <Compile Include="Framework\Cache\FarmAnimalStock.cs" />
     <Compile Include="Framework\Cache\FarmAnimalType.cs" />
     <Compile Include="Framework\Commands\Command.cs" />
@@ -64,10 +65,11 @@
     <Compile Include="Framework\Config\V2\ConfigFarmAnimal.cs" />
     <Compile Include="Framework\Config\V2\ConfigFarmAnimalAnimalShop.cs" />
     <Compile Include="Framework\Config\V2\ModConfig.cs" />
+    <Compile Include="Framework\Constants\ContentPack.cs" />
     <Compile Include="Framework\Constants\Integration.cs" />
     <Compile Include="Framework\Constants\Mod.cs" />
-    <Compile Include="Framework\ContentPacks\FarmAnimalCategory.cs" />
-    <Compile Include="Framework\ContentPacks\FarmAnimals.cs" />
+    <Compile Include="Framework\ContentPacks\Category.cs" />
+    <Compile Include="Framework\ContentPacks\Content.cs" />
     <Compile Include="Framework\Decorators\AutoGrabber.cs" />
     <Compile Include="Framework\Decorators\Decorator.cs" />
     <Compile Include="Framework\Editors\FarmAnimalData.cs" />
