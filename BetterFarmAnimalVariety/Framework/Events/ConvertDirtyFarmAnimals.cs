@@ -100,7 +100,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
             // Need to reload each animal after save/save load because the game 
             // and SMAPI does a strange thing where the reload happens prior to 
             // the "Saving" event
-            PariteeCore.Api.FarmAnimal.ReloadAll();
+            PariteeCore.Characters.FarmAnimal.ReloadAll();
         }
 
         public static void OnSaveLoaded(SaveLoadedEventArgs e)
@@ -108,7 +108,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
             // Need to reload each animal after save/save load because the game 
             // and SMAPI does a strange thing where the reload happens prior to 
             // the "Saving" event
-            PariteeCore.Api.FarmAnimal.ReloadAll();
+            PariteeCore.Characters.FarmAnimal.ReloadAll();
         }
     }
 }

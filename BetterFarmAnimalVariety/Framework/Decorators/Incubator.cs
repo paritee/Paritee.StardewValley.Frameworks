@@ -14,8 +14,8 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
 
         public string GetRandomType(Dictionary<string, List<string>> restrictions)
         {
-            return PariteeCore.Api.AnimalHouse.GetRandomTypeFromIncubator(this.GetOriginal(), restrictions)
-                ?? PariteeCore.Api.FarmAnimal.GetDefaultCoopDwellerType();
+            return PariteeCore.Locations.AnimalHouse.GetRandomTypeFromIncubator(this.GetOriginal(), restrictions)
+                ?? PariteeCore.Characters.FarmAnimal.GetDefaultCoopDwellerType();
         }
     }
 }

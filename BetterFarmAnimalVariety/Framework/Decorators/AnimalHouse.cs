@@ -14,37 +14,37 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
         
         public StardewValley.Object GetIncubatorWithEggReadyToHatch()
         {
-            return PariteeCore.Api.AnimalHouse.GetIncubatorWithEggReadyToHatch(this.GetOriginal());
+            return PariteeCore.Locations.AnimalHouse.GetIncubatorWithEggReadyToHatch(this.GetOriginal());
         }
 
         public void ResetIncubator()
         {
-            PariteeCore.Api.AnimalHouse.ResetIncubator(this.GetOriginal());
+            PariteeCore.Locations.AnimalHouse.ResetIncubator(this.GetOriginal());
         }
 
         public void ResetIncubator(StardewValley.Object incubator)
         {
-            PariteeCore.Api.AnimalHouse.ResetIncubator(this.GetOriginal(), incubator);
+            PariteeCore.Locations.AnimalHouse.ResetIncubator(this.GetOriginal(), incubator);
         }
 
         public bool IsEggReadyToHatch()
         {
-            return PariteeCore.Api.AnimalHouse.IsEggReadyToHatch(this.GetOriginal());
+            return PariteeCore.Locations.AnimalHouse.IsEggReadyToHatch(this.GetOriginal());
         }
 
         public bool IsFull()
         {
-            return PariteeCore.Api.AnimalHouse.IsFull(this.GetOriginal());
+            return PariteeCore.Locations.AnimalHouse.IsFull(this.GetOriginal());
         }
 
         public StardewValley.Buildings.Building GetBuilding()
         {
-            return PariteeCore.Api.AnimalHouse.GetBuilding(this.GetOriginal());
+            return PariteeCore.Locations.AnimalHouse.GetBuilding(this.GetOriginal());
         }
 
         public void SetIncubatorHatchEvent()
         {
-            PariteeCore.Api.AnimalHouse.SetIncubatorHatchEvent(this.GetOriginal());
+            PariteeCore.Locations.AnimalHouse.SetIncubatorHatchEvent(this.GetOriginal());
         }
     }
 }

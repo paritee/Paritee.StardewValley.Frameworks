@@ -63,7 +63,7 @@ namespace BetterFarmAnimalVariety.Framework.Api
             // Remove any types that the player cannot afford
             types = moddedFarmer.SanitizeAffordableTypes(types);
 
-            return types[PariteeCore.Helpers.Random.Next(types.Count)];
+            return types[PariteeCore.Utilities.Random.Next(types.Count)];
         }
 
         /// <summary>Get the farm animal's types from the save data.</summary>

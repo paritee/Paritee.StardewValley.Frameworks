@@ -41,7 +41,7 @@ namespace BetterFarmAnimalVariety.Framework.Editors
 
                 // Remove the short parent type to allow for potential to expand outside the parent's type
                 strings["AnimalBirth"] = this.Helper.Translation.Get("Strings.Events.AnimalBirth");
-                strings["AnimalNamingTitle"] = PariteeCore.Api.Content.LoadString("Strings\\StringsFromCSFiles:PurchaseAnimalsMenu.cs.11357");
+                strings["AnimalNamingTitle"] = PariteeCore.Utilities.Content.LoadString("Strings\\StringsFromCSFiles:PurchaseAnimalsMenu.cs.11357");
             }
 
             if (asset.AssetNameEquals("Strings/Locations"))

@@ -102,7 +102,7 @@ namespace BetterFarmAnimalVariety.Framework.SaveData
             FarmAnimal animal = this.GetAnimal(animalId);
 
             return animal == null
-                ? PariteeCore.Api.FarmAnimal.GetDefaultType(isCoop)
+                ? PariteeCore.Characters.FarmAnimal.GetDefaultType(isCoop)
                 : animal.GetSavedType();
         }
 

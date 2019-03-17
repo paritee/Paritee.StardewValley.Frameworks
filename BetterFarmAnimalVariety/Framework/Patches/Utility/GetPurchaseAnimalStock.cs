@@ -10,7 +10,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.Utility
         public static bool Prefix(ref List<StardewValley.Object> __result)
         {
             // Grab the farm animals for purchase
-            __result = Helpers.FarmAnimals.GetPurchaseAnimalStock(PariteeCore.Api.Game.GetFarm());
+            __result = Helpers.FarmAnimals.GetPurchaseAnimalStock(PariteeCore.Utilities.Game.GetFarm());
 
             return false;
         }

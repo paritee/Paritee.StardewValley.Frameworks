@@ -14,12 +14,12 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
 
         public bool IsOutdoors()
         {
-            return PariteeCore.Api.Location.IsOutdoors(this.GetOriginal());
+            return PariteeCore.Locations.Location.IsOutdoors(this.GetOriginal());
         }
 
         public bool AnyFarmers()
         {
-            return PariteeCore.Api.Location.AnyFarmers(this.GetOriginal());
+            return PariteeCore.Locations.Location.AnyFarmers(this.GetOriginal());
         }
 
         public void RemoveAnimal(StardewValley.FarmAnimal animal)
@@ -29,7 +29,7 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
                 return;
             }
 
-            PariteeCore.Api.Location.RemoveAnimal(this.GetOriginal() as Farm, animal);
+            PariteeCore.Locations.Location.RemoveAnimal(this.GetOriginal() as Farm, animal);
         }
     }
 }

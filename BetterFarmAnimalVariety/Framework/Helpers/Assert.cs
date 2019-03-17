@@ -34,7 +34,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         /// <exception cref="Exceptions.SaveNotLoadedException"></exception>
         public static void SaveLoaded()
         {
-            if (!PariteeCore.Api.Game.IsSaveLoaded())
+            if (!PariteeCore.Utilities.Game.IsSaveLoaded())
             {
                 throw new Exceptions.SaveNotLoadedException();
             }
@@ -43,7 +43,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         /// <exception cref="ApplicationException"></exception>
         public static void SaveNotLoaded()
         {
-            if (PariteeCore.Api.Game.IsSaveLoaded())
+            if (PariteeCore.Utilities.Game.IsSaveLoaded())
             {
                 throw new ApplicationException($"Save has been loaded");
             }
@@ -101,7 +101,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         /// <exception cref="NotImplementedException"></exception>
         public static void FarmAnimalTypesExist(List<string> types)
         {
-            Dictionary<string, string> contentData = PariteeCore.Api.Content.LoadData<string, string>(PariteeCore.Constants.Content.DataFarmAnimalsContentPath);
+            Dictionary<string, string> contentData = PariteeCore.Utilities.Content.LoadData<string, string>(PariteeCore.Utilities.Content.DataFarmAnimalsContentPath);
 
             // Check if these new types are valid
             foreach (string type in types)
@@ -152,13 +152,13 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             }
 
             // "no produce" (-1) should not trigger the assert
-            if (!PariteeCore.Api.FarmAnimal.IsProduceAnItem(produceIndex))
+            if (!PariteeCore.Characters.FarmAnimal.IsProduceAnItem(produceIndex))
             {
                 return;
             }
 
             // Check to see if this object actually exists
-            if (!PariteeCore.Api.Object.ObjectExists(produceIndex))
+            if (!PariteeCore.Objects.Object.ObjectExists(produceIndex))
             {
                 throw new NotImplementedException($"\"{strIndex}\" is not a known Object");
             }
@@ -168,7 +168,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         /// <exception cref="NotImplementedException"></exception>
         public static void BuildingsExist(List<string> buildings)
         {
-            Dictionary<string, string> blueprintsData = PariteeCore.Api.Content.Load<Dictionary<string, string>>(PariteeCore.Constants.Content.DataBlueprintsContentPath);
+            Dictionary<string, string> blueprintsData = PariteeCore.Utilities.Content.Load<Dictionary<string, string>>(PariteeCore.Utilities.Content.DataBlueprintsContentPath);
 
             // Check if these new types are valid
             foreach (string key in buildings)
@@ -342,7 +342,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         /// <exception cref="ApplicationException"></exception>
         public static void NotRaining()
         {
-            if (PariteeCore.Api.Weather.IsRaining())
+            if (PariteeCore.Locations.Weather.IsRaining())
             {
                 throw new ApplicationException($"It is raining");
             }
@@ -351,7 +351,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         /// <exception cref="ApplicationException"></exception>
         public static void NotWinter()
         {
-            if (PariteeCore.Api.Season.IsWinter())
+            if (PariteeCore.Locations.Season.IsWinter())
             {
                 throw new ApplicationException($"It is winter");
             }
@@ -361,7 +361,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
         /// <exception cref="KeyNotFoundException"></exception>
         public static void ProduceIsAnItem(int produceIndex)
         {
-            if (!PariteeCore.Api.FarmAnimal.IsProduceAnItem(produceIndex))
+            if (!PariteeCore.Characters.FarmAnimal.IsProduceAnItem(produceIndex))
             {
                 throw new KeyNotFoundException($"\"{produceIndex}\" is not produce");
             }

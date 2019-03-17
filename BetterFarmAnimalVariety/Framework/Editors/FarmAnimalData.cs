@@ -22,7 +22,7 @@ namespace BetterFarmAnimalVariety.Framework.Editors
         public bool CanEdit<T>(IAssetInfo asset)
         {
             // Check if trying to access the Data/FarmAnimals
-            if (asset.AssetNameEquals(PariteeCore.Constants.Content.DataFarmAnimalsContentPath))
+            if (asset.AssetNameEquals(PariteeCore.Utilities.Content.DataFarmAnimalsContentPath))
             {
                 return true;
             }
@@ -34,7 +34,7 @@ namespace BetterFarmAnimalVariety.Framework.Editors
         /// <param name="asset">A helper which encapsulates metadata about an asset and enables changes to it.</param>
         public void Edit<T>(IAssetData asset)
         {
-            if (asset.AssetNameEquals(PariteeCore.Constants.Content.DataFarmAnimalsContentPath))
+            if (asset.AssetNameEquals(PariteeCore.Utilities.Content.DataFarmAnimalsContentPath))
             {
                 IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
                 
@@ -59,12 +59,12 @@ namespace BetterFarmAnimalVariety.Framework.Editors
 
         private string SanitizeData(string data)
         {
-            string[] values = PariteeCore.Api.Content.ParseDataValue(data);
+            string[] values = PariteeCore.Utilities.Content.ParseDataValue(data);
 
-            values[(int)PariteeCore.Constants.FarmAnimal.DataValueIndex.DefaultProduce] = this.SanitizeProduce(values[(int)PariteeCore.Constants.FarmAnimal.DataValueIndex.DefaultProduce]);
-            values[(int)PariteeCore.Constants.FarmAnimal.DataValueIndex.DeluxeProduce] = this.SanitizeProduce(values[(int)PariteeCore.Constants.FarmAnimal.DataValueIndex.DeluxeProduce]);
+            values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.DefaultProduce] = this.SanitizeProduce(values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.DefaultProduce]);
+            values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.DeluxeProduce] = this.SanitizeProduce(values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.DeluxeProduce]);
 
-            return string.Join(PariteeCore.Constants.Content.DataValueDelimiter.ToString(), values);
+            return string.Join(PariteeCore.Utilities.Content.DataValueDelimiter.ToString(), values);
         }
 
         private string SanitizeProduce(string produceIndexStr)
@@ -78,7 +78,7 @@ namespace BetterFarmAnimalVariety.Framework.Editors
             }
             catch (Exceptions.SaveNotLoadedException e)
             {
-                string noProduceIndex = PariteeCore.Constants.FarmAnimal.NoProduce.ToString();
+                string noProduceIndex = PariteeCore.Characters.FarmAnimal.NoProduce.ToString();
 
                 this.Monitor.Log($"Cannot replace \"{produceIndexStr}\" produce: {e.Message}. Produce will be temporarily set to \"none\" ({noProduceIndex}).", LogLevel.Debug);
 
@@ -87,7 +87,7 @@ namespace BetterFarmAnimalVariety.Framework.Editors
             }
             catch (Exception e)
             {
-                string noProduceIndex = PariteeCore.Constants.FarmAnimal.NoProduce.ToString();
+                string noProduceIndex = PariteeCore.Characters.FarmAnimal.NoProduce.ToString();
 
                 this.Monitor.Log($"Cannot replace \"{produceIndexStr}\" produce: {e.Message}. Produce will be set to \"none\" ({noProduceIndex}).", LogLevel.Debug);
 

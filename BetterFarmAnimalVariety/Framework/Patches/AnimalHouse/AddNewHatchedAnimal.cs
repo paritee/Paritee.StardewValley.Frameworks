@@ -14,21 +14,21 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
         public static bool Prefix(ref StardewValley.AnimalHouse __instance, ref string name)
         {
             Decorators.AnimalHouse moddedAnimalHouse = new Decorators.AnimalHouse(__instance);
-            Decorators.Farmer moddedPlayer = new Decorators.Farmer(PariteeCore.Api.Game.GetPlayer());
+            Decorators.Farmer moddedPlayer = new Decorators.Farmer(PariteeCore.Utilities.Game.GetPlayer());
 
             if (moddedAnimalHouse.GetBuilding() is StardewValley.Buildings.Coop coop)
             {
                 AddNewHatchedAnimal.HandleHatchling(ref moddedAnimalHouse, name, moddedPlayer);
             }
-            else if (PariteeCore.Api.Event.IsFarmEventOccurring<QuestionEvent>(out QuestionEvent questionEvent))
+            else if (PariteeCore.Locations.Event.IsFarmEventOccurring<QuestionEvent>(out QuestionEvent questionEvent))
             {
                 AddNewHatchedAnimal.HandleNewborn(ref moddedAnimalHouse, name, ref questionEvent, moddedPlayer);
             }
 
-            GameLocation currentLocation = PariteeCore.Api.Game.GetCurrentLocation();
+            GameLocation currentLocation = PariteeCore.Utilities.Game.GetCurrentLocation();
 
-            PariteeCore.Api.Event.GoToNextEventCommandInLocation(currentLocation);
-            PariteeCore.Api.Game.ExitActiveMenu();
+            PariteeCore.Locations.Event.GoToNextEventCommandInLocation(currentLocation);
+            PariteeCore.Utilities.Game.ExitActiveMenu();
 
             // Everything in this function was handled here
             return false;
@@ -88,7 +88,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.AnimalHouse
             moddedAnimal.AssociateParent(questionEvent.animal);
             moddedAnimal.AddToBuilding(building);
 
-            PariteeCore.Api.Event.ForceQuestionEventToProceed(questionEvent);
+            PariteeCore.Locations.Event.ForceQuestionEventToProceed(questionEvent);
         }
     }
 }

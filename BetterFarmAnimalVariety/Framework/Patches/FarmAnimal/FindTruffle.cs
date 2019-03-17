@@ -12,11 +12,11 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
         {
             Decorators.FarmAnimal moddedAnimal = new Decorators.FarmAnimal(__instance);
 
-            FindTruffle.AttemptToSpawnProduce(ref moddedAnimal, PariteeCore.Api.Game.GetMasterPlayer());
+            FindTruffle.AttemptToSpawnProduce(ref moddedAnimal, PariteeCore.Utilities.Game.GetMasterPlayer());
 
             if (FindTruffle.ShouldStopFindingProduce(ref moddedAnimal))
             {
-                moddedAnimal.SetCurrentProduce(PariteeCore.Constants.FarmAnimal.NoProduce);
+                moddedAnimal.SetCurrentProduce(PariteeCore.Characters.FarmAnimal.NoProduce);
             }
 
             return false;
@@ -24,9 +24,9 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
         private static bool ShouldStopFindingProduce(ref Decorators.FarmAnimal moddedAnimal)
         {
-            int seed = (int)(moddedAnimal.GetUniqueId() / 2 + PariteeCore.Api.Game.GetDaysPlayed() + PariteeCore.Api.Game.GetTimeOfDay());
+            int seed = (int)(moddedAnimal.GetUniqueId() / 2 + PariteeCore.Utilities.Game.GetDaysPlayed() + PariteeCore.Utilities.Game.GetTimeOfDay());
 
-            return PariteeCore.Helpers.Random.Seed(seed).NextDouble() > moddedAnimal.GetFriendship() / 1500.0;
+            return PariteeCore.Utilities.Random.Seed(seed).NextDouble() > moddedAnimal.GetFriendship() / 1500.0;
         }
 
         private static bool AttemptToSpawnProduce(ref Decorators.FarmAnimal moddedAnimal, Farmer who)
@@ -36,7 +36,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             // Don't roll the produce since we set this in dayUpdate postfix
             int produceIndex = moddedAnimal.GetCurrentProduce();
 
-            if (!PariteeCore.Api.FarmAnimal.IsProduceAnItem(produceIndex))
+            if (!PariteeCore.Characters.FarmAnimal.IsProduceAnItem(produceIndex))
             {
                 return false;
             }
@@ -48,7 +48,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             };
 
             // Spawn the item
-            PariteeCore.Api.Location.SpawnObject(PariteeCore.Api.Game.GetFarm(), tileLocation, obj);
+            PariteeCore.Locations.Location.SpawnObject(PariteeCore.Utilities.Game.GetFarm(), tileLocation, obj);
 
             return true;
         }

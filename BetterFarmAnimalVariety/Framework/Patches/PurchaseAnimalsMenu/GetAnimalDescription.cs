@@ -15,7 +15,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
             __result = Helpers.FarmAnimals.GetCategory(category).AnimalShop.Description;
 
             // Add totals to see how many types the player can afford
-            Decorators.Farmer moddedPlayer = new Decorators.Farmer(PariteeCore.Api.Game.GetPlayer());
+            Decorators.Farmer moddedPlayer = new Decorators.Farmer(PariteeCore.Utilities.Game.GetPlayer());
 
             List<string> types = Helpers.FarmAnimals.GroupPurchaseableTypesByCategory()[category];
 
@@ -35,7 +35,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
             {
                 // Ex: (1/3 <gold symbol>)
                 string[] substitutions = new string[] { available.ToString(), total.ToString(), "$" };
-                __result += " (" + PariteeCore.Api.Content.LoadString("Strings\\Locations:AdventureGuild_KillList_LineFormat", substitutions) + ")";
+                __result += " (" + PariteeCore.Utilities.Content.LoadString("Strings\\Locations:AdventureGuild_KillList_LineFormat", substitutions) + ")";
             }
 
             return false;

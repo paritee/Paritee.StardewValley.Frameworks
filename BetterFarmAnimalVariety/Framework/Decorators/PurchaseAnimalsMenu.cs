@@ -16,87 +16,87 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
 
         public void SetUpAnimalsToPurchase(List<StardewValley.Object> stock, Dictionary<string, Texture2D> icons, out int iconHeight)
         {
-            PariteeCore.Api.PurchaseAnimalsMenu.SetUpAnimalsToPurchase(this.GetOriginal(), stock, icons, out iconHeight);
+            PariteeCore.Menus.PurchaseAnimals.SetUpAnimalsToPurchase(this.GetOriginal(), stock, icons, out iconHeight);
         }
 
         public List<ClickableTextureComponent> GetAnimalsToPurchase()
         {
-            return PariteeCore.Api.PurchaseAnimalsMenu.GetAnimalsToPurchase(this.GetOriginal());
+            return PariteeCore.Menus.PurchaseAnimals.GetAnimalsToPurchase(this.GetOriginal());
         }
 
         public void SetHeight(int height)
         {
-            PariteeCore.Api.PurchaseAnimalsMenu.SetHeight(this.GetOriginal(), height);
+            PariteeCore.Menus.PurchaseAnimals.SetHeight(this.GetOriginal(), height);
         }
 
         public int GetRows()
         {
-            return PariteeCore.Api.PurchaseAnimalsMenu.GetRows(this.GetOriginal());
+            return PariteeCore.Menus.PurchaseAnimals.GetRows(this.GetOriginal());
         }
 
         public void AdjustHeightBasedOnIcons(int iconHeight)
         {
-            PariteeCore.Api.PurchaseAnimalsMenu.AdjustHeightBasedOnIcons(this.GetOriginal(), iconHeight);
+            PariteeCore.Menus.PurchaseAnimals.AdjustHeightBasedOnIcons(this.GetOriginal(), iconHeight);
         }
 
         public bool IsNamingAnimal()
         {
-            return PariteeCore.Api.PurchaseAnimalsMenu.IsNamingAnimal(this.GetOriginal());
+            return PariteeCore.Menus.PurchaseAnimals.IsNamingAnimal(this.GetOriginal());
         }
 
         public StardewValley.FarmAnimal GetAnimalBeingPurchased()
         {
-            return PariteeCore.Api.PurchaseAnimalsMenu.GetAnimalBeingPurchased(this.GetOriginal());
+            return PariteeCore.Menus.PurchaseAnimals.GetAnimalBeingPurchased(this.GetOriginal());
         }
 
         public int GetPriceOfAnimal()
         {
-            return PariteeCore.Api.PurchaseAnimalsMenu.GetPriceOfAnimal(this.GetOriginal());
+            return PariteeCore.Menus.PurchaseAnimals.GetPriceOfAnimal(this.GetOriginal());
         }
 
         public void SetAnimalBeingPurchased(StardewValley.FarmAnimal animal)
         {
-            PariteeCore.Api.PurchaseAnimalsMenu.SetAnimalBeingPurchased(this.GetOriginal(), animal);
+            PariteeCore.Menus.PurchaseAnimals.SetAnimalBeingPurchased(this.GetOriginal(), animal);
         }
 
         public void SetNewAnimalHome(StardewValley.Buildings.Building building)
         {
-            PariteeCore.Api.PurchaseAnimalsMenu.SetNewAnimalHome(this.GetOriginal(), building);
+            PariteeCore.Menus.PurchaseAnimals.SetNewAnimalHome(this.GetOriginal(), building);
         }
 
         public void SetNamingAnimal(bool namingAnimal)
         {
-            PariteeCore.Api.PurchaseAnimalsMenu.SetNamingAnimal(this.GetOriginal(), namingAnimal);
+            PariteeCore.Menus.PurchaseAnimals.SetNamingAnimal(this.GetOriginal(), namingAnimal);
         }
 
         public bool IsOnFarm()
         {
-            return PariteeCore.Api.PurchaseAnimalsMenu.IsOnFarm(this.GetOriginal());
+            return PariteeCore.Menus.PurchaseAnimals.IsOnFarm(this.GetOriginal());
         }
 
         public void SetOnFarm(bool onFarm)
         {
-            PariteeCore.Api.PurchaseAnimalsMenu.SetOnFarm(this.GetOriginal(), onFarm);
+            PariteeCore.Menus.PurchaseAnimals.SetOnFarm(this.GetOriginal(), onFarm);
         }
 
         public void SetPriceOfAnimal(int price)
         {
-            PariteeCore.Api.PurchaseAnimalsMenu.SetPriceOfAnimal(this.GetOriginal(), price);
+            PariteeCore.Menus.PurchaseAnimals.SetPriceOfAnimal(this.GetOriginal(), price);
         }
 
         public bool IsFrozen()
         {
-            return PariteeCore.Api.PurchaseAnimalsMenu.IsFrozen(this.GetOriginal());
+            return PariteeCore.Menus.PurchaseAnimals.IsFrozen(this.GetOriginal());
         }
 
         public bool HasTappedOkButton(int x, int y)
         {
-            return PariteeCore.Api.PurchaseAnimalsMenu.HasTappedOkButton(this.GetOriginal(), x, y);
+            return PariteeCore.Menus.PurchaseAnimals.HasTappedOkButton(this.GetOriginal(), x, y);
         }
 
         public bool IsReadyToClose()
         {
-            return PariteeCore.Api.PurchaseAnimalsMenu.IsReadyToClose(this.GetOriginal());
+            return PariteeCore.Menus.PurchaseAnimals.IsReadyToClose(this.GetOriginal());
         }
     }
 }

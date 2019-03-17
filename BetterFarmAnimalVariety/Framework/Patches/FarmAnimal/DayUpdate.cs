@@ -44,11 +44,11 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             __instance.hitGlowTimer = (__instance.fullness.Value < 200 || Game1.timeOfDay < 1700)
                 && environtment is StardewValley.AnimalHouse
                 && environtment.objects.Pairs.Where(kvp => kvp.Value.Name == "Hay").Any()
-                ? PariteeCore.Constants.FarmAnimal.MaxFullness
+                ? PariteeCore.Characters.FarmAnimal.MaxFullness
                 : __instance.fullness.Value;
 
             // Set the days to 0 so we have full control over the current produce
-            __instance.daysSinceLastLay.Value = PariteeCore.Constants.FarmAnimal.MinDaysSinceLastLay;
+            __instance.daysSinceLastLay.Value = PariteeCore.Characters.FarmAnimal.MinDaysSinceLastLay;
 
             return true;
         }
@@ -67,11 +67,11 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
             // Get back the days since last lay value and increment for today
             moddedAnimal.SetDaysSinceLastLay((byte)(moddedAnimal.GetPauseTimer() + 1));
-            moddedAnimal.SetPauseTimer(PariteeCore.Constants.FarmAnimal.MinPauseTimer);
+            moddedAnimal.SetPauseTimer(PariteeCore.Characters.FarmAnimal.MinPauseTimer);
 
             // Get the original fullness used to determine the current produce
             byte fullness = (byte)moddedAnimal.GetHitGlowTimer();
-            moddedAnimal.SetHitGlowTimer(PariteeCore.Constants.FarmAnimal.MinHitGlowTimer);
+            moddedAnimal.SetHitGlowTimer(PariteeCore.Characters.FarmAnimal.MinHitGlowTimer);
 
             DayUpdate.HandleCurrentProduce(ref moddedAnimal, fullness);
         }
@@ -82,13 +82,13 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             byte daysToLay = moddedAnimal.GetDaysToLay(moddedAnimal.GetOwner());
 
             // Roll a random chance check
-            int seed = (int)moddedAnimal.GetUniqueId() / 2 + PariteeCore.Api.Game.GetDaysPlayed();
+            int seed = (int)moddedAnimal.GetUniqueId() / 2 + PariteeCore.Utilities.Game.GetDaysPlayed();
             bool produceChance = DayUpdate.RollRandomProduceChance(moddedAnimal, originalFullness, seed);
 
             // Non-producers and babies do not produce
             if (!moddedAnimal.IsAProducer() || moddedAnimal.IsBaby())
             {
-                moddedAnimal.SetCurrentProduce(PariteeCore.Constants.FarmAnimal.NoProduce);
+                moddedAnimal.SetCurrentProduce(PariteeCore.Characters.FarmAnimal.NoProduce);
 
                 return;
             }
@@ -100,7 +100,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             // ... otherwise; there was a reason to roll new produce, but it failed
             else if (!produceChance)
             {
-                moddedAnimal.SetCurrentProduce(PariteeCore.Constants.FarmAnimal.NoProduce);
+                moddedAnimal.SetCurrentProduce(PariteeCore.Characters.FarmAnimal.NoProduce);
 
                 return;
             }
@@ -109,7 +109,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             DayUpdate.HandleGameStats(moddedAnimal);
 
             // Roll the current produce
-            StardewValley.Farmer owner = PariteeCore.Api.Game.GetPlayer();
+            StardewValley.Farmer owner = PariteeCore.Utilities.Game.GetPlayer();
 
             Cache.FarmAnimals cache = Helpers.FarmAnimals.ReadCache();
 
@@ -125,13 +125,13 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             moddedAnimal.SetCurrentProduce(parentSheetIndex);
 
             // Could have rolled no produce so no need to continue
-            if (!PariteeCore.Api.FarmAnimal.IsProduceAnItem(parentSheetIndex))
+            if (!PariteeCore.Characters.FarmAnimal.IsProduceAnItem(parentSheetIndex))
             {
                 return;
             }
 
             // Reset the days counter
-            moddedAnimal.SetDaysSinceLastLay(PariteeCore.Constants.FarmAnimal.MinDaysSinceLastLay);
+            moddedAnimal.SetDaysSinceLastLay(PariteeCore.Characters.FarmAnimal.MinDaysSinceLastLay);
 
             DayUpdate.HandleProduceQuality(moddedAnimal, seed);
             DayUpdate.HandleProduceSpawn(moddedAnimal);
@@ -178,7 +178,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
         private static void HandleProduceQuality(Decorators.FarmAnimal moddedAnimal, int seed)
         {
             // Roll the produce quality
-            PariteeCore.Constants.Object.Quality produceQuality = moddedAnimal.RollProduceQuality(moddedAnimal.GetOwner(), seed);
+            PariteeCore.Objects.Object.Quality produceQuality = moddedAnimal.RollProduceQuality(moddedAnimal.GetOwner(), seed);
 
             moddedAnimal.SetProduceQuality(produceQuality);
         }
@@ -192,7 +192,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
                 return;
             }
 
-            StardewValley.AnimalHouse animalHouse = PariteeCore.Api.AnimalHouse.GetIndoors(moddedAnimal.GetHome());
+            StardewValley.AnimalHouse animalHouse = PariteeCore.Locations.AnimalHouse.GetIndoors(moddedAnimal.GetHome());
             Vector2 tileLocation = moddedAnimal.GetTileLocation();
 
             // Check if an object exists on the spawn tile already
@@ -211,10 +211,10 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
             };
 
             // Spawn the item
-            PariteeCore.Api.Location.SpawnObject(animalHouse, tileLocation, obj);
+            PariteeCore.Locations.Location.SpawnObject(animalHouse, tileLocation, obj);
 
             // Remove the animal's produce
-            moddedAnimal.SetCurrentProduce(PariteeCore.Constants.FarmAnimal.NoProduce);
+            moddedAnimal.SetCurrentProduce(PariteeCore.Characters.FarmAnimal.NoProduce);
         }
     }
 }

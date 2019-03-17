@@ -10,17 +10,17 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
     {
         public static T ReadSaveData<T>(string saveDataKey) where T: new()
         {
-            return PariteeCore.Api.Mod.ReadSaveData<T>(Constants.Mod.Key, saveDataKey);
+            return PariteeCore.Utilities.Mod.ReadSaveData<T>(Constants.Mod.Key, saveDataKey);
         }
 
         public static void WriteSaveData<T>(string saveDataKey, T data)
         {
-            PariteeCore.Api.Mod.WriteSaveData<T>(Constants.Mod.Key, saveDataKey, data);
+            PariteeCore.Utilities.Mod.WriteSaveData<T>(Constants.Mod.Key, saveDataKey, data);
         }
 
         public static T ReadConfig<T>() where T: new()
         {
-            return PariteeCore.Api.Mod.ReadConfig<T>(PariteeCore.Constants.Mod.Path, Constants.Mod.ConfigFileName);
+            return PariteeCore.Utilities.Mod.ReadConfig<T>(PariteeCore.Utilities.Mod.Path, Constants.Mod.ConfigFileName);
         }
 
         public static void WriteCache<T>(string cacheFilePath, T data)
@@ -50,7 +50,7 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
 
         public static Texture2D LoadTexture(string filePath)
         {
-            return PariteeCore.Api.Mod.LoadTexture(Path.Combine(PariteeCore.Constants.Mod.Path, filePath));
+            return PariteeCore.Utilities.Mod.LoadTexture(Path.Combine(PariteeCore.Utilities.Mod.Path, filePath));
         }
 
         public static string GetShortAssetPath(string filePath)

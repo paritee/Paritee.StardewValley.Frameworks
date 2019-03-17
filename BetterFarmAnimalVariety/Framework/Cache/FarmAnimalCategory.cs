@@ -32,7 +32,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
             this.AnimalShop = category.AnimalShop;
         }
 
-        public FarmAnimalCategory(string assetSourceDirectory, PariteeCore.Models.LivestockCategory category)
+        public FarmAnimalCategory(string assetSourceDirectory, PariteeCore.Characters.LivestockCategory category)
         {
             this.Category = category.ToString();
             this.Types = category.Types.Select(o => new FarmAnimalType(o)).ToList();
@@ -49,7 +49,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
 
         public Texture2D GetAnimalShopIconTexture()
         {
-            return this.CanBePurchased() ? PariteeCore.Api.Mod.LoadTexture(this.AnimalShop.Icon) : null;
+            return this.CanBePurchased() ? PariteeCore.Utilities.Mod.LoadTexture(this.AnimalShop.Icon) : null;
         }
 
         public bool CanBePurchased()
@@ -74,7 +74,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
                 return null;
             }
 
-            return PariteeCore.Api.AnimalShop.FormatAsAnimalAvailableForPurchase(farm, this.Category, this.AnimalShop.Name, this.Types.Select(o => o.Type).ToArray(), this.Buildings.ToArray());
+            return PariteeCore.Locations.AnimalShop.FormatAsAnimalAvailableForPurchase(farm, this.Category, this.AnimalShop.Name, this.Types.Select(o => o.Type).ToArray(), this.Buildings.ToArray());
         }
     }
 }

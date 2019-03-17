@@ -49,16 +49,16 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
         private static void HandleFindGrassToEat(ref Decorators.FarmAnimal moddedAnimal, ref Decorators.Location moddedLocation)
         {
-            if (moddedLocation.IsOutdoors() && moddedAnimal.GetFullness() < 195 && (PariteeCore.Helpers.Random.NextDouble() < 0.002 && PariteeCore.Api.FarmAnimal.UnderMaxPathFindingPerTick()))
+            if (moddedLocation.IsOutdoors() && moddedAnimal.GetFullness() < 195 && (PariteeCore.Utilities.Random.NextDouble() < 0.002 && PariteeCore.Characters.FarmAnimal.UnderMaxPathFindingPerTick()))
             {
-                PariteeCore.Api.FarmAnimal.IncreasePathFindingThisTick();
+                PariteeCore.Characters.FarmAnimal.IncreasePathFindingThisTick();
                 moddedAnimal.SetFindGrassPathController(moddedLocation.GetOriginal());
             }
         }
 
         private static bool HandleNightTimeRoutine(ref Decorators.FarmAnimal moddedAnimal, ref Decorators.Location moddedLocation)
         {
-            if (PariteeCore.Api.Game.GetTimeOfDay() < 1700)
+            if (PariteeCore.Utilities.Game.GetTimeOfDay() < 1700)
             {
                 return false;
             }
@@ -73,7 +73,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
                 return false;
             }
 
-            if (PariteeCore.Helpers.Random.NextDouble() >= 0.002)
+            if (PariteeCore.Utilities.Random.NextDouble() >= 0.002)
             {
                 return false;
             }
@@ -86,9 +86,9 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
                 return true;
             }
 
-            if (PariteeCore.Api.FarmAnimal.UnderMaxPathFindingPerTick())
+            if (PariteeCore.Characters.FarmAnimal.UnderMaxPathFindingPerTick())
             {
-                PariteeCore.Api.FarmAnimal.IncreasePathFindingThisTick();
+                PariteeCore.Characters.FarmAnimal.IncreasePathFindingThisTick();
                 moddedAnimal.SetFindHomeDoorPathController(moddedLocation.GetOriginal());
             }
 
@@ -97,7 +97,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
         private static bool IsValidLocation(Decorators.Location moddedLocation)
         {
-            return moddedLocation.IsOutdoors() && !PariteeCore.Api.Weather.IsRaining() && !PariteeCore.Api.Season.IsWinter();
+            return moddedLocation.IsOutdoors() && !PariteeCore.Locations.Weather.IsRaining() && !PariteeCore.Locations.Season.IsWinter();
         }
 
         private static bool CanFindProduce(Decorators.FarmAnimal moddedAnimal, Decorators.Farmer moddedPlayer)
@@ -114,7 +114,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
             int currentProduce = moddedAnimal.GetCurrentProduce();
 
-            return PariteeCore.Api.FarmAnimal.IsProduceAnItem(currentProduce);
+            return PariteeCore.Characters.FarmAnimal.IsProduceAnItem(currentProduce);
         }
         
         private static bool HasNoImpediments(Decorators.FarmAnimal moddedAnimal, Decorators.Location moddedLocation)
@@ -137,7 +137,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
         private static void HandleFindProduce(ref Decorators.FarmAnimal moddedAnimal, ref Decorators.Location moddedLocation)
         {
-            Decorators.Farmer moddedPlayer = new Decorators.Farmer(PariteeCore.Api.Game.GetPlayer());
+            Decorators.Farmer moddedPlayer = new Decorators.Farmer(PariteeCore.Utilities.Game.GetPlayer());
 
             if (!Behaviors.IsValidLocation(moddedLocation))
             {
@@ -149,7 +149,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
                 return;
             }
 
-            double roll = PariteeCore.Helpers.Random.NextDouble();
+            double roll = PariteeCore.Utilities.Random.NextDouble();
             bool chance = roll >= Behaviors.FindProduceChance;
 
             if (chance)
@@ -164,12 +164,12 @@ namespace BetterFarmAnimalVariety.Framework.Patches.FarmAnimal
 
             if (moddedPlayer.IsCurrentLocation(moddedLocation.GetOriginal()))
             {
-                PariteeCore.Api.BellsAndWhistles.PlaySound("dirtyHit", 450);
-                PariteeCore.Api.BellsAndWhistles.PlaySound("dirtyHit", 900);
-                PariteeCore.Api.BellsAndWhistles.PlaySound("dirtyHit", 1350);
+                PariteeCore.Utilities.BellsAndWhistles.PlaySound("dirtyHit", 450);
+                PariteeCore.Utilities.BellsAndWhistles.PlaySound("dirtyHit", 900);
+                PariteeCore.Utilities.BellsAndWhistles.PlaySound("dirtyHit", 1350);
             }
 
-            if (PariteeCore.Api.Game.IsCurrentLocation(moddedLocation.GetOriginal()))
+            if (PariteeCore.Utilities.Game.IsCurrentLocation(moddedLocation.GetOriginal()))
             {
                 moddedAnimal.AnimateFindingProduce();
             }

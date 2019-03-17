@@ -102,8 +102,8 @@ namespace BetterFarmAnimalVariety.Framework.Events
         public static void SeedCacheWithVanillaFarmAnimals()
         {
             // Seed with all of the vanilla farm animals
-            List<Cache.FarmAnimalCategory> categories = PariteeCore.Constants.Animals.LivestockCategory.All()
-                .Select(o => new Cache.FarmAnimalCategory(PariteeCore.Constants.Mod.Path, o))
+            List<Cache.FarmAnimalCategory> categories = PariteeCore.Characters.LivestockCategory.All()
+                .Select(o => new Cache.FarmAnimalCategory(PariteeCore.Utilities.Mod.Path, o))
                 .ToList();
 
             // Reset the cache

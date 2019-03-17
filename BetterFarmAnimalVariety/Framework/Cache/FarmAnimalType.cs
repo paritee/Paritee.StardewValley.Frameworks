@@ -26,7 +26,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
             this.DeluxeProduceLuck = deluxeProduceLuck;
         }
 
-        public FarmAnimalType(PariteeCore.Models.Livestock livestock)
+        public FarmAnimalType(PariteeCore.Characters.Livestock livestock)
         {
             this.Type = livestock.ToString();
             this.DeluxeProduceLuck = livestock.DeluxeProduceLuck;
@@ -48,12 +48,12 @@ namespace BetterFarmAnimalVariety.Framework.Cache
                 return this.Data;
             }
 
-            string[] values = PariteeCore.Api.Content.ParseDataValue(this.Data);
+            string[] values = PariteeCore.Utilities.Content.ParseDataValue(this.Data);
 
-            values[(int)PariteeCore.Constants.FarmAnimal.DataValueIndex.DisplayType] = this.Localization[locale][(int)Cache.FarmAnimalType.LocalizationIndex.DisplayType];
-            values[(int)PariteeCore.Constants.FarmAnimal.DataValueIndex.DisplayBuilding] = this.Localization[locale][(int)Cache.FarmAnimalType.LocalizationIndex.DisplayBuilding];
+            values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.DisplayType] = this.Localization[locale][(int)Cache.FarmAnimalType.LocalizationIndex.DisplayType];
+            values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.DisplayBuilding] = this.Localization[locale][(int)Cache.FarmAnimalType.LocalizationIndex.DisplayBuilding];
 
-            return string.Join(PariteeCore.Constants.Content.DataValueDelimiter.ToString(), values);
+            return string.Join(PariteeCore.Utilities.Content.DataValueDelimiter.ToString(), values);
         }
 
         public bool HasLocalization()

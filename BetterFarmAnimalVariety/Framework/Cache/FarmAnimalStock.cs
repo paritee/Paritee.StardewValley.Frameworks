@@ -25,7 +25,7 @@ namespace BetterFarmAnimalVariety.Framework.Cache
             // Do nothing; this is for loading an existing config
         }
 
-        public FarmAnimalStock(PariteeCore.Models.LivestockCategory livestockCategory)
+        public FarmAnimalStock(PariteeCore.Characters.LivestockCategory livestockCategory)
         {
             this.Name = livestockCategory.AnimalShop.Name;
             this.Description = livestockCategory.AnimalShop.Description;

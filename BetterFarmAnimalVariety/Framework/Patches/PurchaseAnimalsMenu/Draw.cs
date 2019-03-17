@@ -13,14 +13,14 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
             Decorators.PurchaseAnimalsMenu moddedMenu = new Decorators.PurchaseAnimalsMenu(__instance);
             Decorators.FarmAnimal moddedAnimal = new Decorators.FarmAnimal(moddedMenu.GetAnimalBeingPurchased());
 
-            if (!PariteeCore.Api.BellsAndWhistles.IsFaded() && moddedMenu.IsOnFarm())
+            if (!PariteeCore.Utilities.BellsAndWhistles.IsFaded() && moddedMenu.IsOnFarm())
             {
                 int price = moddedAnimal.GetPrice();
-                string str = PariteeCore.Api.Content.FormatMoneyString(price);
-                int x = PariteeCore.Api.Game.GetViewport().Width / 2 - PariteeCore.Api.Content.GetWidthOfString(str) / 2;
+                string str = PariteeCore.Utilities.Content.FormatMoneyString(price);
+                int x = PariteeCore.Utilities.Game.GetViewport().Width / 2 - PariteeCore.Utilities.Content.GetWidthOfString(str) / 2;
                 int y = (int)((SpriteText.characterHeight + SpriteText.verticalSpaceBetweenCharacters) * SpriteText.fontPixelZoom * 2);
 
-                PariteeCore.Api.BellsAndWhistles.DrawScroll(b, str, x, y);
+                PariteeCore.Utilities.BellsAndWhistles.DrawScroll(b, str, x, y);
             }
 
             return true;

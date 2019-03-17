@@ -13,14 +13,14 @@ namespace BetterFarmAnimalVariety.Framework.Constants
         public const string ConfigFileName = "config.json";
         public const string AnimalShopIconDirectory = "AnimalShop";
         public const string AnimalShopIconExtension = ".png";
-        public static List<PariteeCore.Models.Animal> RestrictedFarmAnimalTypes => new List<PariteeCore.Models.Animal>()
+        public static List<PariteeCore.Characters.Animal> RestrictedFarmAnimalTypes => new List<PariteeCore.Characters.Animal>()
         {
             // The assets for these animals are kept in the same directory as the 
             // farm animal assets. Naming a type one of these keywords would cause 
             // the asset load to fail.
-            PariteeCore.Constants.Animals.Pet.Cat,
-            PariteeCore.Constants.Animals.Pet.Dog,
-            PariteeCore.Constants.Animals.Mount.Horse,
+            PariteeCore.Characters.Pet.Cat,
+            PariteeCore.Characters.Pet.Dog,
+            PariteeCore.Characters.Mount.Horse,
         };
 
         // Save data
@@ -28,7 +28,7 @@ namespace BetterFarmAnimalVariety.Framework.Constants
 
         // Cache
         public const string CacheDirectory = "cache";
-        public static string CacheFullPath => Path.Combine(PariteeCore.Constants.Mod.Path, Constants.Mod.CacheDirectory);
+        public static string CacheFullPath => Path.Combine(PariteeCore.Utilities.Mod.Path, Constants.Mod.CacheDirectory);
         public static string FarmAnimalsCacheFileName = "farm-animals.json";
 
         // Assets

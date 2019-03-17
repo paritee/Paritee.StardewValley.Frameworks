@@ -13,12 +13,12 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
 
         public StardewValley.AnimalHouse GetIndoors()
         {
-            return PariteeCore.Api.AnimalHouse.GetIndoors(this.GetOriginal());
+            return PariteeCore.Locations.AnimalHouse.GetIndoors(this.GetOriginal());
         }
 
         public bool IsFull()
         {
-            return PariteeCore.Api.AnimalHouse.IsFull(this.GetOriginal());
+            return PariteeCore.Locations.AnimalHouse.IsFull(this.GetOriginal());
         }
     }
 }

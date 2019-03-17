@@ -13,7 +13,7 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
 
         public void AutoGrabFromAnimals(StardewValley.AnimalHouse animalHouse)
         {
-            PariteeCore.Api.AnimalHouse.AutoGrabFromAnimals(animalHouse, this.GetOriginal());
+            PariteeCore.Locations.AnimalHouse.AutoGrabFromAnimals(animalHouse, this.GetOriginal());
         }
     }
 }

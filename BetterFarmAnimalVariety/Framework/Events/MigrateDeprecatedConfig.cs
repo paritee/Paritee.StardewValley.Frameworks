@@ -14,7 +14,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
         public static void OnEntry(ModEntry mod, string targetFormat, out ModConfig config)
         {
             // Try to load the last supported format...
-            string path = Path.Combine(PariteeCore.Constants.Mod.Path, Constants.Mod.ConfigFileName);
+            string path = Path.Combine(PariteeCore.Utilities.Mod.Path, Constants.Mod.ConfigFileName);
             string json = File.ReadAllText(path);
             Config.V2.ModConfig deprecatedConfig = JsonConvert.DeserializeObject<Config.V2.ModConfig>(json);
 
@@ -53,7 +53,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
         public static bool CreateContentPack(ModEntry mod, Config.V2.ModConfig deprecatedConfig)
         {
-            string voidChicken = PariteeCore.Constants.Animals.Livestock.VoidChicken.ToString();
+            string voidChicken = PariteeCore.Characters.FarmAnimal.VoidChicken.ToString();
 
             // Get ready to make a new content pack
             ContentPacks.Content farmAnimals = new ContentPacks.Content(new List<ContentPacks.Category>());
@@ -69,7 +69,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
             foreach (KeyValuePair<string, Config.V2.ConfigFarmAnimal> oldFarmAnimals in deprecatedConfig.FarmAnimals)
             {
                 // Check if this category is a vanila category
-                bool isVanilla = PariteeCore.Constants.Animals.LivestockCategory.All()
+                bool isVanilla = PariteeCore.Characters.LivestockCategory.All()
                     .Exists(o => o.ToString() == oldFarmAnimals.Key);
 
                 // Always create the category with the update for vanilla and create for non-vanilla
@@ -92,7 +92,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
 
                     // Check to make sure the icon exists...
                     string icon = oldFarmAnimals.Value.AnimalShop.Icon;
-                    string pathToIcon = Path.Combine(PariteeCore.Constants.Mod.Path, icon);
+                    string pathToIcon = Path.Combine(PariteeCore.Utilities.Mod.Path, icon);
 
                     if (File.Exists(pathToIcon))
                     {
@@ -176,7 +176,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
                 destinationDirectory.Directory.Create();
 
                 // Copy the icon to the new location
-                File.Copy(Path.Combine(PariteeCore.Constants.Mod.Path, sourceFileName), destFileName);
+                File.Copy(Path.Combine(PariteeCore.Utilities.Mod.Path, sourceFileName), destFileName);
             }
 
             // Update the cache

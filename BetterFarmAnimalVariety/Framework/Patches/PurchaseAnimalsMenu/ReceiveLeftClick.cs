@@ -25,7 +25,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
                 return true;
             }
 
-            Decorators.Farmer moddedPlayer = new Decorators.Farmer(PariteeCore.Api.Game.GetPlayer());
+            Decorators.Farmer moddedPlayer = new Decorators.Farmer(PariteeCore.Utilities.Game.GetPlayer());
 
             return moddedMenu.IsOnFarm()
                 ? ReceiveLeftClick.HandleOnFarm(ref moddedMenu, x, y, moddedPlayer)
@@ -34,7 +34,7 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
 
         private static bool IsActionable(Decorators.PurchaseAnimalsMenu moddedMenu)
         {
-            return !PariteeCore.Api.BellsAndWhistles.IsFaded() && !moddedMenu.IsFrozen();
+            return !PariteeCore.Utilities.BellsAndWhistles.IsFaded() && !moddedMenu.IsFrozen();
         }
 
         private static bool IsClosingMenu(Decorators.PurchaseAnimalsMenu moddedMenu, int x, int y)
@@ -87,8 +87,8 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
 
         private static void SelectedStockBellsAndWhistles(ref Decorators.PurchaseAnimalsMenu moddedMenu)
         {
-            PariteeCore.Api.BellsAndWhistles.FadeToBlack(true, moddedMenu.GetOriginal().setUpForAnimalPlacement, 0.02f);
-            PariteeCore.Api.BellsAndWhistles.PlaySound("smallSelect");
+            PariteeCore.Utilities.BellsAndWhistles.FadeToBlack(true, moddedMenu.GetOriginal().setUpForAnimalPlacement, 0.02f);
+            PariteeCore.Utilities.BellsAndWhistles.PlaySound("smallSelect");
         }
 
         private static bool HandleOnFarm(ref Decorators.PurchaseAnimalsMenu moddedMenu, int x, int y, Decorators.Farmer moddedPlayer)
@@ -101,8 +101,8 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
                 return true;
             }
 
-            xTile.Dimensions.Rectangle viewport = PariteeCore.Api.Game.GetViewport();
-            Building buildingAt = PariteeCore.Api.Game.GetFarm().getBuildingAt(new Vector2((x + viewport.X) / 64, (y + viewport.Y) / 64));
+            xTile.Dimensions.Rectangle viewport = PariteeCore.Utilities.Game.GetViewport();
+            Building buildingAt = PariteeCore.Utilities.Game.GetFarm().getBuildingAt(new Vector2((x + viewport.X) / 64, (y + viewport.Y) / 64));
 
             if (buildingAt == null)
             {
@@ -158,12 +158,12 @@ namespace BetterFarmAnimalVariety.Framework.Patches.PurchaseAnimalsMenu
         {
             if (moddedAnimal.MakesSound())
             {
-                PariteeCore.Api.BellsAndWhistles.CueSound(moddedAnimal.GetSound(), "Pitch", 1200 + PariteeCore.Helpers.Random.Next(-200, 201));
+                PariteeCore.Utilities.BellsAndWhistles.CueSound(moddedAnimal.GetSound(), "Pitch", 1200 + PariteeCore.Utilities.Random.Next(-200, 201));
             }
 
-            string message = PariteeCore.Api.Content.LoadString("Strings\\StringsFromCSFiles:PurchaseAnimalsMenu.cs.11324", moddedAnimal.GetDisplayType());
+            string message = PariteeCore.Utilities.Content.LoadString("Strings\\StringsFromCSFiles:PurchaseAnimalsMenu.cs.11324", moddedAnimal.GetDisplayType());
 
-            PariteeCore.Api.BellsAndWhistles.AddHudMessage(message, Color.LimeGreen, 3500f);
+            PariteeCore.Utilities.BellsAndWhistles.AddHudMessage(message, Color.LimeGreen, 3500f);
         }
     }
 }
