@@ -24,17 +24,12 @@ namespace BetterFarmAnimalVariety.Framework.Cache
 
         public FarmAnimalCategory() { }
 
-        public FarmAnimalCategory(string assetSourceDirectory, ContentPacks.Category category)
+        public FarmAnimalCategory(ContentPacks.Category category)
         {
             this.Category = category.Category;
             this.Types = category.Types;
             this.Buildings = category.Buildings;
             this.AnimalShop = category.AnimalShop;
-
-            if (this.CanBePurchased())
-            {
-                this.AnimalShop.Icon = Path.Combine(assetSourceDirectory, this.AnimalShop.Icon);
-            }
         }
 
         public FarmAnimalCategory(string assetSourceDirectory, PariteeCore.Models.LivestockCategory category)

@@ -6,10 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Nothing yet
+
 ## [3.0.0] - 2019-03-21
 ### Added
 - Support for [BFAV content packs](https://github.com/paritee/Paritee.StardewValley.Frameworks/tree/bfav-3.0.0/BetterFarmAnimalVariety#content-packs)
-- Full [harvest type](https://github.com/paritee/Paritee.StardewValley.FarmAnimals/tree/bfav-3.0.0#harvest-types) (i.e. `lay`, `tool`, `find`, `none`) support for any animal type via its data value string
+- Full [harvest type](https://github.com/paritee/Paritee.StardewValley.FarmAnimals/tree/bfav-3.0.0#harvest-types) (i.e. `lay`, `grab`, `find`, `none`) support for any animal type via its data value string
 - Applied the `<Days To Produce>` [data value](https://stardewvalleywiki.com/Modding:Animal_data#Basic_format) to all harvest types instead of just the `lay` type
 - Full language support
 - Integration with [MoreAnimals 3.x](https://github.com/Entoarox/StardewMods/tree/master/MoreAnimals) for animal skins
@@ -24,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Farm animal categories are managed through [BFAV content packs](https://github.com/paritee/Paritee.StardewValley.Frameworks/tree/bfav-3.0.0/BetterFarmAnimalVariety#content-packs) and not the `config.json`
 - All baby animals' types are chosen based on category and produce restrictions. [Non-producing animals](https://github.com/paritee/Paritee.StardewValley.FarmAnimals/tree/bfav-3.0.0#harvest-types) are still supported while specifying the default and deluxe produce to support this change
 - In the purchase animals menu, use the lowest price to determine if the player can afford the category. Animals that the player cannot afford will not be in the rotation. If at least one type, but not all, is available for purchase, the totals will be displayed in the description of the category on hover
-- The animal type's price will be the actual cost of the animal instead of the category cost. The animal type's price in a scroll on building selection screen
+- The animal type's price will be the actual cost of the animal instead of the category cost. The animal type's price is displayed in a scroll on the building selection screen
 - Messages for hatched egg Coop event are type-agnostic
 - Animals that already exist will have content pack updates automatically applied to them instead of only being applied to new animals
 - `bfav_list` command has been renamed to `livestock_categories`

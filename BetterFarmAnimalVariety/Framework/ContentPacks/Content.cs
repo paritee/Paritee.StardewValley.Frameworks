@@ -75,18 +75,25 @@ namespace BetterFarmAnimalVariety.Framework.ContentPacks
             // Assert no duplicate types
             Helpers.Assert.UniqueValues(category.Types.Select(o => o.Type).ToList());
 
-            // Need to modify the sprite paths
-            category.Types = category.Types.Select(o => this.CastSpritesToFullPaths(o, contentPack.DirectoryPath)).ToList();
+            // Modify the sprite paths
+            category.Types = category.Types
+                .Select(o => this.CastSpritesToFullPaths(o, contentPack.DirectoryPath))
+                .ToList();
 
-            Helpers.FarmAnimals.AddOrReplaceCategory(new Cache.FarmAnimalCategory(contentPack.DirectoryPath, category));
+            // Modify the animal shop icon path
+            if (category.CanBePurchased())
+            {
+                category.AnimalShop.Icon = Path.Combine(contentPack.DirectoryPath, category.AnimalShop.Icon);
+            }
+
+            Helpers.FarmAnimals.AddOrReplaceCategory(new Cache.FarmAnimalCategory(category));
         }
 
         public void HandleUpdateAction(IContentPack contentPack, ContentPacks.Category category)
         {
-            // Assert existing category
-            Helpers.Assert.FarmAnimalCategoryExists(category.Category);
-
-            Cache.FarmAnimalCategory cacheCategory = Helpers.FarmAnimals.GetCategory(category.Category);
+            // Allow updates to add a new category even if it does not exist
+            Cache.FarmAnimalCategory cacheCategory = Helpers.FarmAnimals.GetCategory(category.Category) 
+                ?? new Cache.FarmAnimalCategory(category);
 
             // Add the missing types
             if (category.Types != null)
