@@ -14,14 +14,14 @@ namespace BetterFarmAnimalVariety.Framework.Events
             // Harmony
             LoadMod.SetUpHarmonyPatches();
 
-            // Commands
-            LoadMod.SetUpConsoleCommands(mod);
+            // Asset Loaders
+            LoadMod.SetUpAssetLoaders(mod);
 
             // Asset Editors
             LoadMod.SetUpAssetEditors(mod);
 
-            // Asset Loaders
-            LoadMod.SetUpAssetLoaders(mod);
+            // Commands
+            LoadMod.SetUpConsoleCommands(mod);
         }
 
         private static void SetUpConfig(ModEntry mod)
