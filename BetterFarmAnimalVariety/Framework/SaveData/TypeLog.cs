@@ -16,12 +16,12 @@ namespace BetterFarmAnimalVariety.Framework.SaveData
 
         public bool IsDirty()
         {
-            return !PariteeCore.Characters.FarmAnimal.IsVanilla(this.Saved);
+            return !PariteeCore.Characters.FarmAnimal.IsVanillaType(this.Saved);
         }
 
         public bool IsVanilla()
         {
-            return PariteeCore.Characters.FarmAnimal.IsVanilla(this.Current);
+            return PariteeCore.Characters.FarmAnimal.IsVanillaType(this.Current);
         }
 
         public KeyValuePair<string, string> ConvertToKeyValuePair()

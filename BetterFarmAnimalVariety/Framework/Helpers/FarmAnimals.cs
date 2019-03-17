@@ -1,5 +1,7 @@
 ﻿using StardewValley;
 using System.Collections.Generic;
+using System.Linq;
+using PariteeCore = Paritee.StardewValley.Core;
 
 namespace BetterFarmAnimalVariety.Framework.Helpers
 {
@@ -105,6 +107,18 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             Cache.FarmAnimals cache = Helpers.FarmAnimals.ReadCache();
 
             return cache.CanBePurchased(category);
+        }
+
+        public static List<Cache.FarmAnimalCategory> GetVanillaCategories()
+        {
+            return PariteeCore.Characters.FarmAnimal.GetVanillaCategories()
+                .Select(o => new Cache.FarmAnimalCategory(PariteeCore.Utilities.Mod.Path, o))
+                .ToList();
+        }
+
+        public static bool IsVanillaCategory(string category)
+        {
+            return PariteeCore.Characters.FarmAnimal.IsVanillaCategory(category);
         }
     }
 }

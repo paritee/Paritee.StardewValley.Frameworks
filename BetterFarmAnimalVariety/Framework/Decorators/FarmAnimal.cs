@@ -31,7 +31,7 @@ namespace BetterFarmAnimalVariety.Framework.Decorators
         
         public bool IsVanilla()
         {
-            return PariteeCore.Characters.FarmAnimal.IsVanilla(this.GetTypeString());
+            return PariteeCore.Characters.FarmAnimal.IsVanilla(this.GetOriginal());
         }
 
         public int RollProduce(int seed, StardewValley.Farmer farmer = null, double deluxeProduceLuck = default(double))

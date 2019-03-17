@@ -8,15 +8,6 @@ namespace BetterFarmAnimalVariety.Framework.Events
 {
     class RefreshCache
     {
-        public static void SeedCache(IModHelper helper, IMonitor monitor)
-        {
-            // Seed a new cache with the vanilla animals...
-            RefreshCache.SeedCacheWithVanillaFarmAnimals();
-
-            //... then content packs are loaded to apply changes to the cache
-            LoadContentPacks.SetUpContentPacks(helper.ContentPacks.GetOwned(), monitor);
-        }
-
         public static void ValidateCachedFarmAnimals(IModHelper helper, IMonitor monitor)
         {
             // Get the cache
@@ -102,9 +93,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
         public static void SeedCacheWithVanillaFarmAnimals()
         {
             // Seed with all of the vanilla farm animals
-            List<Cache.FarmAnimalCategory> categories = PariteeCore.Characters.LivestockCategory.All()
-                .Select(o => new Cache.FarmAnimalCategory(PariteeCore.Utilities.Mod.Path, o))
-                .ToList();
+            List<Cache.FarmAnimalCategory> categories = Helpers.FarmAnimals.GetVanillaCategories();
 
             // Reset the cache
             Cache.FarmAnimals cache = new Cache.FarmAnimals(categories);

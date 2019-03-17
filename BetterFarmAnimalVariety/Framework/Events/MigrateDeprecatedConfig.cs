@@ -68,12 +68,10 @@ namespace BetterFarmAnimalVariety.Framework.Events
             // Go through all of the old categories so that we can determine if we need to make a new content pack to preserve the changes
             foreach (KeyValuePair<string, Config.V2.ConfigFarmAnimal> oldFarmAnimals in deprecatedConfig.FarmAnimals)
             {
-                // Check if this category is a vanila category
-                bool isVanilla = PariteeCore.Characters.LivestockCategory.All()
-                    .Exists(o => o.ToString() == oldFarmAnimals.Key);
-
                 // Always create the category with the update for vanilla and create for non-vanilla
-                ContentPacks.Category.Actions action = isVanilla ? ContentPacks.Category.Actions.Update : ContentPacks.Category.Actions.Create;
+                ContentPacks.Category.Actions action = Helpers.FarmAnimals.IsVanillaCategory(oldFarmAnimals.Key)
+                    ? ContentPacks.Category.Actions.Update 
+                    : ContentPacks.Category.Actions.Create;
 
                 Cache.FarmAnimalStock animalShop = null;
                 bool forceOverrideRemoveFromShop = true;

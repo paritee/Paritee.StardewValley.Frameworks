@@ -40,8 +40,8 @@
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Paritee.StardewValley.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Paritee.StardewValley.Core.2.0.0\lib\net452\Paritee.StardewValley.Core.dll</HintPath>
+    <Reference Include="Paritee.StardewValley.Core, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Paritee.StardewValley.Core.2.0.1\lib\net452\Paritee.StardewValley.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
