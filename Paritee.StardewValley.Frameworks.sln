@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paritee's Treat Your Animal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimalBirthEveryNight", "AnimalBirthEveryNight\AnimalBirthEveryNight.csproj", "{94E2DA96-64F6-429A-824C-BAE7A1986E4F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paritee's Butchery", "Paritee's Butchery\Paritee's Butchery.csproj", "{A962E3BD-1EEB-4536-B395-3B29876C7973}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{94E2DA96-64F6-429A-824C-BAE7A1986E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94E2DA96-64F6-429A-824C-BAE7A1986E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94E2DA96-64F6-429A-824C-BAE7A1986E4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A962E3BD-1EEB-4536-B395-3B29876C7973}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A962E3BD-1EEB-4536-B395-3B29876C7973}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A962E3BD-1EEB-4536-B395-3B29876C7973}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A962E3BD-1EEB-4536-B395-3B29876C7973}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

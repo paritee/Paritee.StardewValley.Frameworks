@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Applied the `<Days To Produce>` [data value](https://stardewvalleywiki.com/Modding:Animal_data#Basic_format) to all harvest types instead of just the `lay` type
 - Full language support
 - Integration with [MoreAnimals 3.x](https://github.com/Entoarox/StardewMods/tree/master/MoreAnimals) for animal skins
-- Integration with [JsonAssets 1.x](https://github.com/spacechase0/JsonAssets) for animal produce by item name
+- Integration with [JsonAssets 1.x](https://github.com/spacechase0/JsonAssets) for animal produce and meat by item name
 - Support for integration with [FarmExpansion 3.x](https://github.com/AdvizeGH/FarmExpansion)
 - Farm animal data sanitation on game save to preserve clean saves and recover from dirty saves using save data
 - The following APIs: `IsEnabled`, `GetFarmAnimalCategories`, `GetAnimalShopStock`, `GetAnimalShopIcons`, `GetRandomAnimalShopType`, `GetFarmAnimalTypeHistory`

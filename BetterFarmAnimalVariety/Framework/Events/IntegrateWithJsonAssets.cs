@@ -26,7 +26,7 @@ namespace BetterFarmAnimalVariety.Framework.Events
             helper.Content.Load<Dictionary<string, string>>(PariteeCore.Utilities.Content.DataFarmAnimalsContentPath, ContentSource.GameContent);
         }
 
-        public static bool TryParseFarmAnimalProduceName(string objectName, out int index)
+        public static bool TryParseObjectName(string objectName, out int index)
         {
             return PariteeCore.Objects.Object.TryParse(objectName, out index);
         }

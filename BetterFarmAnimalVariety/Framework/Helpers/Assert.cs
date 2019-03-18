@@ -136,12 +136,12 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
 
         /// <param name="strIndex">string</param>
         /// <exception cref="NotImplementedException"></exception>
-        public static void ValidFarmAnimalProduce(IModHelper helper, string strIndex, out int produceIndex)
+        public static void ValidObject(IModHelper helper, string strIndex, out int index)
         {
-            if (!Int32.TryParse(strIndex, out produceIndex))
+            if (!Int32.TryParse(strIndex, out index))
             {
                 // Try to find an item by name
-                if (IntegrateWithJsonAssets.TryParseFarmAnimalProduceName(strIndex, out produceIndex))
+                if (IntegrateWithJsonAssets.TryParseObjectName(strIndex, out index))
                 {
                     // Found an item by name
                     return;
@@ -152,13 +152,13 @@ namespace BetterFarmAnimalVariety.Framework.Helpers
             }
 
             // "no produce" (-1) should not trigger the assert
-            if (!PariteeCore.Characters.FarmAnimal.IsProduceAnItem(produceIndex))
+            if (!PariteeCore.Characters.FarmAnimal.IsProduceAnItem(index))
             {
                 return;
             }
 
             // Check to see if this object actually exists
-            if (!PariteeCore.Objects.Object.ObjectExists(produceIndex))
+            if (!PariteeCore.Objects.Object.ObjectExists(index))
             {
                 throw new NotImplementedException($"\"{strIndex}\" is not a known Object");
             }

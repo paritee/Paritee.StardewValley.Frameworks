@@ -54,6 +54,8 @@ namespace BetterFarmAnimalVariety.Framework.Editors
                     // Integrate with JsonAssets
                     data[type.Type] = this.SanitizeData(type.Data);
                 }
+
+                this.Monitor.Log($"Data/FarmAnimals:\n{string.Join("\n", data.Select(o => $"{o.Key}: {o.Value}"))}", LogLevel.Trace);
             }
         }
 
@@ -61,41 +63,40 @@ namespace BetterFarmAnimalVariety.Framework.Editors
         {
             string[] values = PariteeCore.Utilities.Content.ParseDataValue(data);
 
-            values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.DefaultProduce] = this.SanitizeProduce(values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.DefaultProduce]);
-            values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.DeluxeProduce] = this.SanitizeProduce(values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.DeluxeProduce]);
+            values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.DefaultProduce] = this.SanitizeItems(values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.DefaultProduce]);
+            values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.DeluxeProduce] = this.SanitizeItems(values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.DeluxeProduce]);
+            values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.MeatIndex] = this.SanitizeItems(values[(int)PariteeCore.Characters.FarmAnimal.DataValueIndex.MeatIndex]);
 
             return string.Join(PariteeCore.Utilities.Content.DataValueDelimiter.ToString(), values);
         }
 
-        private string SanitizeProduce(string produceIndexStr)
+        private string SanitizeItems(string indexStr)
         {
+            string noIndex = PariteeCore.Characters.FarmAnimal.NoProduce.ToString();
+
             try
             {
-                // Assert that the produce is a valid object ...
-                Helpers.Assert.ValidFarmAnimalProduce(this.Helper, produceIndexStr, out int produceIndex);
+                // Assert that the item is a valid object ...
+                Helpers.Assert.ValidObject(this.Helper, indexStr, out int index);
 
-                produceIndexStr = produceIndex.ToString();
+                indexStr = index.ToString();
             }
             catch (Exceptions.SaveNotLoadedException e)
             {
-                string noProduceIndex = PariteeCore.Characters.FarmAnimal.NoProduce.ToString();
-
-                this.Monitor.Log($"Cannot replace \"{produceIndexStr}\" produce: {e.Message}. Produce will be temporarily set to \"none\" ({noProduceIndex}).", LogLevel.Debug);
+                this.Monitor.Log($"Cannot replace \"{indexStr}\" produce: {e.Message}. Will be temporarily set to \"none\" ({noIndex}).", LogLevel.Trace);
 
                 // ... otherwise; default to "no produce"
-                produceIndexStr = noProduceIndex;
+                indexStr = noIndex;
             }
             catch (Exception e)
             {
-                string noProduceIndex = PariteeCore.Characters.FarmAnimal.NoProduce.ToString();
-
-                this.Monitor.Log($"Cannot replace \"{produceIndexStr}\" produce: {e.Message}. Produce will be set to \"none\" ({noProduceIndex}).", LogLevel.Debug);
+                this.Monitor.Log($"Cannot replace \"{indexStr}\" produce: {e.Message}. Will be set to \"none\" ({noIndex}).", LogLevel.Debug);
 
                 // ... otherwise; default to "no produce"
-                produceIndexStr = noProduceIndex;
+                indexStr = noIndex;
             }
 
-            return produceIndexStr;
+            return indexStr;
         }
     }
 }
