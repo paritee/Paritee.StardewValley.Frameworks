@@ -1,0 +1,10 @@
+﻿{
+   "Name": "Paritee's Butchery",
+   "Author": "Paritee",
+   "Version": "1.0.0-alpha.1",
+   "Description": "Butcher your animals",
+   "UniqueID": "Paritee.Butchery",
+   "EntryDll": "Butchery.dll",
+   "MinimumApiVersion": "2.11",
+   "UpdateKeys": [ "Nexus:0000" ]
+}

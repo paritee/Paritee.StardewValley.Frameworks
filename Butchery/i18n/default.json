@@ -1,0 +1,14 @@
+﻿{
+	"Meat.Beef.DisplayName":"Beef",
+	"Meat.Beef.Description":"A source of high-quality protein and nutrients.",	
+	"Meat.Pork.DisplayName":"Pork",
+	"Meat.Pork.Description":"Has a pleasant texture and high fat content.",
+	"Meat.Chicken.DisplayName":"Chicken",
+	"Meat.Chicken.Description":"Can be prepared in a vast range of ways.",
+	"Meat.Duck.DisplayName":"Duck",
+	"Meat.Duck.Description":"The meat is darker than other poultry meat.",
+	"Meat.Rabbit.DisplayName":"Rabbit",
+	"Meat.Rabbit.Description":"Light and gamey in flavor.",
+	"Meat.Mutton.DisplayName":"Mutton",
+	"Meat.Mutton.Description":"Has a strong, musty scent.",
+}
