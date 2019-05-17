@@ -40,6 +40,10 @@ namespace BetterFarmAnimalVariety.Models
         [JsonProperty(Order = 3)]
         public ConfigFarmAnimalAnimalShop AnimalShop;
 
+        [JsonProperty(Order = 4)]
+        public ConfigFarmAnimalData[] Data;
+
+
         [JsonConstructor]
         public ConfigFarmAnimal()
         {

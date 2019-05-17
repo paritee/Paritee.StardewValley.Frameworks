@@ -101,6 +101,7 @@ namespace BetterFarmAnimalVariety
         private ModConfig LoadConfig()
         {
             // Load the config
+            ModConfig.helper = Helper;
             ModConfig config = this.Helper.ReadConfig<ModConfig>();
 
             string targetFormat = this.ModManifest.Version.MajorVersion.ToString();
@@ -117,7 +118,7 @@ namespace BetterFarmAnimalVariety
                 throw new FormatException();
             }
 
-            config.InitializeFarmAnimals();
+            config.InitializeFarmAnimals(true);
 
             return config;
         }
@@ -202,7 +203,7 @@ namespace BetterFarmAnimalVariety
                 {
                     if (entry.Value.CanBePurchased())
                     {
-                        Texture2D texture = this.Helper.Content.Load<Texture2D>(entry.Value.AnimalShop.Icon, ContentSource.ModFolder);
+                        Texture2D texture = entry.Value.AnimalShop.IconTexture;
 
                         iconHeight = texture.Height;
 

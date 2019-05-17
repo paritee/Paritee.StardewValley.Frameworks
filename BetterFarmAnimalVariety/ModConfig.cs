@@ -2,6 +2,7 @@
 using Paritee.StardewValleyAPI.Buildings.AnimalShop.FarmAnimals;
 using Paritee.StardewValleyAPI.FarmAnimals;
 using Paritee.StardewValleyAPI.FarmAnimals.Variations;
+using StardewModdingAPI;
 using StardewValley;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace BetterFarmAnimalVariety
         public bool RandomizeHatchlingFromCategory;
         public bool IgnoreParentProduceCheck;
         public Dictionary<string, ConfigFarmAnimal> FarmAnimals;
+        public static IModHelper helper;
 
         private readonly AppSettings AppSettings;
 
@@ -35,7 +37,7 @@ namespace BetterFarmAnimalVariety
             this.RandomizeHatchlingFromCategory = false;
             this.IgnoreParentProduceCheck = false;
 
-            this.InitializeFarmAnimals();
+            this.InitializeFarmAnimals(false);
         }
         
         public bool IsValidFormat(string targetFormat)
@@ -65,7 +67,7 @@ namespace BetterFarmAnimalVariety
             return this.FarmAnimals[category].GetTypes().ToList<string>();
         }
 
-        public void InitializeFarmAnimals()
+        public void InitializeFarmAnimals(bool includeContentPacks)
         {
             if (this.FarmAnimals == null)
             {
@@ -79,6 +81,29 @@ namespace BetterFarmAnimalVariety
                 {
                     entry.Value.Category = entry.Key;
                     this.FarmAnimals[entry.Key] = entry.Value;
+                    if(entry.Value.AnimalShop.IconTexture == null)
+                        entry.Value.AnimalShop.PreloadIcon(helper);
+                }
+            }
+            if(includeContentPacks)
+                LoadContentPacks();
+        }
+
+        public void LoadContentPacks()
+        {
+            foreach(var pack in helper.ContentPacks.GetOwned())
+            {
+                ContentPackFarmAnimals content = pack.ReadJsonFile<ContentPackFarmAnimals>("content.json");
+                foreach (KeyValuePair<string, ConfigFarmAnimal> entry in content.FarmAnimals.ToDictionary(kvp => kvp.Key, kvp => kvp.Value))
+                {
+                    entry.Value.Category = entry.Key;
+                    this.FarmAnimals[entry.Key] = entry.Value;
+
+                    if (entry.Value.AnimalShop.IconTexture == null)
+                        entry.Value.AnimalShop.PreloadIcon(pack);
+
+                    foreach (var data in entry.Value.Data)
+                        data.InjectData(pack, helper);
                 }
             }
         }

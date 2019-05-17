@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
+using StardewModdingAPI;
 using StardewValley;
 using System.IO;
 
@@ -27,6 +29,9 @@ namespace BetterFarmAnimalVariety.Models
 
         [JsonIgnore]
         public string ConfigPrice;
+
+        [JsonIgnore]
+        public Texture2D IconTexture;
 
         [JsonProperty(Order = 1)]
         public string Name
@@ -119,6 +124,7 @@ namespace BetterFarmAnimalVariety.Models
             set
             {
                 this.ConfigIcon = value;
+                
             }
         }
 
@@ -131,11 +137,33 @@ namespace BetterFarmAnimalVariety.Models
         public ConfigFarmAnimalAnimalShop(string category, AppSetting appSetting)
         {
             string[] Values = appSetting.SplitValue();
-
             this.Category = category;
-            this.DefaultNameStringID = Values[AppSetting.FARMANIMALS_ANIMAL_SHOP_NAME_ID_INDEX];
-            this.DefaultDescriptionStringID = Values[AppSetting.FARMANIMALS_ANIMAL_SHOP_DESCRIPTION_ID_INDEX];
-            this.DefaultPrice = Values[AppSetting.FARMANIMALS_ANIMAL_SHOP_PRICE_INDEX];
+
+            if (category == "Dinosaur")
+            {
+                this.ConfigName = Game1.content.LoadString(@"Data//FarmAnimals:" + category).Split('/')[25];
+                this.DefaultDescriptionStringID = "11335";
+                this.ConfigPrice = "8000";
+                this.ConfigIcon = GetDefaultIconPath();
+            }
+            else
+            {
+                this.DefaultNameStringID = Values[AppSetting.FARMANIMALS_ANIMAL_SHOP_NAME_ID_INDEX];
+                this.DefaultDescriptionStringID = Values[AppSetting.FARMANIMALS_ANIMAL_SHOP_DESCRIPTION_ID_INDEX];
+                this.DefaultPrice = Values[AppSetting.FARMANIMALS_ANIMAL_SHOP_PRICE_INDEX];
+            }
+        }
+
+        public void PreloadIcon(IModHelper helper)
+        {
+            if(Icon != null)
+                IconTexture = helper.Content.Load<Texture2D>(Icon);
+        }
+
+        public void PreloadIcon(IContentPack pack)
+        {
+            if (Icon != null)
+                IconTexture = pack.LoadAsset<Texture2D>(Icon);
         }
 
         public bool ShouldSerializeCategory()
