@@ -27,10 +27,10 @@ namespace TreatYourAnimals.Framework
 
         public override void ChangeFriendship(int points = PetTreat.FRIENDSHIP_POINTS_STEP)
         {
-            this.Pet.friendshipTowardFarmer = Math.Max(0, Math.Min(PetTreat.FRIENDSHIP_POINTS_MAX, this.Pet.friendshipTowardFarmer + points));
+            this.Pet.friendshipTowardFarmer.Value = Math.Max(0, Math.Min(PetTreat.FRIENDSHIP_POINTS_MAX, this.Pet.friendshipTowardFarmer.Value + points));
 
             // Chance to show the "pet loves you" global message
-            this.AttemptToExpressLove(this.Pet, this.Pet.friendshipTowardFarmer, PetTreat.FRIENDSHIP_POINTS_MAX, "petLoveMessage");
+            this.AttemptToExpressLove(this.Pet, this.Pet.friendshipTowardFarmer.Value, PetTreat.FRIENDSHIP_POINTS_MAX, "petLoveMessage");
         }
 
         public void RefuseTreat(bool penalty = false)

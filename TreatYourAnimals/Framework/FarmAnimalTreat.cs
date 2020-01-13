@@ -36,7 +36,7 @@ namespace TreatYourAnimals.Framework
             // same logic used in pet()
             if (this.ReceiveProfessionBoost())
             {
-                this.FarmAnimal.happiness.Value = (byte)Math.Min((int)byte.MaxValue, (int)(byte)((NetFieldBase<byte, NetByte>)this.FarmAnimal.happiness) + Math.Max(5, 40 - (int)(byte)((NetFieldBase<byte, NetByte>)this.FarmAnimal.happinessDrain)));
+                this.FarmAnimal.happiness.Value = (byte)Math.Min(byte.MaxValue, FarmAnimal.happiness.Value + Math.Max(5, 40 - FarmAnimal.happinessDrain.Value));
             }
         }
 
@@ -55,10 +55,10 @@ namespace TreatYourAnimals.Framework
         {
             this.FarmAnimal.friendshipTowardFarmer.Value = Math.Max(0, Math.Min(FarmAnimalTreat.FRIENDSHIP_POINTS_MAX, this.FarmAnimal.friendshipTowardFarmer.Value + points));
 
-            string mailId = "farmAnimalLoveMessage" + this.FarmAnimal.myID;
+            string mailId = "farmAnimalLoveMessage" + this.FarmAnimal.myID.Value;
 
             // Chance to show the "pet loves you" global message
-            this.AttemptToExpressLove(this.FarmAnimal, this.FarmAnimal.friendshipTowardFarmer, FarmAnimalTreat.FRIENDSHIP_POINTS_MAX, mailId);
+            this.AttemptToExpressLove(this.FarmAnimal, this.FarmAnimal.friendshipTowardFarmer.Value, FarmAnimalTreat.FRIENDSHIP_POINTS_MAX, mailId);
         }
 
         private bool ReceiveProfessionBoost()

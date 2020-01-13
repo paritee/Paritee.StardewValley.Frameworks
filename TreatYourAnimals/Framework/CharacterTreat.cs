@@ -85,7 +85,7 @@ namespace TreatYourAnimals.Framework
             // Animal poisons
             List<int> poisons = new List<int>((int[])Enum.GetValues(typeof(Poisons)));
 
-            return poisons.Contains(item.parentSheetIndex);
+            return poisons.Contains(item.ParentSheetIndex);
         }
 
     }
