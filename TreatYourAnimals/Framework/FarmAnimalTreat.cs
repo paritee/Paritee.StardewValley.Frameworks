@@ -1,74 +1,73 @@
-﻿using Netcode;
+﻿using System;
 using StardewValley;
-using System;
 
 namespace TreatYourAnimals.Framework
 {
-    class FarmAnimalTreat : CharacterTreat
+    internal class FarmAnimalTreat : CharacterTreat
     {
-        private const int FRIENDSHIP_POINTS_MAX = 1000;
-        private const int FRIENDSHIP_POINTS_STEP = 6; // matches water bowl for pets
-        private const int EXPERIENCE_POINTS = 5; // matches pet() value
+        private const int FriendshipPointsMax = 1000;
+        private const int FriendshipPointsStep = 6; // matches water bowl for pets
+        private const int ExperiencePoints = 5; // matches pet() value
 
-        private FarmAnimal FarmAnimal;
+        private readonly FarmAnimal _farmAnimal;
 
         public FarmAnimalTreat(FarmAnimal farmAnimal, ModConfig config) : base(config)
         {
-            this.FarmAnimal = farmAnimal;
+            _farmAnimal = farmAnimal;
         }
 
         public override void GiveTreat()
         {
-            this.ReduceActiveItemByOne();
-            this.ChangeFriendship();
+            ReduceActiveItemByOne();
+            ChangeFriendship();
 
             // Extras
-            this.ChangeFullness();
-            this.ChangeHappiness();
-            this.GainExperience();
+            ChangeFullness();
+            ChangeHappiness();
+            GainExperience();
 
-            this.DoEmote();
-            this.PlaySound();
+            DoEmote();
+            PlaySound();
         }
 
         private void ChangeHappiness()
         {
             // same logic used in pet()
-            if (this.ReceiveProfessionBoost())
+            if (ReceiveProfessionBoost())
             {
-                this.FarmAnimal.happiness.Value = (byte)Math.Min(byte.MaxValue, FarmAnimal.happiness.Value + Math.Max(5, 40 - FarmAnimal.happinessDrain.Value));
+                _farmAnimal.happiness.Value = (byte)Math.Min(byte.MaxValue, _farmAnimal.happiness.Value + Math.Max(5, 40 - _farmAnimal.happinessDrain.Value));
             }
         }
 
         private void GainExperience()
         {
             // same logic used in pet()
-            Game1.player.gainExperience((int)Skill.Skills.Farming, FarmAnimalTreat.EXPERIENCE_POINTS);
+            Game1.player.gainExperience((int)Skill.Skills.Farming, ExperiencePoints);
         }
 
         private void ChangeFullness()
         {
-            this.FarmAnimal.fullness.Value = byte.MaxValue;
+            _farmAnimal.fullness.Value = byte.MaxValue;
         }
 
-        public override void ChangeFriendship(int points = FarmAnimalTreat.FRIENDSHIP_POINTS_STEP)
+        protected override void ChangeFriendship(int points = FriendshipPointsStep)
         {
-            this.FarmAnimal.friendshipTowardFarmer.Value = Math.Max(0, Math.Min(FarmAnimalTreat.FRIENDSHIP_POINTS_MAX, this.FarmAnimal.friendshipTowardFarmer.Value + points));
+            _farmAnimal.friendshipTowardFarmer.Value = Math.Max(0, Math.Min(FriendshipPointsMax, _farmAnimal.friendshipTowardFarmer.Value + points));
 
-            string mailId = "farmAnimalLoveMessage" + this.FarmAnimal.myID.Value;
+            var mailId = "farmAnimalLoveMessage" + _farmAnimal.myID.Value;
 
             // Chance to show the "pet loves you" global message
-            this.AttemptToExpressLove(this.FarmAnimal, this.FarmAnimal.friendshipTowardFarmer.Value, FarmAnimalTreat.FRIENDSHIP_POINTS_MAX, mailId);
+            AttemptToExpressLove(_farmAnimal, _farmAnimal.friendshipTowardFarmer.Value, FriendshipPointsMax, mailId);
         }
 
         private bool ReceiveProfessionBoost()
         {
-            if (Game1.player.professions.Contains((int)Profession.Professions.Shepherd) && !this.FarmAnimal.isCoopDweller())
+            if (Game1.player.professions.Contains((int)Profession.Professions.Shepherd) && !_farmAnimal.isCoopDweller())
             {
                 return true;
             }
 
-            if (Game1.player.professions.Contains((int)Profession.Professions.Coopmaster) && this.FarmAnimal.isCoopDweller())
+            if (Game1.player.professions.Contains((int)Profession.Professions.Coopmaster) && _farmAnimal.isCoopDweller())
             {
                 return true;
             }
@@ -78,19 +77,19 @@ namespace TreatYourAnimals.Framework
 
         public override void DoEmote()
         {
-            base.DoEmote(this.FarmAnimal);
+            DoEmote(_farmAnimal);
         }
 
         public void RefuseTreat(bool penalty)
         {
-            int pointsLoss = penalty ? -1 * (FarmAnimalTreat.FRIENDSHIP_POINTS_STEP / 2) : 0;
+            var pointsLoss = penalty ? -1 * (FriendshipPointsStep / 2) : 0;
 
-            base.RefuseTreat(this.FarmAnimal, pointsLoss);
+            base.RefuseTreat(_farmAnimal, pointsLoss);
         }
 
-        public override void PlaySound()
+        protected override void PlaySound()
         {
-            this.FarmAnimal.makeSound();
+            _farmAnimal.makeSound();
         }
     }
 }

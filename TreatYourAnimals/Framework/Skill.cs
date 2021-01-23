@@ -1,6 +1,6 @@
 ﻿namespace TreatYourAnimals.Framework
 {
-    class Skill
+    internal static class Skill
     {
         public enum Skills
         {

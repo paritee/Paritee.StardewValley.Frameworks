@@ -1,6 +1,6 @@
 ﻿namespace TreatYourAnimals
 {
-    class ModConfig
+    internal class ModConfig
     {
         public bool EnableHorseFriendship { get; set; } = true;
     }

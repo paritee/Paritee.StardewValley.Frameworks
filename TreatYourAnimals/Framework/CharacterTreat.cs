@@ -1,14 +1,15 @@
-﻿using StardewValley;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using StardewValley;
+using Object = StardewValley.Object;
 
 namespace TreatYourAnimals.Framework
 {
-    abstract class CharacterTreat
+    internal abstract class CharacterTreat
     {
-        public const int INEDIBLE_THRESHOLD = -300;
+        public const int InedibleThreshold = -300;
 
-        private const string STRINGS_LOVE_MESSAGE = "Strings\\Characters:PetLovesYou";
+        private const string StringsLoveMessage = "Strings\\Characters:PetLovesYou";
 
         private enum Poisons
         {
@@ -29,53 +30,51 @@ namespace TreatYourAnimals.Framework
             Cherry = 638,
         }
 
-        protected ModConfig Config;
+        protected readonly ModConfig Config;
 
-        public CharacterTreat(ModConfig config)
+        protected CharacterTreat(ModConfig config)
         {
-            this.Config = config;
+            Config = config;
         }
 
-        public void ReduceActiveItemByOne()
+        protected static void ReduceActiveItemByOne()
         {
             Game1.player.reduceActiveItemByOne();
         }
 
-        protected void AttemptToExpressLove(Character character, int points, int pointsThreshold, string mailKey)
+        protected static void AttemptToExpressLove(Character character, int points, int pointsThreshold, string mailKey)
         {
-            if (points >= pointsThreshold && !Game1.player.mailReceived.Contains(mailKey))
-            {
-                // "PetLovesYou": "{0} loves you. <"
-                Game1.showGlobalMessage(Game1.content.LoadString(CharacterTreat.STRINGS_LOVE_MESSAGE, character.displayName));
-                Game1.player.mailReceived.Add(mailKey);
-            }
+            if (points < pointsThreshold || Game1.player.mailReceived.Contains(mailKey)) return;
+            // "PetLovesYou": "{0} loves you. <"
+            Game1.showGlobalMessage(Game1.content.LoadString(StringsLoveMessage, character.displayName));
+            Game1.player.mailReceived.Add(mailKey);
         }
 
-        public void RefuseTreat(Character character, int points)
+        protected void RefuseTreat(Character character, int points)
         {
             if (points != 0)
             {
-                this.ChangeFriendship(points);
+                ChangeFriendship(points);
             }
 
-            this.DoEmote(character, Emote.Emotes.Angry);
-            this.PlaySound();
+            DoEmote(character, Emote.Emotes.Angry);
+            PlaySound();
         }
 
         public abstract void GiveTreat();
 
-        public abstract void ChangeFriendship(int points);
+        protected abstract void ChangeFriendship(int points);
 
         public abstract void DoEmote();
 
-        public void DoEmote(Character character, Emote.Emotes emote = Emote.Emotes.Heart)
+        protected static void DoEmote(Character character, Emote.Emotes emote = Emote.Emotes.Heart)
         {
-            character.doEmote((int)emote, true);
+            character.doEmote((int)emote);
         }
 
-        public abstract void PlaySound();
+        protected abstract void PlaySound();
 
-        public bool IsPoisonous(StardewValley.Object item)
+        public static bool IsPoisonous(Object item)
         {
             if (item.Edibility < 0)
             {
@@ -83,7 +82,7 @@ namespace TreatYourAnimals.Framework
             }
 
             // Animal poisons
-            List<int> poisons = new List<int>((int[])Enum.GetValues(typeof(Poisons)));
+            var poisons = new List<int>((int[])Enum.GetValues(typeof(Poisons)));
 
             return poisons.Contains(item.ParentSheetIndex);
         }

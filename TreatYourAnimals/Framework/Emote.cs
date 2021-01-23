@@ -1,6 +1,6 @@
 ﻿namespace TreatYourAnimals.Framework
 {
-    class Emote
+    internal static class Emote
     {
         public enum Emotes
         {

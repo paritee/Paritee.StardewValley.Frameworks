@@ -1,20 +1,22 @@
-﻿using Netcode;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Netcode;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Characters;
 using StardewValley.Network;
-using System.Collections.Generic;
 using TreatYourAnimals.Framework;
 using xTile.Dimensions;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace TreatYourAnimals
 {
     /// <summary>The mod entry point.</summary>
     public class ModEntry : Mod
     {
-        private ModConfig Config;
-        private CharacterTreatedData CharacterTreatedData;
+        private ModConfig _config;
+        private CharacterTreatedData _characterTreatedData;
 
         /*********
         ** Public methods
@@ -24,18 +26,18 @@ namespace TreatYourAnimals
         public override void Entry(IModHelper helper)
         {
             // Load config
-            this.Config = this.Helper.ReadConfig<ModConfig>();
+            _config = Helper.ReadConfig<ModConfig>();
 
             // Events
-            this.Helper.Events.Input.ButtonPressed += this.OnButtonPressed;
-            this.Helper.Events.GameLoop.DayStarted += this.OnDayStarted;
+            Helper.Events.Input.ButtonPressed += OnButtonPressed;
+            Helper.Events.GameLoop.DayStarted += OnDayStarted;
             // TODO: Change cursor to gift on hover with a valid object to give to animal - use same rectangle
         }
 
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
             // Refresh the tracked character treats each day
-            this.SetDailyTreatsData(new CharacterTreatedData());
+            SetDailyTreatsData(new CharacterTreatedData());
         }
 
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
@@ -59,210 +61,195 @@ namespace TreatYourAnimals
             }
 
             // ... and that object is sort-of edible
-            if (Game1.player.ActiveObject.Edibility <= CharacterTreat.INEDIBLE_THRESHOLD)
+            if (Game1.player.ActiveObject.Edibility <= CharacterTreat.InedibleThreshold)
             {
                 return;
             }
 
             //Vector2 index = new Vector2((float)((Game1.getOldMouseX() + Game1.viewport.X) / 64), (float)((Game1.getOldMouseY() + Game1.viewport.Y) / 64));
-            Location tileLocation = new Location((int)e.Cursor.GrabTile.X, (int)e.Cursor.GrabTile.Y);
-            Microsoft.Xna.Framework.Rectangle rectangle = new Microsoft.Xna.Framework.Rectangle(tileLocation.X * 64, tileLocation.Y * 64, 64, 64);
+            var tileLocation = new Location((int)e.Cursor.GrabTile.X, (int)e.Cursor.GrabTile.Y);
+            var rectangle = new Rectangle(tileLocation.X * 64, tileLocation.Y * 64, 64, 64);
 
-            bool intersected = false;
+            var intersected = false;
 
-            if (Game1.player.currentLocation is AnimalHouse)
+            switch (Game1.player.currentLocation)
             {
-                AnimalHouse animalHouse = Game1.player.currentLocation as AnimalHouse;
-
-                intersected = this.AttemptToGiveTreatToFarmAnimals(animalHouse.animals, rectangle);
-            }
-            else if (Game1.player.currentLocation is Farm)
-            {
-                Farm farm = Game1.player.currentLocation as Farm;
-
-                intersected = this.AttemptToGiveTreatToFarmAnimals(farm.animals, rectangle);
+                case AnimalHouse _:
+                {
+                    if (Game1.player.currentLocation is AnimalHouse animalHouse)
+                        intersected = AttemptToGiveTreatToFarmAnimals(animalHouse.animals, rectangle);
+                    break;
+                }
+                case Farm _:
+                {
+                    if (Game1.player.currentLocation is Farm farm) intersected = AttemptToGiveTreatToFarmAnimals(farm.animals, rectangle);
+                    break;
+                }
             }
 
             if (!intersected)
             {
-                intersected = this.AttemptToGiveTreatToHorsesAndPets(rectangle);
+                intersected = AttemptToGiveTreatToHorsesAndPets(rectangle);
             }
 
             // Always suppress the button if we intersected as an attempt to treat
             // Blocks weird behaviour of mounting if you meant to treat a horse that was already treated
             if (intersected)
             {
-                this.Helper.Input.Suppress(e.Button);
+                Helper.Input.Suppress(e.Button);
             }
         }
 
-        private bool AttemptToGiveTreatToFarmAnimals(NetLongDictionary<FarmAnimal, NetRef<FarmAnimal>> animals, Microsoft.Xna.Framework.Rectangle rectangle)
+        private bool AttemptToGiveTreatToFarmAnimals(NetLongDictionary<FarmAnimal, NetRef<FarmAnimal>> animals, Rectangle rectangle)
         {
-            foreach (KeyValuePair<long, FarmAnimal> pair in animals.Pairs)
+            foreach (var pair in animals.Pairs.Where(pair => pair.Value.GetBoundingBox().Intersects(rectangle)))
             {
-                if (pair.Value.GetBoundingBox().Intersects(rectangle))
-                {
-                    this.AttemptToGiveTreatToFarmAnimal(pair.Value);
+                AttemptToGiveTreatToFarmAnimal(pair.Value);
                     
-                    // Intersects always return true
-                    return true;
-                }
+                // Intersects always return true
+                return true;
             }
 
             return false;
         }
 
-        private bool AttemptToGiveTreatToFarmAnimal(FarmAnimal farmAnimal)
+        private void AttemptToGiveTreatToFarmAnimal(FarmAnimal farmAnimal)
         {
-            string type = farmAnimal.GetType().ToString();
-            string id = farmAnimal.myID.ToString();
+            var type = farmAnimal.GetType().ToString();
+            var id = farmAnimal.myID.ToString();
 
-            FarmAnimalTreat treatHandler = new FarmAnimalTreat(farmAnimal, this.Config);
+            var treatHandler = new FarmAnimalTreat(farmAnimal, _config);
 
             // Refuse a poisonous treat
-            if (treatHandler.IsPoisonous(Game1.player.ActiveObject))
+            if (CharacterTreat.IsPoisonous(Game1.player.ActiveObject))
             {
                 treatHandler.RefuseTreat(true);
 
-                return false;
+                return;
             }
 
             // Can only give a treat once per day
-            if (this.GivenTreatToday(type, id))
+            if (GivenTreatToday(type, id))
             {
                 treatHandler.RefuseTreat(false);
 
-                return false;
+                return;
             }
 
             treatHandler.GiveTreat();
 
-            this.TrackGivenTreat(type, id);
-
-            return true;
+            TrackGivenTreat(type, id);
         }
 
-        private bool AttemptToGiveTreatToHorsesAndPets(Microsoft.Xna.Framework.Rectangle rectangle)
+        private bool AttemptToGiveTreatToHorsesAndPets(Rectangle rectangle)
         {
-            foreach (NPC character in Game1.player.currentLocation.characters)
+            foreach (var character in Game1.player.currentLocation.characters.Where(character => character is Horse || character is Pet).Where(character => character.GetBoundingBox().Intersects(rectangle)))
             {
-                // We only care about Horses and Pets
-                if (!(character is Horse) && !(character is Pet))
-                    continue;
-
-                // We only care if they're intersecting the animal
-                if (character.GetBoundingBox().Intersects(rectangle))
+                if (character is Horse horse)
                 {
-                    if (character is Horse)
+                    // Check if horse has a name
+                    if (horse.Name.Length <= 0)
                     {
-                        // Check if horse has a name
-                        if (character.Name.Length <= 0)
-                        {
-                            // We don't want to stop the naming prompt even with an intercept
-                            return false;
-                        }
-
-                        this.AttemptToGiveTreatToHorse(character as Horse);
-                    }
-                    else
-                    {
-                        this.AttemptToGiveTreatToPet(character as Pet);
+                        // We don't want to stop the naming prompt even with an intercept
+                        return false;
                     }
 
-                    // Intersects always return true
-                    return true;
+                    AttemptToGiveTreatToHorse(horse);
                 }
+                else
+                {
+                    AttemptToGiveTreatToPet(character as Pet);
+                }
+
+                // Intersects always return true
+                return true;
             }
 
             return false;
         }
 
-        private bool AttemptToGiveTreatToHorse(Horse horse)
+        private void AttemptToGiveTreatToHorse(Horse horse)
         {
-            string type = horse.GetType().ToString();
-            string id = horse.id.ToString();
+            var type = horse.GetType().ToString();
+            var id = horse.id.ToString();
 
-            HorseTreat treatHandler = new HorseTreat(horse, this.Config);
+            var treatHandler = new HorseTreat(horse, _config);
 
             // Refuse a poisonous treat
-            if (treatHandler.IsPoisonous(Game1.player.ActiveObject))
+            if (CharacterTreat.IsPoisonous(Game1.player.ActiveObject))
             {
                 treatHandler.RefuseTreat(true);
 
-                return false;
+                return;
             }
 
             // Can only give a treat once per day
-            if (this.GivenTreatToday(type, id))
+            if (GivenTreatToday(type, id))
             {
                 treatHandler.RefuseTreat(false);
 
-                return false;
+                return;
             }
 
             treatHandler.GiveTreat();
 
-            this.TrackGivenTreat(type, id);
-
-            return true;
+            TrackGivenTreat(type, id);
         }
 
-        private bool AttemptToGiveTreatToPet(Pet pet)
+        private void AttemptToGiveTreatToPet(Pet pet)
         {
-            string type = pet.GetType().ToString();
-            string id = pet.id.ToString();
+            var type = pet.GetType().ToString();
+            var id = pet.id.ToString();
 
-            PetTreat treatHandler = new PetTreat(pet, this.Config);
+            var treatHandler = new PetTreat(pet, _config);
 
             // Refuse a poisonous treat
-            if (treatHandler.IsPoisonous(Game1.player.ActiveObject))
+            if (CharacterTreat.IsPoisonous(Game1.player.ActiveObject))
             {
                 treatHandler.RefuseTreat(true);
 
-                return false;
+                return;
             }
 
             // Can only give a treat once per day
-            if (this.GivenTreatToday(type, id))
+            if (GivenTreatToday(type, id))
             {
-                treatHandler.RefuseTreat(false);
+                treatHandler.RefuseTreat();
 
-                return false;
+                return;
             }
 
             treatHandler.GiveTreat();
 
-            this.TrackGivenTreat(type, id);
-
-            return true;
+            TrackGivenTreat(type, id);
         }
 
         private bool GivenTreatToday(string type, string id)
         {
-            CharacterTreatedData model = this.GetDailyTreatsData();
+            var model = GetDailyTreatsData();
 
             // Check if the entry already was treated
-            return model.Characters.Contains(model.FormatEntry(type, id));
+            return model.Characters.Contains(CharacterTreatedData.FormatEntry(type, id));
         }
 
         private void TrackGivenTreat(string type, string id)
         {
-            CharacterTreatedData model = this.GetDailyTreatsData();
-            string entry = model.FormatEntry(type, id);
+            var model = GetDailyTreatsData();
+            var entry = CharacterTreatedData.FormatEntry(type, id);
 
             model.Characters.Add(entry);
 
-            this.SetDailyTreatsData(model);
+            SetDailyTreatsData(model);
         }
 
         private CharacterTreatedData GetDailyTreatsData()
         {
-            return this.CharacterTreatedData;
+            return _characterTreatedData;
         }
 
         private void SetDailyTreatsData(CharacterTreatedData model)
         {
-            this.CharacterTreatedData = model;
+            _characterTreatedData = model;
         }
     }
 }

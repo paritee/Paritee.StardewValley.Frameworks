@@ -1,6 +1,6 @@
 ﻿namespace TreatYourAnimals.Framework
 {
-    class Profession
+    internal static class Profession
     {
         public enum Professions
         {

@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace TreatYourAnimals
 {
-    class CharacterTreatedData
+    internal class CharacterTreatedData
     {
-        public List<string> Characters = new List<string>();
+        public readonly List<string> Characters = new List<string>();
 
-        public string FormatEntry(string type, string id)
+        public static string FormatEntry(string type, string id)
         {
-            return String.Join("_", new string[] { type, id });
+            return string.Join("_", type, id);
         }
     }
 }

@@ -1,53 +1,53 @@
-﻿using StardewValley.Characters;
-using System;
+﻿using System;
+using StardewValley.Characters;
 
 namespace TreatYourAnimals.Framework
 {
-    class PetTreat : CharacterTreat
+    internal class PetTreat : CharacterTreat
     {
-        private const int FRIENDSHIP_POINTS_MAX = 1000;
-        private const int FRIENDSHIP_POINTS_STEP = 6; // matches water bowl value
+        private const int FriendshipPointsMax = 1000;
+        private const int FriendshipPointsStep = 6; // matches water bowl value
 
-        private const int CHOCOLATE_CAKE = 220;
+        private const int ChocolateCake = 220;
 
-        private Pet Pet;
+        private readonly Pet _pet;
 
         public PetTreat(Pet pet, ModConfig config) : base(config)
         {
-            this.Pet = pet;
+            _pet = pet;
         }
 
         public override void GiveTreat()
         {
-            this.ReduceActiveItemByOne();
-            this.ChangeFriendship();
-            this.DoEmote();
-            this.PlaySound();
+            ReduceActiveItemByOne();
+            ChangeFriendship();
+            DoEmote();
+            PlaySound();
         }
 
-        public override void ChangeFriendship(int points = PetTreat.FRIENDSHIP_POINTS_STEP)
+        protected override void ChangeFriendship(int points = FriendshipPointsStep)
         {
-            this.Pet.friendshipTowardFarmer.Value = Math.Max(0, Math.Min(PetTreat.FRIENDSHIP_POINTS_MAX, this.Pet.friendshipTowardFarmer.Value + points));
+            _pet.friendshipTowardFarmer.Value = Math.Max(0, Math.Min(FriendshipPointsMax, _pet.friendshipTowardFarmer.Value + points));
 
             // Chance to show the "pet loves you" global message
-            this.AttemptToExpressLove(this.Pet, this.Pet.friendshipTowardFarmer.Value, PetTreat.FRIENDSHIP_POINTS_MAX, "petLoveMessage");
+            AttemptToExpressLove(_pet, _pet.friendshipTowardFarmer.Value, FriendshipPointsMax, "petLoveMessage");
         }
 
         public void RefuseTreat(bool penalty = false)
         {
-            int pointsLoss = penalty ? -1 * (PetTreat.FRIENDSHIP_POINTS_STEP / 2) : 0;
+            var pointsLoss = penalty ? -1 * (FriendshipPointsStep / 2) : 0;
 
-            base.RefuseTreat(this.Pet, pointsLoss);
+            base.RefuseTreat(_pet, pointsLoss);
         }
 
         public override void DoEmote()
         {
-            base.DoEmote(this.Pet);
+            DoEmote(_pet);
         }
 
-        public override void PlaySound()
+        protected override void PlaySound()
         {
-            this.Pet.playContentSound();
+            _pet.playContentSound();
         }
     }
 }
